@@ -1,5 +1,3 @@
-[![Tests](https://github.com/OpenDataGIS/ckanext-fototeca/workflows/Tests/badge.svg?branch=main)](https://github.com/OpenDataGIS/ckanext-fototeca/actions)
-
 # ckanext-fototeca
 
 Extensión de temas creada para la fototeca del CNIG
@@ -51,17 +49,17 @@ Ninguna por ahora
 
 Para instalar ckanext-fototeca en modo desarrollador ejecuta:
 
-    git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
-    cd ckanext-fototeca
-    python setup.py develop
-    pip install -r dev-requirements.txt
+		git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
+		cd ckanext-fototeca
+		python setup.py develop
+		pip install -r dev-requirements.txt
 
 
 ## Tests
 
 Para ejecutar los test:
-
-    pytest --ckan-ini=test.ini
+		
+		pytest --ckan-ini=test.ini
 
 ## Licencia
 
