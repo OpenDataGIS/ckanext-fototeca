@@ -1,0 +1,8 @@
+.account-masthead {
+    height: 50px;
+    background-color: #364b5f;
+    display: flex;
+    align-items: center;
+    font-family: Fira Sans, sans-serif;
+    z-index: 999999;
+}
