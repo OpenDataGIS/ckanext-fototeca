@@ -31,14 +31,14 @@ Para instalar ckanext-fototeca:
 
 2. Clone the source and install it on the virtualenv
 
-    git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
-    cd ckanext-fototeca
-    pip install -e .
-	pip install -r requirements.txt
+		git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
+		cd ckanext-fototeca
+		pip install -e .
+		pip install -r requirements.txt
 
-3. Añadir `fototeca` a la configuración `ckan.plugins` en tu archivo de configuración de CKAN.
+4. Añadir `fototeca` a la configuración `ckan.plugins` en tu archivo de configuración de CKAN.
 
-4. Reinicia CKAN
+5. Reinicia CKAN
 
      sudo service apache2 reload
 
