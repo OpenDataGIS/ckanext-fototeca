@@ -8,6 +8,8 @@ ckanext/__init__.py
 ckanext/fototeca/__init__.py
 ckanext/fototeca/plugin.py
 ckanext/fototeca/assets/webassets.yml
+ckanext/fototeca/public/header.css
+ckanext/fototeca/templates/base.html
 ckanext/fototeca/tests/__init__.py
 ckanext/fototeca/tests/test_plugin.py
 ckanext_fototeca.egg-info/PKG-INFO
