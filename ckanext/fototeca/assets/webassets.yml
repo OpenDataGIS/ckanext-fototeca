@@ -7,8 +7,9 @@
 #     preload:
 #       - base/main
 
-# fototeca-css:
-#   filter: cssrewrite
-#   output: ckanext-fototeca/%(version)s-fototeca.css
-#   contents:
-#     - css/fototeca.css
+ fototeca-css:
+   filter: cssrewrite
+   output: ckanext-fototeca/%(version)s-fototeca-css.css
+   contents:
+     - css/fototeca.css
+

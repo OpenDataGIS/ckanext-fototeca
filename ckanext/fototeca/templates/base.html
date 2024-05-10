@@ -1,7 +1,7 @@
-{% ckan_extends "base.html" %}
+{% ckan_extends %}
 
 {% block styles %}
   {{ super() }}
-  <link rel="stylesheet" href="/catalog/header.css" />
+  {% asset 'ckanext-fototeca/fototeca-css' %}
 {% endblock %}
 
