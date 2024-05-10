@@ -6,3 +6,12 @@
     font-family: Fira Sans, sans-serif;
     z-index: 999999;
 }
+.account-masthead .account {
+    padding: 7px 0;
+}
+
+.ign-banner {
+    height: 50px;
+    float: left;
+    align-items: center;
+}
