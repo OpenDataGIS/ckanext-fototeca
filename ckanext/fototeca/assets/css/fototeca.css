@@ -76,3 +76,8 @@ header .visor-title .label-container .subtitle::after{
 .site-footer strong{
     color: white;
 }
+
+.col-md-6 { /* CSS relativo a featured org*/
+    width: 70%;
+    float: right;
+}
