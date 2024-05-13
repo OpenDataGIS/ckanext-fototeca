@@ -13,3 +13,9 @@
    contents:
      - css/fototeca.css
 
+
+ home-css:
+   filter: cssrewrite
+   output: ckanext-fototeca/%(version)s-home-css.css
+   contents:
+     - css/home.css

@@ -9,6 +9,7 @@ ckanext/fototeca/__init__.py
 ckanext/fototeca/plugin.py
 ckanext/fototeca/assets/webassets.yml
 ckanext/fototeca/assets/css/fototeca.css
+ckanext/fototeca/assets/css/home.css
 ckanext/fototeca/templates/base.html
 ckanext/fototeca/templates/header.html
 ckanext/fototeca/templates/home/index.html
