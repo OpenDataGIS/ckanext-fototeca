@@ -15,11 +15,7 @@ Compatibilidad con CKAN:
 | 2.9             | no probado    |
 
 
-## Installation
-
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
+## Instalación
 
 Para instalar ckanext-fototeca:
 
@@ -27,12 +23,11 @@ Para instalar ckanext-fototeca:
 
      . /usr/lib/ckan/default/bin/activate
 
-2. Clone the source and install it on the virtualenv
+2. Clona el repositorio y instalalo en el venv de ckan 
 
 		git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
 		cd ckanext-fototeca
 		pip install -e .
-		pip install -r requirements.txt
 
 4. Añadir `fototeca` a la configuración `ckan.plugins` en tu archivo de configuración de CKAN.
 
@@ -52,7 +47,6 @@ Para instalar ckanext-fototeca en modo desarrollador ejecuta:
 	git clone https://github.com/OpenDataGIS/ckanext-fototeca.git
 	cd ckanext-fototeca
 	python setup.py develop
-	pip install -r dev-requirements.txt
 
 
 ## Tests
