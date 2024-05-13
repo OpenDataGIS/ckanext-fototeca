@@ -11,6 +11,7 @@ ckanext/fototeca/assets/webassets.yml
 ckanext/fototeca/assets/css/fototeca.css
 ckanext/fototeca/templates/base.html
 ckanext/fototeca/templates/header.html
+ckanext/fototeca/templates/home/index.html
 ckanext/fototeca/tests/__init__.py
 ckanext/fototeca/tests/test_plugin.py
 ckanext_fototeca.egg-info/PKG-INFO
