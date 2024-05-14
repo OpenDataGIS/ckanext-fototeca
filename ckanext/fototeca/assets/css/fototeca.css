@@ -81,3 +81,31 @@ header .visor-title .label-container .subtitle::after{
     width: 70%;
     float: right;
 }
+
+
+/*CSS relativo al footer>*/
+
+.col-md-4.attribution{
+    width: 25%;
+    padding: 10px 0;
+}
+
+
+.footer-links{
+    display: inline-block;
+    width: 60%;
+
+}
+
+.footer-links a{
+    float: left;
+    display: inline-block;
+    width: 50% !important;
+    font-size: smaller;
+}
+
+.footer-text-section.w50.f1.aenor{
+    float: left;
+    display: inline-block;
+
+}
