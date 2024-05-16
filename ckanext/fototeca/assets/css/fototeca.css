@@ -9,6 +9,20 @@
     padding: 7px 0;
 }
 
+.site-footer{
+    background: #364b5f;
+    padding: 30px 0;
+}
+.site-footer a{
+    color: white;
+}
+.site-footer label{
+    color: white;
+}
+.site-footer strong{
+    color: white;
+}
+
 @media (min-width: 993px) {
     .account-masthead {
         height: 50px;
@@ -77,7 +91,7 @@
     }  
 }
 
-@media (min-width: 993px) {
+@media (min-width: 1200px) {
     .toolbar .breadcrumb a{
         color: #364b5f;
     }  
@@ -111,29 +125,7 @@
     }
 }
 
-@media (max-width: 992px) and (min-width: 584px){
-    .site-footer{
-        background: #364b5f;
-        padding: 30px 0;
-    }
-    .site-footer a{
-        color: white;
-    }
-    .site-footer label{
-        color: white;
-    }
-    .site-footer strong{
-        color: white;
-    }
-    /*CSS relativo al footer>*/   
-    .col-md-4.attribution{
-        width: 170px;
-    }
-    .col-md-8.footer-links{
-        display: inline-block;
-        width: 60%;
-    
-    }
+@media (max-width: 1200px) and (min-width: 415px){
     .footer-links a{
         float: left;
         width: 50% !important;
@@ -149,6 +141,5 @@
     .col-md-4.attribution p{
         position: relative;
         display: block;
-        padding: 10px 15px;
     }
 }
