@@ -1,5 +1,4 @@
 .account-masthead {
-    height: 50px;
     background-color: #364b5f;
     display: flex;
     align-items: center;
@@ -9,103 +8,147 @@
 .account-masthead .account {
     padding: 7px 0;
 }
-.ign-banner {
-    height: 50px;
-    float: left;
-    align-items: center;
-}
-header .visor-title{
-    align-items: center; 
-    column-gap: 5px;   
-    display: flex;
-    align-items:center;
-}
-header .visor-title .logo-fototeca{
-    width: 50px;
-}
-header .visor-title .logo-fototeca img {
-    max-height: 50px;
-    position: relative;
-    top: 1px;
-    margin-right: .5rem;
-}
-header .visor-title .label-container .title{
-    color: #364b5f;
-    font-size: 19.6px;
-    font-weight: 700;
-    font-family: "Fira Sans", sans-serif;
-    letter-spacing: 4px;
-    display: flex;
-    justify-content: flex-end;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-header .visor-title .label-container .title::after{
-    color:white
-}
-header .visor-title .label-container .subtitle{
-    color: #b9b9b9;
-    margin-top: 3px;
-    font-size: 12px;
-    margin-right: 5px;
-    display: flex;
-    justify-content: flex-end;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-header .visor-title .label-container .subtitle::after{
-    color:white
+
+@media (min-width: 993px) {
+    .account-masthead {
+        height: 50px;
+    } 
+    .ign-banner {
+        height: 50px;
+        float: left;
+        align-items: center;
+    }
 }
 
-.toolbar .breadcrumb a{
-    color: #364b5f;
+@media (max-width: 993px) {
+    .account-masthead {
+        height: 100px;
+    } 
+    .ign-banner {
+        height: 50px;
+        float: left;
+        align-items: center;
+    }
 }
 
-.site-footer{
-    background: #364b5f;
-    padding: 30px 0;
+@media (min-width: 371px) {
+    
+    header .visor-title{
+        align-items: center; 
+        column-gap: 5px;   
+        display: flex;
+        align-items:center;
+    }
+    header .visor-title .logo-fototeca{
+        width: 50px;
+    }
+    header .visor-title .logo-fototeca img {
+        max-height: 50px;
+        position: relative;
+        top: 1px;
+        margin-right: .5rem;
+    }
+    header .visor-title .label-container .title{
+        color: #364b5f;
+        font-size: 19.6px;
+        font-weight: 700;
+        font-family: "Fira Sans", sans-serif;
+        letter-spacing: 4px;
+        display: flex;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    header .visor-title .label-container .title::after{
+        color:white
+    }
+    header .visor-title .label-container .subtitle{
+        color: #b9b9b9;
+        margin-top: 3px;
+        font-size: 12px;
+        margin-right: 5px;
+        display: flex;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    header .visor-title .label-container .subtitle::after{
+        color:white
+    }  
 }
 
-.site-footer a{
-    color: white;
+@media (min-width: 993px) {
+    .toolbar .breadcrumb a{
+        color: #364b5f;
+    }  
+    .site-footer{
+        background: #364b5f;
+        padding: 30px 0;
+    }
+    .site-footer a{
+        color: white;
+    }
+    .site-footer label{
+        color: white;
+    }
+    .site-footer strong{
+        color: white;
+    }
+    /*CSS relativo al footer>*/   
+    .col-md-4.attribution{
+        width: 25%;
+        padding: 10px 0;
+    }
+    .footer-links{
+        display: inline-block;
+        width: 60%;
+    
+    }
+    .footer-links a{
+        float: left;
+        width: 50% !important;
+        font-size: smaller;
+    }
 }
 
-.site-footer label{
-    color: white;
-}
-.site-footer strong{
-    color: white;
-}
+@media (max-width: 992px) and (min-width: 584px){
+    .site-footer{
+        background: #364b5f;
+        padding: 30px 0;
+    }
+    .site-footer a{
+        color: white;
+    }
+    .site-footer label{
+        color: white;
+    }
+    .site-footer strong{
+        color: white;
+    }
+    /*CSS relativo al footer>*/   
+    .col-md-4.attribution{
+        width: 170px;
+    }
+    .col-md-8.footer-links{
+        display: inline-block;
+        width: 60%;
+    
+    }
+    .footer-links a{
+        float: left;
+        width: 50% !important;
+        font-size: smaller;
+    }
 
-.col-md-6 { /* CSS relativo a featured org*/
-    width: 70%;
-    float: right;
-}
+    .form-inline.form-select.lang-select{
+        position: relative;
+        float:left
+    }
 
-
-/*CSS relativo al footer>*/
-
-.col-md-4.attribution{
-    width: 25%;
-    padding: 10px 0;
-}
-
-
-.footer-links{
-    display: inline-block;
-    width: 60%;
-
-}
-
-.footer-links a{
-    float: left;
-    display: inline-block;
-    width: 50% !important;
-    font-size: smaller;
-}
-
-.footer-text-section.w50.f1.aenor{
-    float: left;
-    display: inline-block;
-
+    
+    .col-md-4.attribution p{
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+    }
 }

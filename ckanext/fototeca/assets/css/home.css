@@ -1,20 +1,55 @@
-.container .row .row1 .col-md-12{
-    align-items: center; 
-    column-gap: 5px;   
-    display: flex;
-    align-items:center;
+@media (min-width: 1200px){
+    .container .row .row1 .col-md-12{
+        align-items: center; 
+        column-gap: 5px;   
+        display: flex;
+        align-items:center;
+    }
+    
+    .container .col-md-12 .box{
+        width: 25%;
+        float: left;
+    }
+    
+    .homepage .module-search.box {
+        width: 70%;
+        float: right;
+    }
+    
+    a.endpoints_layout1{
+        width: 100%
+    }
+
+    .col-md-6 { /* CSS relativo a featured org*/
+        width: 70%;
+        float: right;
+    }
+    
 }
 
-.container .col-md-12 .box{
-    width: 25%;
-    float: left;
+@media (max-width: 1200px) and (min-width: 992px){
+    .col-md-6 { /* CSS relativo a featured org*/
+        width: 100%;
+        float: right;
+    }
 }
 
-.homepage .module-search.box {
-    width: 70%;
-    float: right;
+@media (max-width: 992px) and (min-width: 584px){
+    a.endpoints_layout1{
+        width: 25%;
+        height: 50px;
+    }
 }
 
-a.endpoints_layout1{
-    width: 180px
+@media (max-width: 584px) and (min-width: 385px){
+    a.endpoints_layout1{
+        width: 40%;
+        height: 50px;
+    }
+}
+
+@media (max-width: 385px){
+    a.endpoints_layout1{
+        width: 100%;
+    }
 }
