@@ -3,12 +3,10 @@
     display: flex;
     align-items: center;
     font-family: Fira Sans, sans-serif;
-    z-index: 999999;
 }
 .account-masthead .account {
     padding: 7px 0;
 }
-
 .site-footer{
     background: #364b5f;
     padding: 30px 0;
@@ -32,9 +30,16 @@
         float: left;
         align-items: center;
     }
+    
+    .ign-banner-small{
+        display:none;
+    }
+    .site-footer a{
+        color: white;
+    }
 }
 
-@media (max-width: 993px) {
+@media (max-width: 993px) and (min-width: 720px){
     .account-masthead {
         height: 50px;
     } /*
@@ -46,6 +51,41 @@
     .ign-banner {
         display: none;
     }
+
+    .ign-banner-small{
+        height: 100px;
+        position: absolute;
+        display:inline-block;
+        align-items: center;
+        z-index: 1;
+    }
+    .account-masthead {
+        height: 50px;
+    } 
+    .site-footer a{
+        color: white;
+    }
+}
+
+@media (max-width: 993px) {
+    .account-masthead {
+    height: 50px;
+    } 
+    .ign-banner {
+        display: none;
+    }
+    .ign-banner-small{
+        height: 100px;
+        position: absolute;
+        display:inline-block;
+        align-items: center;
+        z-index: 1;
+    }
+    .account-masthead .account ul li a {
+        color: #fff;
+        padding: 0 7px;
+    }
+    
 }
 
 @media (min-width: 371px) {
@@ -57,7 +97,7 @@
         align-items:center;
     }
     header .visor-title .logo-fototeca{
-        width: 50px;
+        display: none;
     }
     header .visor-title .logo-fototeca img {
         max-height: 50px;
@@ -102,9 +142,11 @@
         display: flex;
         align-items:center;
     }
+
     header .visor-title .logo-fototeca{
         display: none;
     }
+
     header .visor-title .logo-fototeca img {
         max-height: 50px;
         position: relative;
@@ -139,6 +181,8 @@
         color:white
     }  
 }
+
+
 
 @media (min-width: 1200px) {
     .toolbar .breadcrumb a{
