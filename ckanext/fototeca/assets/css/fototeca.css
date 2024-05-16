@@ -36,12 +36,15 @@
 
 @media (max-width: 993px) {
     .account-masthead {
-        height: 100px;
-    } 
+        height: 50px;
+    } /*
     .ign-banner {
         height: 50px;
         float: left;
         align-items: center;
+    }*/
+    .ign-banner {
+        display: none;
     }
 }
 
@@ -55,6 +58,52 @@
     }
     header .visor-title .logo-fototeca{
         width: 50px;
+    }
+    header .visor-title .logo-fototeca img {
+        max-height: 50px;
+        position: relative;
+        top: 1px;
+        margin-right: .5rem;
+    }
+    header .visor-title .label-container .title{
+        color: #364b5f;
+        font-size: 19.6px;
+        font-weight: 700;
+        font-family: "Fira Sans", sans-serif;
+        letter-spacing: 4px;
+        display: flex;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    header .visor-title .label-container .title::after{
+        color:white
+    }
+    header .visor-title .label-container .subtitle{
+        color: #b9b9b9;
+        margin-top: 3px;
+        font-size: 12px;
+        margin-right: 5px;
+        display: flex;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    header .visor-title .label-container .subtitle::after{
+        color:white
+    }  
+}
+
+@media (max-width: 371px) {
+        
+    header .visor-title{
+        align-items: center; 
+        column-gap: 5px;   
+        display: flex;
+        align-items:center;
+    }
+    header .visor-title .logo-fototeca{
+        display: none;
     }
     header .visor-title .logo-fototeca img {
         max-height: 50px;
@@ -143,3 +192,4 @@
         display: block;
     }
 }
+
