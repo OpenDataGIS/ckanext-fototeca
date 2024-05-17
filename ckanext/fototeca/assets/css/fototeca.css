@@ -20,11 +20,58 @@
 .site-footer strong{
     color: white;
 }
+.account-masthead {
+    height: 50px;
+}
+
+header .visor-title{
+    align-items: center; 
+    column-gap: 5px;   
+    display: flex;
+    align-items:center;
+}
+header .visor-title .logo-fototeca{
+    display: none;
+}
+header .visor-title .logo-fototeca img {
+    max-height: 50px;
+    position: relative;
+    top: 1px;
+    margin-right: .5rem;
+}
+header .visor-title .label-container .title{
+    color: #364b5f;
+    font-size: 19.6px;
+    font-weight: 700;
+    font-family: "Fira Sans", sans-serif;
+    letter-spacing: 4px;
+    display: flex;
+    justify-content: flex-end;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+header .visor-title .label-container .title::after{
+    color:white
+}
+header .visor-title .label-container .subtitle{
+    color: #b9b9b9;
+    margin-top: 3px;
+    font-size: 12px;
+    margin-right: 5px;
+    display: flex;
+    justify-content: flex-end;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+header .visor-title .label-container .subtitle::after{
+    color:white
+}
+
+.ign-banner-small{
+    pointer-events: none
+}
 
 @media (min-width: 993px) {
-    .account-masthead {
-        height: 50px;
-    } 
     .ign-banner {
         height: 50px;
         float: left;
@@ -39,15 +86,7 @@
     }
 }
 
-@media (max-width: 993px) and (min-width: 720px){
-    .account-masthead {
-        height: 50px;
-    } /*
-    .ign-banner {
-        height: 50px;
-        float: left;
-        align-items: center;
-    }*/
+@media (max-width: 993px) and (min-width: 767px){
     .ign-banner {
         display: none;
     }
@@ -59,18 +98,12 @@
         align-items: center;
         z-index: 1;
     }
-    .account-masthead {
-        height: 50px;
-    } 
     .site-footer a{
         color: white;
     }
 }
 
-@media (max-width: 993px) {
-    .account-masthead {
-    height: 50px;
-    } 
+@media (max-width: 767px) and (min-width: 377px){
     .ign-banner {
         display: none;
     }
@@ -81,108 +114,37 @@
         align-items: center;
         z-index: 1;
     }
+    .account-masthead .container{
+        width: 100%;
+    }
     .account-masthead .account ul li a {
         color: #fff;
         padding: 0 7px;
+        float: right;
     }
     
 }
-
-@media (min-width: 371px) {
+@media (max-width: 377px){
     
-    header .visor-title{
-        align-items: center; 
-        column-gap: 5px;   
-        display: flex;
-        align-items:center;
-    }
-    header .visor-title .logo-fototeca{
+    .ign-banner {
         display: none;
     }
-    header .visor-title .logo-fototeca img {
-        max-height: 50px;
-        position: relative;
-        top: 1px;
-        margin-right: .5rem;
+    .ign-banner-small{
+        height: 100px;
+        position: absolute;
+        display:inline-block;
+        align-items: center;
+        z-index: 1;
     }
-    header .visor-title .label-container .title{
-        color: #364b5f;
-        font-size: 19.6px;
-        font-weight: 700;
-        font-family: "Fira Sans", sans-serif;
-        letter-spacing: 4px;
-        display: flex;
-        justify-content: flex-end;
-        text-transform: uppercase;
-        cursor: pointer;
+    .account-masthead .container{
+        width: 100%;
     }
-    header .visor-title .label-container .title::after{
-        color:white
+    .account-masthead .account ul li a {
+        color: #fff;
+        padding: 0 4px;
+        float: right;
     }
-    header .visor-title .label-container .subtitle{
-        color: #b9b9b9;
-        margin-top: 3px;
-        font-size: 12px;
-        margin-right: 5px;
-        display: flex;
-        justify-content: flex-end;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
-    header .visor-title .label-container .subtitle::after{
-        color:white
-    }  
 }
-
-@media (max-width: 371px) {
-        
-    header .visor-title{
-        align-items: center; 
-        column-gap: 5px;   
-        display: flex;
-        align-items:center;
-    }
-
-    header .visor-title .logo-fototeca{
-        display: none;
-    }
-
-    header .visor-title .logo-fototeca img {
-        max-height: 50px;
-        position: relative;
-        top: 1px;
-        margin-right: .5rem;
-    }
-    header .visor-title .label-container .title{
-        color: #364b5f;
-        font-size: 19.6px;
-        font-weight: 700;
-        font-family: "Fira Sans", sans-serif;
-        letter-spacing: 4px;
-        display: flex;
-        justify-content: flex-end;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
-    header .visor-title .label-container .title::after{
-        color:white
-    }
-    header .visor-title .label-container .subtitle{
-        color: #b9b9b9;
-        margin-top: 3px;
-        font-size: 12px;
-        margin-right: 5px;
-        display: flex;
-        justify-content: flex-end;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
-    header .visor-title .label-container .subtitle::after{
-        color:white
-    }  
-}
-
-
 
 @media (min-width: 1200px) {
     .toolbar .breadcrumb a{
