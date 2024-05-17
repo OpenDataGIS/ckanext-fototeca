@@ -12,7 +12,7 @@ Compatibilidad con CKAN:
 | 2.6 o antes     | no probado    |
 | 2.7             | no probado    |
 | 2.8             | no probado    |
-| 2.9             | no probado    |
+| 2.9             | en pruebas    |
 
 
 ## Instalación
