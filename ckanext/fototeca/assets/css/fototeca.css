@@ -27,18 +27,11 @@
 header .visor-title{
     align-items: center; 
     column-gap: 5px;   
-    display: flex;
-    align-items:center;
 }
-header .visor-title .logo-fototeca{
-    display: none;
+header .visor-title .label-container{
+    float:left
 }
-header .visor-title .logo-fototeca img {
-    max-height: 50px;
-    position: relative;
-    top: 1px;
-    margin-right: .5rem;
-}
+
 header .visor-title .label-container .title{
     color: #364b5f;
     font-size: 19.6px;
@@ -84,6 +77,16 @@ header .visor-title .label-container .subtitle::after{
     .site-footer a{
         color: white;
     }
+    .navbar-left{
+        width: 300px;
+    }
+    header .visor-title .logo-fototeca img {
+        max-height: 50px;
+        position: relative;
+        top: 1px;
+        margin-right: .5rem;
+        float:left
+    }
 }
 
 @media (max-width: 993px) and (min-width: 767px){
@@ -103,6 +106,16 @@ header .visor-title .label-container .subtitle::after{
     }
     .site-footer .col-md-4, .site-footer .col-md-8{
         display:flow-root
+    }
+    .navbar-left{
+        width: 300px;
+    }
+    header .visor-title .logo-fototeca img {
+        max-height: 50px;
+        position: relative;
+        top: 1px;
+        margin-right: .5rem;
+        float:left
     }
 }
 
@@ -128,7 +141,13 @@ header .visor-title .label-container .subtitle::after{
     .site-footer .col-md-4, .site-footer .col-md-8{
         display:flow-root
     }
-    
+    header .visor-title .logo-fototeca img {
+        max-height: 50px;
+        position: relative;
+        top: 1px;
+        margin-right: .5rem;
+        float:left
+    }
 }
 @media (max-width: 377px){
     
@@ -149,6 +168,9 @@ header .visor-title .label-container .subtitle::after{
         color: #fff;
         padding: 0 4px;
         float: right;
+    }
+    .fototeca-logo{
+        display:none;
     }
 }
 
