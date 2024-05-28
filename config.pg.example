@@ -1,0 +1,21 @@
+{
+    "database_type" : "postgres",
+    "credentials": {
+        "user" : "user",
+        "password" : "password",
+        "host": "host",
+        "port": "port",
+        "db": "postgres"
+    },
+    "database_mapping": {
+        "fields" :{
+            "{Ckan_field}":"{schema}.{table}.{field}"
+        },
+        "p_key" :{
+            "{schema1}.{table1}.{field1}":"{schema2}.{table2}.{field2}"
+        }
+    },
+    "defaults_groups": [],
+    "defaults_tags": [],
+    "default_group_dicts": []
+}
