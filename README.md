@@ -29,7 +29,7 @@ Para instalar ckanext-fototeca:
 		cd ckanext-fototeca
 		pip install -e .
 
-4. Añadir `fototeca` a la configuración `ckan.plugins` en tu archivo de configuración de CKAN.
+4. Añadir `fototeca` y `fototeca_pg_harveste` a la configuración `ckan.plugins` en tu archivo de configuración de CKAN.
 
 5. Reinicia CKAN
 

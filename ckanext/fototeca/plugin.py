@@ -4,7 +4,6 @@ from ckan.common import CKANConfig
 from flask import Blueprint
 from flask import render_template_string
 
-
 class FototecaPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IBlueprint)

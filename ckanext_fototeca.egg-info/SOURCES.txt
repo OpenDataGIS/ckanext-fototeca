@@ -10,6 +10,8 @@ ckanext/fototeca/plugin.py
 ckanext/fototeca/assets/webassets.yml
 ckanext/fototeca/assets/css/fototeca.css
 ckanext/fototeca/assets/css/home.css
+ckanext/fototeca/harvesters/__init__.py
+ckanext/fototeca/harvesters/pg_harvester.py
 ckanext/fototeca/templates/base.html
 ckanext/fototeca/templates/footer.html
 ckanext/fototeca/templates/header.html
