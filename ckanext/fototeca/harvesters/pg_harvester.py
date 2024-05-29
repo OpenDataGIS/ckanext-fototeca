@@ -69,18 +69,22 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         return []
     
 ##fetch stage y funciones del fetch stage
+    ##TODO implementar el fetch_stage
+    #esta parte necesita tomar el engine creado en gather_stage, generar una sentencia SQL que se base en las keys del config, realizar la petición SQL y guardar los datos en un dataframe de pandas que se usará en el import_stage()
     def fetch_stage(self, harvest_object):
         # Aquí iría el código para extraer los datos del objeto de la API REST.
         return True
 
 
 ##import stage y funciones del import stage
+    ##TODO implementar el import stage 
+    #esta parte debe recopilar el dataframe de pandas 
     def import_stage(self, harvest_object):
         # Aquí iría el código para crear o actualizar el conjunto de datos en CKAN.
         return True
 
 
-##validate config y funciones del validate configu
+##validate config y funciones del validate config
     def validate_config(self,config):
         supported_types = ', '.join([st['name'] for st in self._storage_types_supported if st['active']])
         config_obj = self.get_harvester_basic_info(config)
