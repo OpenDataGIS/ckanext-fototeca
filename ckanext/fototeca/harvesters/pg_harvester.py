@@ -2,6 +2,9 @@ import logging
 import json
 from past.builtins import basestring
 from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester, RemoteResourceError, ReadError, RemoteSchemaError
+import psycopg2
+import pandas as pd 
+from sqlalchemy import engine, create_engine, text
 
 
 from ckan import logic
@@ -30,11 +33,14 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
     _database_type = "postgres"
     _credentials = None
+    _engine = None
+    
 
+##gather_stage() y funciones llamadas desde el gather_stage()
     def gather_stage(self, harvest_job):
-        # Aquí iría el código para recopilar los identificadores de los objetos a recolectar de la API REST.
-        source_url = harvest_job.source.credentials.url
         
+        source_url = harvest_job.source.url
+
         log.debug('In gater_stage with database: %s', source_url)
         
         content_dict = {}
@@ -43,17 +49,38 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         # Get config options
         if harvest_job.source.config:
             self._set_config(harvest_job.source.config)
+            database_type = self.config.get("database_type")
+            credentials = self.config.get("credentials")
+            database_mapping = self.config.get("database_mapping")
 
+        if database_type == "postgres":
+            engine_params = "postgresql+psycopg2://"+credentials["user"]+":"+credentials["password"]+"@"+credentials["host"]+":"+str(credentials["port"])+"/"+credentials["db"]
+            log.debug(engine_params)
+            self.engine = create_engine(engine_params)
+        else:
+            raise ValueError("unsupported database reached gather stage")
+
+        ##TODO Query de prueba para probar si todas las tablas existen y la conexión es correcta 
+        with self.engine.connect() as conn:
+            result = conn.execute(text("select * from ways limit 20"))
+            log.debug(result.first())
+
+        
         return []
-
+    
+##fetch stage y funciones del fetch stage
     def fetch_stage(self, harvest_object):
         # Aquí iría el código para extraer los datos del objeto de la API REST.
         return True
 
+
+##import stage y funciones del import stage
     def import_stage(self, harvest_object):
         # Aquí iría el código para crear o actualizar el conjunto de datos en CKAN.
         return True
 
+
+##validate config y funciones del validate configu
     def validate_config(self,config):
         supported_types = ', '.join([st['name'] for st in self._storage_types_supported if st['active']])
         config_obj = self.get_harvester_basic_info(config)
@@ -83,7 +110,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
                         if 'host' in credentials:
                             if 'port' in credentials:
                                 if 'db' in credentials:
-                                    passdataset_sheet
+                                    pass
                                 else:
                                     raise ValueError('credentials needs key "db"')
                                 if not isinstance(credentials['port'],int):
