@@ -33,10 +33,11 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
     _database_type = "postgres"
     _credentials = None
-    _engine = None
+    engine = None
     
 
 ##gather_stage() y funciones llamadas desde el gather_stage()
+
     def gather_stage(self, harvest_job):
         
         source_url = harvest_job.source.url
@@ -62,19 +63,41 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
         ##TODO Query de prueba para probar si todas las tablas existen y la conexión es correcta 
         with self.engine.connect() as conn:
-            result = conn.execute(text("select * from ways limit 20"))
+            query = self._create_query(database_mapping['fields'],database_mapping['p_key'])
+            log.debug(query)
+            result = conn.execute(text(query))
             log.debug(result.first())
 
-        
         return []
+
+    def _create_query(self,fields,p_key):
+        fieldsJoined = " ,".join(list(fields.values()))
+        log.debug(fieldsJoined)
+        p_keyList = list(p_key.items())
+        query = "select "+fieldsJoined
+
+        table1 = ".".join(p_keyList[0][0].split('.')[0:2])
+        table2 = ".".join(p_keyList[0][1].split('.')[0:2])
+        query += " from "+ table1+ " join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
     
+        for field in p_keyList[1:]:
+            table1 = ".".join(field.split[0]('.')[0:2])
+            table2 = ".".join(field.split[1]('.')[0:2])
+            query += " from "+ table1+ " join "+table2 +" on "+ field[0] +"="+ field[1]
+            
+        return query
+
 ##fetch stage y funciones del fetch stage
     ##TODO implementar el fetch_stage
     #esta parte necesita tomar el engine creado en gather_stage, generar una sentencia SQL que se base en las keys del config, realizar la petición SQL y guardar los datos en un dataframe de pandas que se usará en el import_stage()
     def fetch_stage(self, harvest_object):
         # Aquí iría el código para extraer los datos del objeto de la API REST.
+        log.debug("starting fetch stage ")
+        self.database_mapping
+        with self.engine.connect() as conn:
+            result = conn.execute(text(_create_query(self.database_mapping["fields"],self.database_mapping["p_key"])))
+            log.debug(str(result))
         return True
-
 
 ##import stage y funciones del import stage
     ##TODO implementar el import stage 
@@ -88,6 +111,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     def validate_config(self,config):
         supported_types = ', '.join([st['name'] for st in self._storage_types_supported if st['active']])
         config_obj = self.get_harvester_basic_info(config)
+        log.debug(self._isNotDBKey("1.2.3"))
 
         
         if 'database_type' in config:
@@ -140,15 +164,16 @@ class FototecaPGHarvester(SchemingDCATHarvester):
                     if not isinstance(database_mapping['p_key'],dict):
                         ValueError('p_key must be a dictionary')
                     else:
-                        if _isNotDBKey(next(iter(database_mapping['p_key']))):
+                        if self._isNotDBKey(next(iter(database_mapping['p_key']))):
                             ValueError('wrong "p_key" database field format; should be schema.table.value')
+                        
                     if not isinstance(database_mapping['fields']):
                         ValueError('fields must be a dictionary')
                     else:
-                        if _isNotDBKey(next(iter(database_mapping['fields']))):
+                        if self._isNotDBKey(next(iter(database_mapping['fields']))):
                             ValueError('wrong "fields" database field format; should be schema.table.value')
 
 
-    def _isNotDBKey(string):
+    def _isNotDBKey(self, string):
         field = string.split('.')
         return field != 3
