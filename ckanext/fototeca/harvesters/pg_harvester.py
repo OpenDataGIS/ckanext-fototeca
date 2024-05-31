@@ -33,8 +33,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
     _database_type = "postgres"
     _credentials = None
-    engine = None
-    
+    data = None
 
 ##gather_stage() y funciones llamadas desde el gather_stage()
 
@@ -47,27 +46,33 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         content_dict = {}
         self._names_taken = []
         
-        # Get config options
+        # obtener Opciones de configuración
         if harvest_job.source.config:
             self._set_config(harvest_job.source.config)
             database_type = self.config.get("database_type")
             credentials = self.config.get("credentials")
             database_mapping = self.config.get("database_mapping")
 
+        ##definición de engines de SQLalchemy
+        #En caso de querer agregar nuevas bases de datos añadirlas con 
+        #elif al condicional
         if database_type == "postgres":
             engine_params = "postgresql+psycopg2://"+credentials["user"]+":"+credentials["password"]+"@"+credentials["host"]+":"+str(credentials["port"])+"/"+credentials["db"]
             log.debug(engine_params)
-            self.engine = create_engine(engine_params)
+            engine = create_engine(engine_params)
         else:
             raise ValueError("unsupported database reached gather stage")
 
         ##TODO Query de prueba para probar si todas las tablas existen y la conexión es correcta 
-        with self.engine.connect() as conn:
+        log.debug(database_mapping)
+        with engine.connect() as conn:
             query = self._create_query(database_mapping['fields'],database_mapping['p_key'])
             log.debug(query)
             result = conn.execute(text(query))
-            log.debug(result.first())
-
+            dataList = result.fetchall()
+    
+        self.data = pd.DataFrame(data=dataList, columns=list(database_mapping["fields"].keys()))
+        log.debug(self.data)
         return []
 
     def _create_query(self,fields,p_key):
@@ -76,27 +81,26 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         p_keyList = list(p_key.items())
         query = "select "+fieldsJoined
 
-        table1 = ".".join(p_keyList[0][0].split('.')[0:2])
-        table2 = ".".join(p_keyList[0][1].split('.')[0:2])
-        query += " from "+ table1+ " join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
-    
-        for field in p_keyList[1:]:
-            table1 = ".".join(field.split[0]('.')[0:2])
-            table2 = ".".join(field.split[1]('.')[0:2])
-            query += " from "+ table1+ " join "+table2 +" on "+ field[0] +"="+ field[1]
-            
+        if 'oneTable' not in p_key:
+            table1 = ".".join(p_keyList[0][0].split('.')[0:2])
+            table2 = ".".join(p_keyList[0][1].split('.')[0:2])
+            query += " from "+ table1+ " join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
+
+            for field in p_keyList[1:]:
+                table1 = ".".join(field.split[0]('.')[0:2])
+                table2 = ".".join(field.split[1]('.')[0:2])
+                query += " from "+ table1+ " join "+table2 +" on "+ field[0] +"="+ field[1]
+        else:
+            table2 = ".".join(p_keyList[0][1].split('.')[0:2])
+            query += " from " + table2
+        
         return query
 
 ##fetch stage y funciones del fetch stage
     ##TODO implementar el fetch_stage
     #esta parte necesita tomar el engine creado en gather_stage, generar una sentencia SQL que se base en las keys del config, realizar la petición SQL y guardar los datos en un dataframe de pandas que se usará en el import_stage()
     def fetch_stage(self, harvest_object):
-        # Aquí iría el código para extraer los datos del objeto de la API REST.
-        log.debug("starting fetch stage ")
-        self.database_mapping
-        with self.engine.connect() as conn:
-            result = conn.execute(text(_create_query(self.database_mapping["fields"],self.database_mapping["p_key"])))
-            log.debug(str(result))
+        #vacío porque los datos ya estan recopilados en gather_stage
         return True
 
 ##import stage y funciones del import stage
