@@ -1,7 +1,8 @@
 import logging
 import json
 from past.builtins import basestring
-from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester, RemoteResourceError, ReadError, RemoteSchemaError
+from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.harvesters.base import HarvesterBase
 import psycopg2
 import pandas as pd 
 from sqlalchemy import engine, create_engine, text
@@ -15,7 +16,7 @@ import ckan.model as model
 log = logging.getLogger(__name__)
 
 
-class FototecaPGHarvester(SchemingDCATHarvester):
+class FototecaPGHarvester(HarvesterBase):
     def info(self):
         return {
             'name': 'fototeca_pg_harvester',
@@ -34,6 +35,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     _database_type = "postgres"
     _credentials = None
     data = None
+    config = None
 
 ##gather_stage() y funciones llamadas desde el gather_stage()
 
@@ -48,7 +50,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         
         # obtener Opciones de configuración
         if harvest_job.source.config:
-            self._set_config(harvest_job.source.config)
+            self.config = json.loads(harvest_job.source.config)
             database_type = self.config.get("database_type")
             credentials = self.config.get("credentials")
             database_mapping = self.config.get("database_mapping")
@@ -73,6 +75,10 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     
         self.data = pd.DataFrame(data=dataList, columns=list(database_mapping["fields"].keys()))
         log.debug(self.data)
+
+        ##TODO generate UUIDs based on p_key
+
+
         return []
 
     def _create_query(self,fields,p_key):
@@ -95,6 +101,12 @@ class FototecaPGHarvester(SchemingDCATHarvester):
             query += " from " + table2
         
         return query
+    
+    def _create_uuids(self, p_key):
+        uuids = []
+        for i in p_key:
+            uuids
+        return uuids 
 
 ##fetch stage y funciones del fetch stage
     ##TODO implementar el fetch_stage
@@ -181,3 +193,4 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     def _isNotDBKey(self, string):
         field = string.split('.')
         return field != 3
+
