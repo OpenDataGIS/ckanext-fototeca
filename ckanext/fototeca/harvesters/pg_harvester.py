@@ -146,8 +146,6 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     
 
 ##fetch stage y funciones del fetch stage
-    ##TODO implementar el fetch_stage
-    #esta parte necesita tomar el engine creado en gather_stage, generar una sentencia SQL que se base en las keys del config, realizar la petición SQL y guardar los datos en un dataframe de pandas que se usará en el import_stage()
     def fetch_stage(self, harvest_object):
         #vacío porque los datos ya estan recopilados en gather_stage
         return True
