@@ -1,8 +1,11 @@
 import logging
 import json
+import hashlib
 from past.builtins import basestring
-from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.harvesters.base import HarvesterBase
+from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
+from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester, RemoteResourceError, ReadError, RemoteSchemaError
+from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
 import psycopg2
 import pandas as pd 
 from sqlalchemy import engine, create_engine, text
@@ -16,7 +19,7 @@ import ckan.model as model
 log = logging.getLogger(__name__)
 
 
-class FototecaPGHarvester(HarvesterBase):
+class FototecaPGHarvester(SchemingDCATHarvester):
     def info(self):
         return {
             'name': 'fototeca_pg_harvester',
@@ -65,7 +68,7 @@ class FototecaPGHarvester(HarvesterBase):
         else:
             raise ValueError("unsupported database reached gather stage")
 
-        ##TODO Query de prueba para probar si todas las tablas existen y la conexión es correcta 
+        ##realizar query y obtener los valores de la base de datos
         log.debug(database_mapping)
         with engine.connect() as conn:
             query = self._create_query(database_mapping['fields'],database_mapping['p_key'])
@@ -75,8 +78,25 @@ class FototecaPGHarvester(HarvesterBase):
     
         self.data = pd.DataFrame(data=dataList, columns=list(database_mapping["fields"].keys()))
         log.debug(self.data)
+        self.data.reset_index()
+        log.debug("Añadimos dataset a base de datos")
+        for index, row in self.data.iterrows():
+            print(row)
+            try:
+                if 'name' not in row:
+                    row['name'] = self._gen_new_name(row['title'])
+                while row['name'] in self._names_taken:
+                    suffix = sum(name.startswith(row['name'] + '-') for name in self._names_taken) + 1
+                    row['name'] = '{}-{}'.format(row['name'], suffix)
+                self._names_taken.append(row['name'])
 
-        ##TODO generate UUIDs based on p_key
+                # Si no hay identificador usar el nombre
+                if 'identifier' not in row:
+                    row['identifier'] = self._generate_identifier(row)
+                log.debug(row)
+            except Exception as e:
+                self._save_gather_error('Error for the dataset identifier %s [%r]' % (row['identifier'], e), harvest_job)
+                continue
 
 
         return []
@@ -90,23 +110,18 @@ class FototecaPGHarvester(HarvesterBase):
         if 'oneTable' not in p_key:
             table1 = ".".join(p_keyList[0][0].split('.')[0:2])
             table2 = ".".join(p_keyList[0][1].split('.')[0:2])
-            query += " from "+ table1+ " join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
+            query += " from "+ table1+ " left join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
 
             for field in p_keyList[1:]:
                 table1 = ".".join(field.split[0]('.')[0:2])
                 table2 = ".".join(field.split[1]('.')[0:2])
-                query += " from "+ table1+ " join "+table2 +" on "+ field[0] +"="+ field[1]
+                query += " from "+ table1+ " left join "+table2 +" on "+ field[0] +"="+ field[1]
         else:
             table2 = ".".join(p_keyList[0][1].split('.')[0:2])
             query += " from " + table2
         
         return query
     
-    def _create_uuids(self, p_key):
-        uuids = []
-        for i in p_key:
-            uuids
-        return uuids 
 
 ##fetch stage y funciones del fetch stage
     ##TODO implementar el fetch_stage
