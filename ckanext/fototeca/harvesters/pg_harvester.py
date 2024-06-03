@@ -121,6 +121,14 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
         log.debug(datasets_to_harvest)
 
+        ##Generamos HarvestObject
+        ids = []
+        for guid in new:
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid)),
+                                extras=[HarvestObjectExtra(key='status', value='new')])
+            obj.save()
+            ids.append(obj.id)
+
         return []
 
     def _create_query(self,fields,p_key):
@@ -146,9 +154,9 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     
 
 ##fetch stage y funciones del fetch stage
-    def fetch_stage(self, harvest_object):
+        def fetch_stage(self, harvest_object):
         #vacío porque los datos ya estan recopilados en gather_stage
-        return True
+            return True
 
 ##import stage y funciones del import stage
     ##TODO implementar el import stage 
