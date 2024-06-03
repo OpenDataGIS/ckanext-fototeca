@@ -84,7 +84,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
         datasets_to_harvest = {}
         guids_in_harvest = set()
-        guids_in_db = set(guid_to_package_id.keys())
+        #guids_in_db = set(guid_to_package_id.keys())
 
         log.debug("Añadimos dataset a base de datos")
         for index, row in self.data.iterrows():
@@ -120,16 +120,22 @@ class FototecaPGHarvester(SchemingDCATHarvester):
             datasets_to_harvest[row['identifier']] = row
 
         log.debug(datasets_to_harvest)
+        
+
+        ##TODO implementar condicionales de new/delete/change 
+        new = guids_in_harvest 
 
         ##Generamos HarvestObject
         ids = []
         for guid in new:
-            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid)),
+            log.debug("guid: "+ guid)
+            log.debug(datasets_to_harvest.get(guid).to_dict())
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
                                 extras=[HarvestObjectExtra(key='status', value='new')])
-            obj.save()
-            ids.append(obj.id)
+        #    obj.save()
+        #    ids.append(obj.id)
 
-        return []
+        return ids
 
     def _create_query(self,fields,p_key):
         fieldsJoined = " ,".join(list(fields.values()))
