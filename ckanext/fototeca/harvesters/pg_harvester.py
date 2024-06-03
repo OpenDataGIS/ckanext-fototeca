@@ -78,11 +78,19 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     
         self.data = pd.DataFrame(data=dataList, columns=list(database_mapping["fields"].keys()))
         log.debug(self.data)
-        self.data.reset_index()
+        self.data.reset_index() 
+
+        ##TODO implementar validación de esquema
+
+        datasets_to_harvest = {}
+        guids_in_harvest = set()
+        guids_in_db = set(guid_to_package_id.keys())
+
         log.debug("Añadimos dataset a base de datos")
         for index, row in self.data.iterrows():
             print(row)
             try:
+                source_dataset = model.Package.get(harvest_job.source.id)
                 if 'name' not in row:
                     row['name'] = self._gen_new_name(row['title'])
                 while row['name'] in self._names_taken:
@@ -93,11 +101,25 @@ class FototecaPGHarvester(SchemingDCATHarvester):
                 # Si no hay identificador usar el nombre
                 if 'identifier' not in row:
                     row['identifier'] = self._generate_identifier(row)
-                log.debug(row)
             except Exception as e:
                 self._save_gather_error('Error for the dataset identifier %s [%r]' % (row['identifier'], e), harvest_job)
                 continue
+        
+            #Establecer campos traducidos
+            row = self._set_translated_fields(row)
 
+            #Obtener el owner del dataset si existe
+            if not row.get('owner_org'):
+                if source_dataset.owner_org:
+                    row['owner_org'] = source_dataset.owner_org
+
+            if 'extras' not in row:
+                row['extras'] = []
+
+            guids_in_harvest.add(row['identifier'])
+            datasets_to_harvest[row['identifier']] = row
+
+        log.debug(datasets_to_harvest)
 
         return []
 
