@@ -265,7 +265,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     def validate_config(self,config):
         supported_types = ', '.join([st['name'] for st in self._storage_types_supported if st['active']])
         config_obj = self.get_harvester_basic_info(config)
-        log.debug(self._isNotDBKey("1.2.3"))
+        log.debug(self._is_not_db_key("1.2.3"))
 
         
         if 'database_type' in config:
@@ -308,27 +308,112 @@ class FototecaPGHarvester(SchemingDCATHarvester):
         else:
             raise ValueError('credentials must exist')
 
-        if 'database_mapping' in config:
-            database_mapping = config_obj['database_mapping']
+        # Check if 'field_mapping_schema_version' exists in the config
+        if 'field_mapping_schema_version' not in config_obj:
+            raise ValueError(f'Insert the schema version: "field_mapping_schema_version: <version>", one of {self._field_mapping_schema_versions} . More info: https://github.com/mjanez/ckanext-schemingdcat?tab=readme-ov-file#remote-google-sheetonedrive-excel-metadata-upload-harvester')
+        else:
+            # If it exists, check if it's an integer and in the allowed versions
+            if not isinstance(config_obj['field_mapping_schema_version'], int) or config_obj['field_mapping_schema_version'] not in self._field_mapping_schema_versions:
+                raise ValueError(f'field_mapping_schema_version must be an integer and one of {self._field_mapping_schema_versions}. Check the extension README for more info.')
 
-            if not isinstance(next(iter(database_mapping)),dict):
-                ValueError('database_mapping must be a collection of dictionaries')
-            else:
-                if 'p_key' in database_mapping:
-                    if not isinstance(database_mapping['p_key'],dict):
-                        ValueError('p_key must be a dictionary')
-                    else:
-                        if self._isNotDBKey(next(iter(database_mapping['p_key']))):
-                            ValueError('wrong "p_key" database field format; should be schema.table.value')
+        # Validate if exists a JSON contained the mapping field_names between the remote schema and the local schema        
+        for mapping_name in ['dataset_field_mapping', 'distribution_field_mapping', 'resourcedictionary_field_mapping']:
+            if mapping_name in config:
+                field_mapping = config_obj[mapping_name]
+                if not isinstance(field_mapping, dict):
+                    raise ValueError(f'{mapping_name} must be a dictionary')
+
+                schema_version = config_obj['field_mapping_schema_version']
+
+                if schema_version == 1:
+                    # Check if the config is a valid mapping for schema version 1
+                    for local_field, remote_field in field_mapping.items():
+                        if not isinstance(local_field, str):
+                            raise ValueError('"local_field_name" must be a string')
+                        if not isinstance(remote_field, (str, dict)):
+                            raise ValueError('"remote_field_name" must be a string or a dictionary')
+                        if isinstance(remote_field, dict):
+                            for lang, remote_field_name in remote_field.items():
+                                if not isinstance(lang, str) or not isinstance(remote_field_name, str):
+                                    raise ValueError('In translated fields, both language and remote_field_name must be strings. eg. "notes_translated": {"es": "notes-es"}')
+                                if not re.match("^[a-z]{2}$", lang):
+                                    raise ValueError('Language code must be a 2-letter ISO 639-1 code')
+                else:
+                    # Check if the config is a valid mapping for schema version 2
+                    for local_field, field_config in field_mapping.items():
+                        if not isinstance(local_field, str):
+                            raise ValueError('"local_field_name" must be a string')
+                        if not isinstance(field_config, dict):
+                            raise ValueError('"field_config" must be a dictionary')
+
+                        # Check field properties
+                        for prop, value in field_config.items():
+                            if prop not in ['field_value', 'field_position', 'field_name', 'languages']:
+                                raise ValueError(f'Invalid property "{prop}" in field_config. Check: https://github.com/mjanez/ckanext-schemingdcat?tab=field-mapping-structure')
+                            if prop in ['field_value', 'field_position', 'field_name'] and not isinstance(value, (str, list)):
+                                raise ValueError(f'"{prop}" must be a string: "value_1" or a list: "["value_1", "value_2"]')
+
+                            #TODO: _is_not_db_key
+                            if prop in ['field_name']:
+                                # if value _is_not_db_key
+                                    value = string.split('.')
+                                    if length(value) != 3:
+                                        raise ValueError(f'"The lenght of the field: {local_field} is: {length(value)}"')
+
+                            if prop == 'languages':
+                                if not isinstance(value, dict):
+                                    raise ValueError('"languages" must be a dictionary')
+                                for lang, lang_config in value.items():
+                                    if not isinstance(lang, str) or not re.match("^[a-z]{2}$", lang):
+                                        raise ValueError('Language code must be a 2-letter ISO 639-1 code')
+                                    if not isinstance(lang_config, dict):
+                                        raise ValueError('Language config must be a dictionary')
+                                    for lang_prop, lang_value in lang_config.items():
+                                        if lang_prop not in ['field_value', 'field_position', 'field_name']:
+                                            raise ValueError(f'Invalid property "{lang_prop}" in language config')
+                                        if not isinstance(lang_value, (str, list)):
+                                            raise ValueError(f'"{lang_prop}" must be a string or a list')
+
+                config = json.dumps({**config_obj, mapping_name: field_mapping})
+
+
+        # TODO: database_p_keys _is_not_db_key
+        if 'database_p_keys' in config:
+            database_p_keys = config_obj['database_p_keys']
+            log.debug("database_type = "+ database_p_keys)
+            if not isinstance(database_p_keys, basestring):
+                raise ValueError('database_type must be a string')
+
+            #TODO: Loop over database_p_keys
+
+
+            config = json.dumps({**config_obj, 'database_type': database_type})
+
+
+
+        # if 'database_mapping' in config:
+        #     database_mapping = config_obj['database_mapping']
+
+        #     if not isinstance(next(iter(database_mapping)),dict):
+        #         ValueError('database_mapping must be a collection of dictionaries')
+        #     else:
+        #         if 'p_key' in database_mapping:
+        #             if not isinstance(database_mapping['p_key'],dict):
+        #                 ValueError('p_key must be a dictionary')
+        #             else:
+        #                 if self._is_not_db_key(next(iter(database_mapping['p_key']))):
+        #                     ValueError('wrong "p_key" database field format; should be schema.table.value')
                         
-                    if not isinstance(database_mapping['fields']):
-                        ValueError('fields must be a dictionary')
-                    else:
-                        if self._isNotDBKey(next(iter(database_mapping['fields']))):
-                            ValueError('wrong "fields" database field format; should be schema.table.value')
+        #             if not isinstance(database_mapping['fields']):
+        #                 ValueError('fields must be a dictionary')
+        #             else:
+        #                 if self._is_not_db_key(next(iter(database_mapping['fields']))):
+        #                     ValueError('wrong "fields" database field format; should be schema.table.value')
 
 
-    def _isNotDBKey(self, string):
-        field = string.split('.')
-        return field != 3
+    # def _is_not_db_key(self, string):
+    #     field = string.split('.')
+
+    #     if length(field) != 3:
+    #         raise ValueError(f'"The lenght of the field is: {length(field)}"')
 
