@@ -19,3 +19,41 @@
     "defaults_tags": [],
     "default_group_dicts": []
 }
+
+
+# schema_version 2:
+
+{
+    ...
+    "field_mapping_schema_version": 2,
+    "dataset_field_mapping":{
+        "ckan_field": {
+            "field_name": "{schema}.{table}.{field}"
+            "p_key": "",
+            "table": "",
+            "sort": 1,
+        },
+        "alternate_identifer": {
+            "field_name": "fototeca.vuelos.cod_vuelo"
+            "foreign_key": true,
+            "table": "vuelos",
+            "sort": 2,
+        },
+        "title_translated":{
+            "es": {
+            "field_name": "fototeca.vuelos.nom_vuelo_es"
+            "foreign_key": true,
+            "table": "vuelos",
+            "sort": 3,
+            },
+        "en": {
+            "field_name": "fototeca.vuelos.nom_vuelo_en"
+            "foreign_key": true,
+            "table": "vuelos",
+            "sort": 4,
+            },
+
+        },
+    },
+    ...
+}
