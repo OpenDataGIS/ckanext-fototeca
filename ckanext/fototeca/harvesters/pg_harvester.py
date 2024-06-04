@@ -121,9 +121,25 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
         log.debug(datasets_to_harvest)
         
+        # obtener GUIDs anteriores
+        qGuid = \
+            model.Session.query(HarvestObject.guid, HarvestObject.package_id) \
+            .filter(HarvestObject.current == True) \
+            .filter(HarvestObject.harvest_source_id == harvest_job.source.id)
+        guid_to_package_id = {}
 
-        ##TODO implementar condicionales de new/delete/change 
-        new = guids_in_harvest 
+        for guid, package_id in qGuid:
+            guid_to_package_id[guid] = package_id
+
+        guids_in_db = set(guid_to_package_id.keys())
+
+        # Check guids to create/update/delete
+        new = guids_in_harvest - guids_in_db
+        # Get objects/datasets to delete (ie in the DB but not in the source)
+        delete = set(guids_in_db) - set(guids_in_harvest)
+        change = guids_in_db & guids_in_harvest
+
+        log.debug('new: %s, delete: %s and change: %s', new, delete, change)
 
         ##Generamos HarvestObject
         ids = []
@@ -132,8 +148,25 @@ class FototecaPGHarvester(SchemingDCATHarvester):
             log.debug(datasets_to_harvest.get(guid).to_dict())
             obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
                                 extras=[HarvestObjectExtra(key='status', value='new')])
-        #    obj.save()
-        #    ids.append(obj.id)
+            obj.save()
+            ids.append(obj.id)
+
+        for guid in change:
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
+                                package_id=guid_to_package_id[guid],
+                                extras=[HarvestObjectExtra(key='status', value='change')])
+            obj.save()
+            ids.append(obj.id)
+            
+        for guid in delete:
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
+                                package_id=guid_to_package_id[guid],
+                                extras=[HarvestObjectExtra(key='status', value='delete')])
+            model.Session.query(HarvestObject).\
+                  filter_by(guid=guid).\
+                  update({'current': False}, False)
+            obj.save()
+            ids.append(obj.id)
 
         return ids
 
@@ -160,16 +193,72 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     
 
 ##fetch stage y funciones del fetch stage
-        def fetch_stage(self, harvest_object):
-        #vacío porque los datos ya estan recopilados en gather_stage
-            return True
+
+    def fetch_stage(self, harvest_object):
+    #vacío porque los datos ya estan recopilados en gather_stage
+        return True
 
 ##import stage y funciones del import stage
     ##TODO implementar el import stage 
     #esta parte debe recopilar el dataframe de pandas 
     def import_stage(self, harvest_object):
         # Aquí iría el código para crear o actualizar el conjunto de datos en CKAN.
+        log.debug("In FototecaPGHarvester import stage")
+
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': self._get_user_name(),
+        }
+        
+        if not harvest_object:
+            log.error('No harvest object received')
+            return False   
+        
+        self._set_config(harvest_object.source.config)
+        
+        if self.force_import:
+            status = 'change'
+        else:
+            status = self._get_object_extra(harvest_object, 'status')
+        
+        if status == 'delete':
+            override_local_datasets = self.config.get("override_local_datasets", False)
+            if override_local_datasets is True:
+                # Delete package
+                context.update({
+                    'ignore_auth': True,
+                })
+                p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
+                log.info('The override_local_datasets configuration is %s. Package %s deleted with GUID: %s' % (override_local_datasets, harvest_object.package_id, harvest_object.guid))
+
+                return True
+            
+            else:
+                log.info('The override_local_datasets configuration is %s. Package %s not deleted with GUID: %s' % (override_local_datasets, harvest_object.package_id, harvest_object.guid))
+
+                return 'unchanged'
+
+        # Check if harvest object has a non-empty content
+        if harvest_object.content is None:
+            self._save_object_error('Empty content for object {0}'.format(harvest_object.id),
+                                    harvest_object, 'Import')
+            return False
+
+        try:
+            dataset = json.loads(harvest_object.content)
+        except ValueError:
+            self._save_object_error('Could not ateutil.parser.parse content for object {0}'.format(harvest_object.id),
+                                    harvest_object, 'Import')
+            return False
+
+        # Check if the dataset is a harvest source and we are not allowed to harvest it
+        if dataset.get('type') == 'harvest' and self.config.get('allow_harvest_datasets', False) is False:
+            log.warn('Remote dataset is a harvest source and allow_harvest_datasets is False, ignoring...')
+            return True
+
         return True
+
 
 
 ##validate config y funciones del validate config
