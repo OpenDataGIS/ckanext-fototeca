@@ -1,5 +1,5 @@
-# sql-wrapper
-Librería para interaccionar con bases de datos.
+# routingSQL
+Librería para interaccionar con bases de datos y relacionar las tablas de manera automática
 
 Actua como un wrapper para sqlalchemy y multiples librerias para simplificar la interacción con bases de datos SQL
 Pensado para funcionar con https://github.com/OpenDataGIS/ckanext-fototeca
