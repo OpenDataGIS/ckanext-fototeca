@@ -37,11 +37,16 @@ class routingBase:
                         if prev[key] is None:
                             prev[key] = next_route[2][key]
                 first_run = False
-                
-            print(prev)
 
         #create query 
         query = self._create_query(columns, route, prev, "left join")
+        print(query)
+
+        #with self._engine.connect() as conn:
+        #    request = conn.execute(text(query))
+        #    columns = request.fetchall()
+        #
+        #print(columns)
 
     def _dijkastra(self,from_table, to_table):
         
@@ -86,24 +91,24 @@ class routingBase:
         columns_joined = " ,".join(list(columns))
         query = "select "+columns_joined
         query += " from "+ tables[0]
-        #print(tables)
-        for i in range(len(tables)-1):
-            print("tabla1 : "+tables[i+1]+ ", tabla2 : "+tables[i+2])
-            relation_table = self._relation[prev[tables[i+1]]]
-            if prev[tables[i+2]] not in relation_table:
-                for table in tables:
-                    if prev[table] in relation_table:
-                        fk_table = table
-                        break
-                print(1)
-            else:
-                fk_table = tables[i+2]
-                print(2)
-            
-            print(relation_table)
-            pk = relation_table[fk_table]
-            print(pk)
-            query += " ".join([join,tables[i+1],"on",str(pk.keys()),str(pk.values())])
+        print("tablas ",tables)
+        tables_in_query = [tables[0]]
+        for i in tables[1:]:
+            join_table = None
+            print(i)
+            for table in tables_in_query:
+                if prev[i] in self._relation[table]:
+                    join_table = i
+                    print("Está")
+                    break
+                    
+                else:
+                    print("no está")
+            if join_table is None:
+                print("es None")
+
+            query += " ".join([" ",join," ",i," on "])
+                
         return query
             
 
