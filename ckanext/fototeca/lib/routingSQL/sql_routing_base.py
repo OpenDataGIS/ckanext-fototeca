@@ -46,7 +46,7 @@ class routingBase:
             request = conn.execute(text(query))
             columns = request.fetchall()
         
-        print(columns)
+        return(columns)
 
     def _dijkastra(self,from_table, to_table):
         

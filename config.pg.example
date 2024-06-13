@@ -1,59 +1,40 @@
 {
-    "database_type" : "postgres",
-    "credentials": {
-        "user" : "user",
-        "password" : "password",
-        "host": "host",
-        "port": "port",
-        "db": "postgres"
-    },
-    "database_mapping": {
-        "fields" :{
-            "{Ckan_field}":"{schema}.{table}.{field}"
-        },
-        "p_key" :{
-            "{schema1}.{table1}.{field1}":"{schema2}.{table2}.{field2}"
-        }
-    },
-    "defaults_groups": [],
-    "defaults_tags": [],
-    "default_group_dicts": []
-}
-
-
-# schema_version 2:
-
-{
-    ...
-    "field_mapping_schema_version": 2,
-    "dataset_field_mapping":{
-        "ckan_field": {
-            "field_name": "{schema}.{table}.{field}"
-            "p_key": "",
-            "table": "",
-            "sort": 1,
-        },
-        "alternate_identifer": {
-            "field_name": "fototeca.vuelos.cod_vuelo"
-            "foreign_key": true,
-            "table": "vuelos",
-            "sort": 2,
-        },
-        "title_translated":{
-            "es": {
-            "field_name": "fototeca.vuelos.nom_vuelo_es"
-            "foreign_key": true,
-            "table": "vuelos",
-            "sort": 3,
-            },
-        "en": {
-            "field_name": "fototeca.vuelos.nom_vuelo_en"
-            "foreign_key": true,
-            "table": "vuelos",
-            "sort": 4,
-            },
-
-        },
-    },
-    ...
+   "database_type":"postgres",
+   "credentials":{
+      "user":"user",
+      "password":"password",
+      "host":"host",
+      "port":5432,
+      "db":"postgres"
+   },
+   "field_mapping_schema_version":2,
+   "dataset_field_mapping":{
+      "ckan_field":{
+         "field_name":"{schema}.{table}.{field}",
+         "sort":1
+      },
+      "alternate_identifer":{
+         "field_name":"fototeca.vuelos.cod_vuelo",
+         "sort":2
+      },
+      "title_translated":{
+         "es":{
+            "field_name":"fototeca.vuelos.nom_vuelo_es",
+            "sort":3
+         },
+         "en":{
+            "field_name":"fototeca.vuelos.nom_vuelo_en",
+            "sort":4
+         }
+      }
+   },
+   "defaults_groups":[
+      
+   ],
+   "defaults_tags":[
+      
+   ],
+   "default_group_dicts":[
+      
+   ]
 }
