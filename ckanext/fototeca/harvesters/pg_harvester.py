@@ -6,10 +6,12 @@ from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester, RemoteResourceError, ReadError, RemoteSchemaError
 from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
-import psycopg2
-import pandas as pd 
-from sqlalchemy import engine, create_engine, text
+from ckanext.schemingdcat.lib.field_mapping import FieldMappingValidator
+from ckanext.fototeca.lib.routingSQL.sql_routing_pg import routingPG
 
+#import psycopg2
+#from sqlalchemy import engine, create_engine, text
+import pandas as pd 
 
 from ckan import logic
 from ckan.logic import NotFound, get_action
@@ -56,27 +58,37 @@ class FototecaPGHarvester(SchemingDCATHarvester):
             self.config = json.loads(harvest_job.source.config)
             database_type = self.config.get("database_type")
             credentials = self.config.get("credentials")
-            database_mapping = self.config.get("database_mapping")
+            dataset_field_mapping = self.config.get("dataset_field_mapping")
 
-        ##definición de engines de SQLalchemy
-        #En caso de querer agregar nuevas bases de datos añadirlas con 
-        #elif al condicional
+        ###definición de engines de SQLalchemy
+        ##En caso de querer agregar nuevas bases de datos añadirlas con 
+        ##elif al condicional
         if database_type == "postgres":
-            engine_params = "postgresql+psycopg2://"+credentials["user"]+":"+credentials["password"]+"@"+credentials["host"]+":"+str(credentials["port"])+"/"+credentials["db"]
-            log.debug(engine_params)
-            engine = create_engine(engine_params)
+            log.debug("starting database remote schema harvest")
+            database = routingPG(credentials['user'],credentials['password'],credentials['host'],credentials['port'],credentials['db'])
         else:
             raise ValueError("unsupported database reached gather stage")
+        #
+        ###realizar query y obtener los valores de la base de datos
+        #log.debug(dataset_field_mapping)
+        #with engine.connect() as conn:
+        #    query = self._create_query(dataset_field_mapping['fields'],dataset_field_mapping['p_key'])
+        #    log.debug(query)
+        #    result = conn.execute(text(query))
+        #    dataList = result.fetchall()
 
-        ##realizar query y obtener los valores de la base de datos
-        log.debug(database_mapping)
-        with engine.connect() as conn:
-            query = self._create_query(database_mapping['fields'],database_mapping['p_key'])
-            log.debug(query)
-            result = conn.execute(text(query))
-            dataList = result.fetchall()
-    
-        self.data = pd.DataFrame(data=dataList, columns=list(database_mapping["fields"].keys()))
+        keys = []
+        values = []
+
+        log.debug(dataset_field_mapping)
+
+        for key, value in dataset_field_mapping.items():
+            keys.append(str(key))
+            values.append(str(value["field_namegit"]))
+
+        dataList = database.get_columns(values)
+       
+        self.data = pd.DataFrame(data=dataList, columns=keys)
         log.debug(self.data)
         self.data.reset_index() 
 
@@ -265,7 +277,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
     def validate_config(self,config):
         supported_types = ', '.join([st['name'] for st in self._storage_types_supported if st['active']])
         config_obj = self.get_harvester_basic_info(config)
-        log.debug(self._is_not_db_key("1.2.3"))
+        #log.debug(self._is_not_db_key("1.2.3"))
 
         
         if 'database_type' in config:
@@ -310,11 +322,11 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
         # Check if 'field_mapping_schema_version' exists in the config
         if 'field_mapping_schema_version' not in config_obj:
-            raise ValueError(f'Insert the schema version: "field_mapping_schema_version: <version>", one of {self._field_mapping_schema_versions} . More info: https://github.com/mjanez/ckanext-schemingdcat?tab=readme-ov-file#remote-google-sheetonedrive-excel-metadata-upload-harvester')
+            raise ValueError(f'Insert the schema version: "field_mapping_schema_version: <version>", one of {self._field_mapping_validator_versions} . More info: https://github.com/mjanez/ckanext-schemingdcat?tab=readme-ov-file#remote-google-sheetonedrive-excel-metadata-upload-harvester')
         else:
             # If it exists, check if it's an integer and in the allowed versions
-            if not isinstance(config_obj['field_mapping_schema_version'], int) or config_obj['field_mapping_schema_version'] not in self._field_mapping_schema_versions:
-                raise ValueError(f'field_mapping_schema_version must be an integer and one of {self._field_mapping_schema_versions}. Check the extension README for more info.')
+            if not isinstance(config_obj['field_mapping_schema_version'], int) or config_obj['field_mapping_schema_version'] not in self._field_mapping_validator_versions:
+                raise ValueError(f'field_mapping_schema_version must be an integer and one of {self._field_mapping_validator_versions}. Check the extension README for more info.')
 
         # Validate if exists a JSON contained the mapping field_names between the remote schema and the local schema        
         for mapping_name in ['dataset_field_mapping', 'distribution_field_mapping', 'resourcedictionary_field_mapping']:
@@ -348,7 +360,7 @@ class FototecaPGHarvester(SchemingDCATHarvester):
 
                         # Check field properties
                         for prop, value in field_config.items():
-                            if prop not in ['field_value', 'field_position', 'field_name', 'languages']:
+                            if prop not in ['field_value', 'field_position', 'field_name', 'languages', "sort", "es", "en"]:
                                 raise ValueError(f'Invalid property "{prop}" in field_config. Check: https://github.com/mjanez/ckanext-schemingdcat?tab=field-mapping-structure')
                             if prop in ['field_value', 'field_position', 'field_name'] and not isinstance(value, (str, list)):
                                 raise ValueError(f'"{prop}" must be a string: "value_1" or a list: "["value_1", "value_2"]')
@@ -356,9 +368,9 @@ class FototecaPGHarvester(SchemingDCATHarvester):
                             #TODO: _is_not_db_key
                             if prop in ['field_name']:
                                 # if value _is_not_db_key
-                                    value = string.split('.')
-                                    if length(value) != 3:
-                                        raise ValueError(f'"The lenght of the field: {local_field} is: {length(value)}"')
+                                    value_split = value.split('.')
+                                    if len(value_split) != 3:
+                                        raise ValueError(f'"The lenght of the field: {local_field} is: {len(value)} on {value}"')
 
                             if prop == 'languages':
                                 if not isinstance(value, dict):
