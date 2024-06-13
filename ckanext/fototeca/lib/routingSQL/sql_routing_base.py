@@ -42,11 +42,11 @@ class routingBase:
         query = self._create_query(columns, route, prev, "left join")
         print(query)
 
-        #with self._engine.connect() as conn:
-        #    request = conn.execute(text(query))
-        #    columns = request.fetchall()
-        #
-        #print(columns)
+        with self._engine.connect() as conn:
+            request = conn.execute(text(query))
+            columns = request.fetchall()
+        
+        print(columns)
 
     def _dijkastra(self,from_table, to_table):
         
@@ -93,21 +93,36 @@ class routingBase:
         query += " from "+ tables[0]
         print("tablas ",tables)
         tables_in_query = [tables[0]]
-        for i in tables[1:]:
-            join_table = None
+        for i in tables[:0:-1]:
+            key1 = i
+            key2 = ""
             print(i)
             for table in tables_in_query:
-                if prev[i] in self._relation[table]:
-                    join_table = i
+                print("relations in ",table," : \n",self._relation[table])
+                print("relations in ",i," : \n",self._relation[i])
+                if i in self._relation[table]:
                     print("Está")
+                    key1 += "."+str(list(self._relation[i][table].keys())[0])
+                    key2 = table+"."+str(list(self._relation[i][table].values())[0])
                     break
-                    
+
+                elif table in self._relation[i]:
+                    print("Está - alt")
+                    key1 += "."+str(list(self._relation[table][i].keys())[0])
+                    key2 = table+"."+str(list(self._relation[table][i].values())[0])
+
                 else:
                     print("no está")
-            if join_table is None:
-                print("es None")
 
-            query += " ".join([" ",join," ",i," on "])
+            tables_in_query.append(i)
+            #for table in tables_in_query:
+            #    if join_table is None:
+            #        print("es None")
+            #        if prev[table] in self._relation[i]:
+            #            join_table = table
+                    
+            #print(prev)
+            query += " ".join([" ",join," ",i," on ",key1," = ",key2])
                 
         return query
             
