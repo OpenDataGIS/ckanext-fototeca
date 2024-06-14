@@ -87,7 +87,7 @@ setup(
         fototeca=ckanext.fototeca.plugin:FototecaPlugin
 
         # Harvesters
-        fototeca_pg_harvester=ckanext.fototeca.harvesters:FototecaPGHarvester
+        fototeca_sql_harvester=ckanext.fototeca.harvesters:FototecaSQLHarvester
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

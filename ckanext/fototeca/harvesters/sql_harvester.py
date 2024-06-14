@@ -21,7 +21,7 @@ import ckan.model as model
 log = logging.getLogger(__name__)
 
 
-class FototecaPGHarvester(SchemingDCATHarvester):
+class FototecaSQLHarvester(SchemingDCATHarvester):
     def info(self):
         return {
             'name': 'fototeca_pg_harvester',

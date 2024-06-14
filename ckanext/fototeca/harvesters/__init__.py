@@ -1,3 +1,3 @@
-from ckanext.fototeca.harvesters.pg_harvester import FototecaPGHarvester
+from ckanext.fototeca.harvesters.sql_harvester import FototecaSQLHarvester
 
-__all__ = ['FototecaPGHarvester']
+__all__ = ['FototecaSQLHarvester']
