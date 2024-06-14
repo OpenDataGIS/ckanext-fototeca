@@ -9,8 +9,6 @@ from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
 from ckanext.schemingdcat.lib.field_mapping import FieldMappingValidator
 from ckanext.fototeca.lib.routingSQL.sql_routing_pg import routingPG
 
-#import psycopg2
-#from sqlalchemy import engine, create_engine, text
 import pandas as pd 
 
 from ckan import logic
@@ -60,7 +58,7 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             credentials = self.config.get("credentials")
             dataset_field_mapping = self.config.get("dataset_field_mapping")
 
-        ###definición de engines de SQLalchemy
+        ###definición de engines de SQLrouting
         ##En caso de querer agregar nuevas bases de datos añadirlas con 
         ##elif al condicional
         if database_type == "postgres":
@@ -68,14 +66,6 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             database = routingPG(credentials['user'],credentials['password'],credentials['host'],credentials['port'],credentials['db'])
         else:
             raise ValueError("unsupported database reached gather stage")
-        #
-        ###realizar query y obtener los valores de la base de datos
-        #log.debug(dataset_field_mapping)
-        #with engine.connect() as conn:
-        #    query = self._create_query(dataset_field_mapping['fields'],dataset_field_mapping['p_key'])
-        #    log.debug(query)
-        #    result = conn.execute(text(query))
-        #    dataList = result.fetchall()
 
         keys = []
         values = []
@@ -145,7 +135,7 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
         guids_in_db = set(guid_to_package_id.keys())
 
-        # Check guids to create/update/delete
+        # Comprobar guids para crear, borrar o cambiar
         new = guids_in_harvest - guids_in_db
         # Get objects/datasets to delete (ie in the DB but not in the source)
         delete = set(guids_in_db) - set(guids_in_harvest)
@@ -388,8 +378,6 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
                 config = json.dumps({**config_obj, mapping_name: field_mapping})
 
-
-        # TODO: database_p_keys _is_not_db_key
         if 'database_p_keys' in config:
             database_p_keys = config_obj['database_p_keys']
             log.debug("database_type = "+ database_p_keys)
@@ -421,11 +409,4 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
         #             else:
         #                 if self._is_not_db_key(next(iter(database_mapping['fields']))):
         #                     ValueError('wrong "fields" database field format; should be schema.table.value')
-
-
-    # def _is_not_db_key(self, string):
-    #     field = string.split('.')
-
-    #     if length(field) != 3:
-    #         raise ValueError(f'"The lenght of the field is: {length(field)}"')
 
