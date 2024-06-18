@@ -9,6 +9,8 @@ from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
 from ckanext.schemingdcat.lib.field_mapping import FieldMappingValidator
 from ckanext.fototeca.lib.routingSQL.sql_routing_pg import routingPG
 
+#import psycopg2
+#from sqlalchemy import engine, create_engine, text
 import pandas as pd 
 
 from ckan import logic
@@ -58,7 +60,7 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             credentials = self.config.get("credentials")
             dataset_field_mapping = self.config.get("dataset_field_mapping")
 
-        ###definición de engines de SQLrouting
+        ###definición de engines de SQLalchemy
         ##En caso de querer agregar nuevas bases de datos añadirlas con 
         ##elif al condicional
         if database_type == "postgres":
@@ -66,6 +68,14 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             database = routingPG(credentials['user'],credentials['password'],credentials['host'],credentials['port'],credentials['db'])
         else:
             raise ValueError("unsupported database reached gather stage")
+        #
+        ###realizar query y obtener los valores de la base de datos
+        #log.debug(dataset_field_mapping)
+        #with engine.connect() as conn:
+        #    query = self._create_query(dataset_field_mapping['fields'],dataset_field_mapping['p_key'])
+        #    log.debug(query)
+        #    result = conn.execute(text(query))
+        #    dataList = result.fetchall()
 
         keys = []
         values = []
@@ -74,7 +84,7 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
         for key, value in dataset_field_mapping.items():
             keys.append(str(key))
-            values.append(str(value["field_namegit"]))
+            values.append(str(value["field_name"]))
 
         dataList = database.get_columns(values)
        
@@ -135,7 +145,7 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
         guids_in_db = set(guid_to_package_id.keys())
 
-        # Comprobar guids para crear, borrar o cambiar
+        # Check guids to create/update/delete
         new = guids_in_harvest - guids_in_db
         # Get objects/datasets to delete (ie in the DB but not in the source)
         delete = set(guids_in_db) - set(guids_in_harvest)
@@ -200,13 +210,84 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
     #vacío porque los datos ya estan recopilados en gather_stage
         return True
 
-##import stage y funciones del import stage
-    ##TODO implementar el import stage 
-    #esta parte debe recopilar el dataframe de pandas 
-    def import_stage(self, harvest_object):
-        # Aquí iría el código para crear o actualizar el conjunto de datos en CKAN.
-        log.debug("In FototecaPGHarvester import stage")
+###import stage y funciones del import stage
+#    ##TODO implementar el import stage 
+#    #esta parte debe recopilar el dataframe de pandas 
+#    def import_stage(self, harvest_object):
+#        # Aquí iría el código para crear o actualizar el conjunto de datos en CKAN.
+#        log.debug("In FototecaPGHarvester import stage")
+#
+#        context = {
+#            'model': model,
+#            'session': model.Session,
+#            'user': self._get_user_name(),
+#        }
+#        
+#        if not harvest_object:
+#            log.error('No harvest object received')
+#            return False   
+#        
+#        self._set_config(harvest_object.source.config)
+#        
+#        if self.force_import:
+#            status = 'change'
+#        else:
+#            status = self._get_object_extra(harvest_object, 'status')
+#        
+#        if status == 'delete':
+#            override_local_datasets = self.config.get("override_local_datasets", False)
+#            if override_local_datasets is True:
+#                # Delete package
+#                context.update({
+#                    'ignore_auth': True,
+#                })
+#                p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
+#                log.info('The override_local_datasets configuration is %s. Package %s deleted with GUID: %s' % (override_local_datasets, harvest_object.package_id, harvest_object.guid))
+#
+#                return True
+#            
+#            else:
+#                log.info('The override_local_datasets configuration is %s. Package %s not deleted with GUID: %s' % (override_local_datasets, harvest_object.package_id, harvest_object.guid))
+#
+#                return 'unchanged'
+#
+#        # Check if harvest object has a non-empty content
+#        if harvest_object.content is None:
+#            self._save_object_error('Empty content for object {0}'.format(harvest_object.id),
+#                                    harvest_object, 'Import')
+#            return False
+#
+#        try:
+#            dataset = json.loads(harvest_object.content)
+#        except ValueError:
+#            self._save_object_error('Could not ateutil.parser.parse content for object {0}'.format(harvest_object.id),
+#                                    harvest_object, 'Import')
+#            return False
+#
+#        # Check if the dataset is a harvest source and we are not allowed to harvest it
+#        if dataset.get('type') == 'harvest' and self.config.get('allow_harvest_datasets', False) is False:
+#            log.warn('Remote dataset is a harvest source and allow_harvest_datasets is False, ignoring...')
+#            return True
+#
+#        return True
 
+    def import_stage(self, harvest_object):
+        """
+        Performs the import stage of the SchemingDCATXLSHarvester.
+
+        Args:
+            harvest_object (HarvestObject): The harvest object to import.
+
+        Returns:
+            bool or str: Returns True if the import is successful, 'unchanged' if the package is unchanged,
+                        or False if there is an error during the import.
+
+        Raises:
+            None
+        """
+        log.debug('In SchemingDCATXLSHarvester import_stage')
+
+        harvester_tmp_dict = {}
         context = {
             'model': model,
             'session': model.Session,
@@ -223,7 +304,13 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             status = 'change'
         else:
             status = self._get_object_extra(harvest_object, 'status')
-        
+
+        # Get the last harvested object (if any)
+        previous_object = model.Session.query(HarvestObject) \
+                          .filter(HarvestObject.guid==harvest_object.guid) \
+                          .filter(HarvestObject.current==True) \
+                          .first()
+
         if status == 'delete':
             override_local_datasets = self.config.get("override_local_datasets", False)
             if override_local_datasets is True:
@@ -259,7 +346,141 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
             log.warn('Remote dataset is a harvest source and allow_harvest_datasets is False, ignoring...')
             return True
 
-        return True
+        dataset = self.modify_package_dict(dataset, harvest_object)
+
+        # Flag previous object as not current anymore
+        if previous_object and not self.force_import:
+            previous_object.current = False
+            previous_object.add()
+
+        # Dataset dict::Update GUID with the identifier from the dataset
+        remote_guid = dataset['identifier']
+        if remote_guid and harvest_object.guid != remote_guid:
+            # First make sure there already aren't current objects
+            # with the same guid
+            existing_object = model.Session.query(HarvestObject.id) \
+                            .filter(HarvestObject.guid==remote_guid) \
+                            .filter(HarvestObject.current==True) \
+                            .first()
+            if existing_object:
+                self._save_object_error('Object {0} already has this guid {1}'.format(existing_object.id, remote_guid),
+                        harvest_object, 'Import')
+                return False
+
+            harvest_object.guid = remote_guid
+            harvest_object.add()
+
+        # Assign GUID if not present (i.e. it's a manual import)
+        if not harvest_object.guid:
+            harvest_object.guid = remote_guid
+            harvest_object.add()
+
+        # Update dates
+        self._source_date_format = self.config.get('source_date_format', None)
+        self._set_basic_dates(dataset)
+
+        harvest_object.metadata_modified_date = dataset['modified']
+        harvest_object.add()
+
+        # Build the package dict
+        package_dict = self.get_package_dict(harvest_object, context, dataset)
+        if not package_dict:
+            log.error('No package dict returned, aborting import for object %s' % harvest_object.id)
+            return False
+
+        # Create / update the package
+        context.update({
+           'extras_as_string': True,
+           'api_version': '2',
+           'return_id_only': True})
+
+        if self._site_user and context['user'] == self._site_user['name']:
+            context['ignore_auth'] = True
+
+        # Flag this object as the current one
+        harvest_object.current = True
+        harvest_object.add()
+
+        if status == 'new':       
+            # We need to explicitly provide a package ID based on uuid4 identifier created in gather_stage
+            # won't be be able to link the extent to the package.
+            package_dict['id'] = package_dict['identifier']
+
+            # before_create interface
+            for harvester in p.PluginImplementations(ISchemingDCATHarvester):
+                if hasattr(harvester, 'before_create'):
+                    err = harvester.before_create(harvest_object, package_dict, self._local_schema, harvester_tmp_dict)
+                
+                    if err:
+                        self._save_object_error(f'before_create error: {err}', harvest_object, 'Import')
+                        return False
+            
+            try:
+                result = self._create_or_update_package(
+                    package_dict, harvest_object, 
+                    package_dict_form='package_show')
+                
+                # after_create interface
+                for harvester in p.PluginImplementations(ISchemingDCATHarvester):
+                    if hasattr(harvester, 'after_create'):
+                        err = harvester.after_create(harvest_object, package_dict, harvester_tmp_dict)
+
+                        if err:
+                            self._save_object_error(f'after_create error: {err}', harvest_object, 'Import')
+                            return False
+
+            except p.toolkit.ValidationError as e:
+                error_message = ', '.join(f'{k}: {v}' for k, v in e.error_dict.items())
+                self._save_object_error(f'Validation Error: {error_message}', harvest_object, 'Import')
+                return False
+
+        elif status == 'change':
+            # Check if the modified date is more recent
+            if not self.force_import and previous_object and dateutil.parser.parse(harvest_object.metadata_modified_date) <= previous_object.metadata_modified_date:
+                log.info('Package with GUID: %s unchanged, skipping...' % harvest_object.guid)
+                return 'unchanged'
+            else:
+                log.info("Dataset dates - Harvest date: %s and Previous date: %s", harvest_object.metadata_modified_date, previous_object.metadata_modified_date)
+
+                # update_package_schema_for_update interface
+                package_schema = logic.schema.default_update_package_schema()
+                for harvester in p.PluginImplementations(ISchemingDCATHarvester):
+                    if hasattr(harvester, 'update_package_schema_for_update'):
+                        package_schema = harvester.update_package_schema_for_update(package_schema)
+                context['schema'] = package_schema
+
+                package_dict['id'] = harvest_object.package_id
+                try:
+                    # before_update interface
+                    for harvester in p.PluginImplementations(ISchemingDCATHarvester):
+                        if hasattr(harvester, 'before_update'):
+                            err = harvester.before_update(harvest_object, package_dict, harvester_tmp_dict)
+
+                            if err:
+                                self._save_object_error(f'TableHarvester plugin error: {err}', harvest_object, 'Import')
+                                return False
+                    
+                    result = self._create_or_update_package(
+                        package_dict, harvest_object, 
+                        package_dict_form='package_show')
+
+                    # after_update interface
+                    for harvester in p.PluginImplementations(ISchemingDCATHarvester):
+                        if hasattr(harvester, 'after_update'):
+                            err = harvester.after_update(harvest_object, package_dict, harvester_tmp_dict)
+
+                            if err:
+                                self._save_object_error(f'TableHarvester plugin error: {err}', harvest_object, 'Import')
+                                return False
+
+                    log.info('Updated package %s with GUID: %s' % (package_dict["id"], harvest_object.guid))
+                    
+                except p.toolkit.ValidationError as e:
+                    error_message = ', '.join(f'{k}: {v}' for k, v in e.error_dict.items())
+                    self._save_object_error(f'Validation Error: {error_message}', harvest_object, 'Import')
+                    return False
+
+        return result
 
 
 
@@ -378,6 +599,8 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
                 config = json.dumps({**config_obj, mapping_name: field_mapping})
 
+
+        # TODO: database_p_keys _is_not_db_key
         if 'database_p_keys' in config:
             database_p_keys = config_obj['database_p_keys']
             log.debug("database_type = "+ database_p_keys)
@@ -410,3 +633,9 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
         #                 if self._is_not_db_key(next(iter(database_mapping['fields']))):
         #                     ValueError('wrong "fields" database field format; should be schema.table.value')
 
+
+    # def _is_not_db_key(self, string):
+    #     field = string.split('.')
+
+    #     if length(field) != 3:
+    #         raise ValueError(f'"The lenght of the field is: {length(field)}"')
