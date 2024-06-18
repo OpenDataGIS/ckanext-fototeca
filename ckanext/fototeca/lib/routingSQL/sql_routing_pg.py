@@ -7,7 +7,8 @@ from ckanext.fototeca.lib.routingSQL.sql_routing_base import routingBase
 
 class routingPG(routingBase):
     
-    
+    #collects the columns and relations needed for the routing from the postgres database and 
+    #creates the sqlalchemy engine used for the connection 
     def __init__(self, user: str, password: str, url: str, port: int, database: str):
 
         engine_params = "postgresql+psycopg2://"+user+":"+password+"@"+url+":"+str(port)+"/"+database

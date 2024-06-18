@@ -639,4 +639,3 @@ class FototecaSQLHarvester(SchemingDCATHarvester):
 
     #     if length(field) != 3:
     #         raise ValueError(f'"The lenght of the field is: {length(field)}"')
-
