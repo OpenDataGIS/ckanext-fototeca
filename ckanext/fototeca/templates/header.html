@@ -1,0 +1,19 @@
+{% ckan_extends %}
+
+{% block header_account_container_content %}
+    {{ super() }}
+        <img class="ign-banner" src="/catalog/fototeca/banner-ign.png" onclick="window.location='https://www.ign.es/web/ign/portal'">
+        <img class="ign-banner-small" src="/catalog/fototeca/IGN-Footer-Ball.png">
+{% endblock %}
+
+{% block header_logo %}
+    <div class="visor-title" onclick="window.location={{ h.url_for('home.index') }}">
+        <div class="logo-fototeca">
+            <img class="fototeca-logo" src="/catalog/fototeca/foto-icon.svg">
+        </div>
+        <div class="label-container">
+            <label class="title">Fototeca Digital</label>
+            <label class="subtitle">portal de datos</label>
+        </div>
+    </div>
+{% endblock %}
