@@ -1,0 +1,71 @@
+# Translations template for ckanext-fototeca.
+# Copyright (C) 2024 OpenDataGIS
+# This file is distributed under the same license as the ckanext-fototeca project.
+# mjanez <mjanez@tragsa.es>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-fototeca 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-01-01 12:01+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: mjanez <mjanez@tragsa.es>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ckanext/fototeca/templates/header
+msgid "Digital Fototeca"
+msgstr ""
+
+#: ckanext/fototeca/templates/header
+msgid "Open Data portal"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "National Geographic Institute"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "FAQ"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "National Cartographic System"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "National Cartographic Plan"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Collegial bodies"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Related links"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Legal notice"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Data Policy"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Accessibility"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Usability"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer
+msgid "Sitemap"
+msgstr ""
+
