@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import engine, create_engine, text
 import logging, heapq
 
-from ckanext.fototeca.lib.routingSQL.sql_routing_base import routingBase
+from ckanext.fototeca.lib.routing_sql.base import routingBase
 
 class routingPG(routingBase):
     
