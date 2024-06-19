@@ -1,0 +1,16 @@
+{
+    "scheming_presets_version": 1,
+    "about": "scheming presets for fototeca fields",
+    "about_url": "http://github.com/OpenDataGIS/ckanext-fototeca",
+    "presets": [
+      {
+        "preset_name": "flight_frames",
+        "values": {
+          "validators": "default(0) natural_number_validator",
+          "display_snippet": "schemingdcat/display_snippets/file_size.html",
+          "form_snippet": "schemingdcat/form_snippets/file_size.html"
+        }
+      }
+    ]
+  }
+  
