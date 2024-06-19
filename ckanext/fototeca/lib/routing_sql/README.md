@@ -3,10 +3,11 @@ Librería para interaccionar con bases de datos y relacionar las tablas de maner
 
 Actua como un wrapper para sqlalchemy y multiples librerias para simplificar la interacción con bases de datos SQL
 Pensado para funcionar con https://github.com/OpenDataGIS/ckanext-fototeca
+
 ## Instanciar la librería
-### Para based de datos postgres
+### Para bases de datos postgres
 ```python
-from sql_routing_pg import routingPG
+from routing_pg import routingPG
 database = routingPG(user: str, password: str, url: str, port: int, database: str)
 ```
 
@@ -36,9 +37,9 @@ get_relations()
 devuelve la estructura de tablas de la base de datos 
 
 ## Extender funcionalidad para implementar otros tipos de bases de datos
-extender sql_routing_base, tal que
+extender base, tal que
 ```python
-from ckanext.fototeca.lib.routingSQL.sql_routing_base import routingBase
+from ckanext.fototeca.lib.routing_sql.base import routingBase
 
 class routingPG(routingBase):
 ```
