@@ -20,54 +20,62 @@ msgstr ""
 "X-Generator: Poedit 3.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: ckanext/fototeca/templates/header
+#: ckanext/fototeca/templates/header.html
 msgid "Digital Fototeca"
 msgstr "Fototeca Digital"
 
-#: ckanext/fototeca/templates/header
+#: ckanext/fototeca/templates/header.html
 msgid "Open Data portal"
 msgstr "Portal de Datos Abiertos"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Geographic Institute"
 msgstr "Instituto Geográfico Nacional"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "FAQ"
 msgstr "Preguntas frequentes"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Cartographic System"
 msgstr "Sistema Cartográfico Nacional"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Cartographic Plan"
 msgstr "Plan Cartográfico Nacional"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Collegial bodies"
 msgstr "Órganos colegiados"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Related links"
 msgstr "Enlaces relacionados"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Legal notice"
 msgstr "Aviso legal"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Data Policy"
 msgstr "Política de datos"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Accessibility"
 msgstr "Accesibilidad"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Usability"
 msgstr "Usabilidad"
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Sitemap"
 msgstr "Mapa del sitio"
+
+#: ckanext/fototeca/source/new_source.html
+msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
+msgstr "Debe incluir la parte <code>http://</code> or <code>https://</code>  de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sql_harvester"
+msgstr "Fototeca: Bases de datos SQL"

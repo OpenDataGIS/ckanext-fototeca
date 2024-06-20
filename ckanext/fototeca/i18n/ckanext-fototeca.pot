@@ -17,55 +17,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.7.0\n"
 
-#: ckanext/fototeca/templates/header
+#: ckanext/fototeca/templates/header.html
 msgid "Digital Fototeca"
 msgstr ""
 
-#: ckanext/fototeca/templates/header
+#: ckanext/fototeca/templates/header.html
 msgid "Open Data portal"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Geographic Institute"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "FAQ"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Cartographic System"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "National Cartographic Plan"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Collegial bodies"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Related links"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Legal notice"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Data Policy"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Accessibility"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Usability"
 msgstr ""
 
-#: ckanext/fototeca/templates/footer
+#: ckanext/fototeca/templates/footer.html
 msgid "Sitemap"
+msgstr ""
+
+#: ckanext/fototeca/source/new_source.html
+msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
+msgstr ""
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sql_harvester"
 msgstr ""
 
