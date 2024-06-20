@@ -105,11 +105,7 @@ Para campos que no son multilingües, puedes usar directamente `field_name` sin 
       "user":"u_fototeca",
       "password":"u_fototeca",
       "host":"localhost",
-
-
-     
-
- "port":5432,
+      "port":5432,
       "db":"fototeca"
    },
    "field_mapping_schema_version":1,

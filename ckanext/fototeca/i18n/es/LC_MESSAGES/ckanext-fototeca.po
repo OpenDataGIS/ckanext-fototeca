@@ -74,7 +74,7 @@ msgstr "Mapa del sitio"
 
 #: ckanext/fototeca/source/new_source.html
 msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
-msgstr "Debe incluir la parte <code>http://</code> or <code>https://</code>  de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
+msgstr "Debe incluir la parte <code>http://</code> o <code>https://</code> de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
 
 #: ckanext/harvest/templates/source/new_source_form.html
 msgid "fototeca_sql_harvester"
