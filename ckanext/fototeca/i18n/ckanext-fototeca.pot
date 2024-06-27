@@ -1,0 +1,91 @@
+# Translations template for ckanext-fototeca.
+# Copyright (C) 2024 OpenDataGIS
+# This file is distributed under the same license as the ckanext-fototeca project.
+# mjanez <mjanez@tragsa.es>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-fototeca 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-01-01 12:01+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: mjanez <mjanez@tragsa.es>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: ckanext/fototeca/templates/header.html
+msgid "Digital Fototeca"
+msgstr ""
+
+#: ckanext/fototeca/templates/header.html
+msgid "Open Data portal"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Geographic Institute"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "FAQ"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Cartographic System"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Cartographic Plan"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Collegial bodies"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Related links"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Legal notice"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Data Policy"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Accessibility"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Usability"
+msgstr ""
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Sitemap"
+msgstr ""
+
+#: ckanext/fototeca/source/new_source.html
+msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
+msgstr ""
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_postgres_harvester"
+msgstr ""
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sqlite_harvester"
+msgstr ""
+
+# Codelists
+#: ckanext/fototeca
+msgid "true"
+msgstr ""
+
+#: ckanext/fototeca
+msgid "false"
+msgstr ""

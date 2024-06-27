@@ -1,0 +1,94 @@
+# Translations template for ckanext-fototeca.
+# Copyright (C) 2024 OpenDataGIS
+# This file is distributed under the same license as the ckanext-fototeca project.
+# mjanez <mjanez@tragsa.es>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-fototeca 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-01-01 12:01+0000\n"
+"PO-Revision-Date: 2024-06-18 15:23+0200\n"
+"Last-Translator: mjanez <mjanez@tragsa.es>\n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.7.0\n"
+"X-Generator: Poedit 3.2\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: ckanext/fototeca/templates/header.html
+msgid "Digital Fototeca"
+msgstr "Fototeca Digital"
+
+#: ckanext/fototeca/templates/header.html
+msgid "Open Data portal"
+msgstr "Portal de Datos Abiertos"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Geographic Institute"
+msgstr "Instituto Geográfico Nacional"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "FAQ"
+msgstr "Preguntas frequentes"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Cartographic System"
+msgstr "Sistema Cartográfico Nacional"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "National Cartographic Plan"
+msgstr "Plan Cartográfico Nacional"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Collegial bodies"
+msgstr "Órganos colegiados"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Related links"
+msgstr "Enlaces relacionados"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Legal notice"
+msgstr "Aviso legal"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Data Policy"
+msgstr "Política de datos"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Accessibility"
+msgstr "Accesibilidad"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Usability"
+msgstr "Usabilidad"
+
+#: ckanext/fototeca/templates/footer.html
+msgid "Sitemap"
+msgstr "Mapa del sitio"
+
+#: ckanext/fototeca/source/new_source.html
+msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
+msgstr "Debe incluir la parte <code>http://</code> o <code>https://</code> de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_postgres_harvester"
+msgstr "Fototeca: Bases de datos PostgreSQL"
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sqlite_harvester"
+msgstr "Fototeca: Bases de datos SQLite"
+
+# Codelists
+#: ckanext/fototeca
+msgid "true"
+msgstr "Sí"
+
+#: ckanext/fototeca
+msgid "false"
+msgstr "No"

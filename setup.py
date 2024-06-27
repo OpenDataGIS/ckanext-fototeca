@@ -26,7 +26,7 @@ setup(
     url='https://github.com/OpenDataGIS/ckanext-fototeca',
 
     # Author details
-    author='''Ernesto Hontecillas Molina''',
+    author='''OpenDataGIS''',
     author_email='''ehonteci@tragsa.es''',
 
     # Choose your license
@@ -50,7 +50,7 @@ setup(
 
 
     # What does your project relate to?
-    keywords='''CKAN IGN CNIG styles customization''',
+    keywords='''CKAN CNIG customization''',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -87,7 +87,7 @@ setup(
         fototeca=ckanext.fototeca.plugin:FototecaPlugin
 
         # Harvesters
-        fototeca_sql_harvester=ckanext.fototeca.harvesters:FototecaSQLHarvester
+        fototeca_postgres_harvester=ckanext.fototeca.harvesters:PostgresHarvester
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

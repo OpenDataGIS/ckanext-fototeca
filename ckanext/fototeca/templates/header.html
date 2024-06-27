@@ -2,18 +2,19 @@
 
 {% block header_account_container_content %}
     {{ super() }}
-        <img class="ign-banner" src="/catalog/fototeca/banner-ign.png" onclick="window.location='https://www.ign.es/web/ign/portal'">
-        <img class="ign-banner-small" src="/catalog/fototeca/IGN-Footer-Ball.png">
+        <a href="https://www.ign.es/web/ign/portal" target="_blank" rel="noopener noreferrer" title="IGN"><img class="ign-banner" src="{{ h.url_for_static("/fototeca/banner-ign.png") }}"></a>
+        <img class="ign-banner-small" src="{{ h.url_for_static("/fototeca/IGN-Footer-Ball.png") }}">
 {% endblock %}
 
 {% block header_logo %}
-    <div class="visor-title" onclick="window.location={{ h.url_for('home.index') }}">
+    <a href="{{ h.url_for('home.index') }}"><div class="visor-title">
         <div class="logo-fototeca">
-            <img class="fototeca-logo" src="/catalog/fototeca/foto-icon.svg">
+            <img class="fototeca-logo" src="{{ h.url_for_static("/fototeca/foto-icon.svg") }}">
         </div>
         <div class="label-container">
-            <label class="title">Fototeca Digital</label>
-            <label class="subtitle">portal de datos</label>
+            <label class="title">{{ _('Digital Fototeca') }}</label>
+            <label class="subtitle">{{ _('Open Data portal') }}</label>
         </div>
     </div>
+    </a>
 {% endblock %}
