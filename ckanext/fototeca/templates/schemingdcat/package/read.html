@@ -1,0 +1,7 @@
+{% ckan_extends %}
+
+    {% block package_dataset_extent %}
+        {% if pkg.spatial %}
+            {% snippet "schemingdcat/snippets/schemingdcat_dataset_map_additional_info.html", extent=pkg.spatial %}
+        {% endif %}
+    {% endblock %}

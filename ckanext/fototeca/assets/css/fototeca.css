@@ -229,3 +229,7 @@ header .visor-title .label-container .subtitle::after{
     }
 }
 
+/* fototeca_info */
+.fototeca-code {
+    overflow: auto; max-height: 130px; font-size:11px;
+}

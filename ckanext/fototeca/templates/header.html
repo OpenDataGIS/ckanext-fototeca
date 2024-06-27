@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block header_logo %}
-    <a href="{{ home_url }}"><div class="visor-title">
+    <a href="{{ h.url_for('home.index') }}"><div class="visor-title">
         <div class="logo-fototeca">
             <img class="fototeca-logo" src="{{ h.url_for_static("/fototeca/foto-icon.svg") }}">
         </div>
