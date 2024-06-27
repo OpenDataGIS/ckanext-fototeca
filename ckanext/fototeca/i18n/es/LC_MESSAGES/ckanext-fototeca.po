@@ -77,5 +77,18 @@ msgid "This should include the <code>http://</code> or <code>https://</code> par
 msgstr "Debe incluir la parte <code>http://</code> o <code>https://</code> de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
 
 #: ckanext/harvest/templates/source/new_source_form.html
-msgid "fototeca_sql_harvester"
-msgstr "Fototeca: Bases de datos SQL"
+msgid "fototeca_postgres_harvester"
+msgstr "Fototeca: Bases de datos PostgreSQL"
+
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sqlite_harvester"
+msgstr "Fototeca: Bases de datos SQLite"
+
+# Codelists
+#: ckanext/fototeca
+msgid "true"
+msgstr "Sí"
+
+#: ckanext/fototeca
+msgid "false"
+msgstr "No"

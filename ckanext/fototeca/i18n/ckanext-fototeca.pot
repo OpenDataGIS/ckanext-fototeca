@@ -74,6 +74,18 @@ msgid "This should include the <code>http://</code> or <code>https://</code> par
 msgstr ""
 
 #: ckanext/harvest/templates/source/new_source_form.html
-msgid "fototeca_sql_harvester"
+msgid "fototeca_postgres_harvester"
 msgstr ""
 
+#: ckanext/harvest/templates/source/new_source_form.html
+msgid "fototeca_sqlite_harvester"
+msgstr ""
+
+# Codelists
+#: ckanext/fototeca
+msgid "true"
+msgstr ""
+
+#: ckanext/fototeca
+msgid "false"
+msgstr ""
