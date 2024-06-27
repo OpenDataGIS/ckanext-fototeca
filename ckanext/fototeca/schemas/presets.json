@@ -10,6 +10,22 @@
           "display_snippet": "schemingdcat/display_snippets/file_size.html",
           "form_snippet": "schemingdcat/form_snippets/file_size.html"
         }
+      },
+      {
+        "preset_name": "flight_spatial",
+        "values": {
+          "form_snippet": "json.html",
+          "display_snippet": "schemingdcat/display_snippets/spatial_json.html",
+          "validators": "ignore_missing schemingdcat_valid_json_object"
+        }
+      },
+      {
+        "preset_name": "fototeca_spatial",
+        "values": {
+          "form_snippet": "json.html",
+          "display_snippet": "schemingdcat/display_snippets/spatial_json.html",
+          "validators": "fototeca_spatial_validator ignore_missing schemingdcat_valid_json_object"
+        }
       }
     ]
   }

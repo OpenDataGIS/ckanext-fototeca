@@ -994,7 +994,7 @@ dataset_fields:
     - label:
         en: "Analogical"
         es: "Analógico"
-      value: analogical
+      value: analogico
     - label:
         en: "Digital"
         es: "Digital"
@@ -1047,15 +1047,28 @@ dataset_fields:
     - label:
         en: "Black & White"
         es: "Blanco y Negro"
-      value: black-white
+      value: "B/N"
     - label:
         en: "Coloured"
         es: "Color"
-      value: coloured
+      value: color
     - label:
         en: "Mixed"
         es: "Mixto"
-      value: mixed
+      value: mixto
+  form_group_id: fototeca
+
+# Geographic flight extension (M)
+- field_name: flight_spatial
+  label: 
+    en: Flight extension
+    es: Extensión del vuelo
+  preset: flight_spatial
+  form_placeholder: '{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}'
+  help_text:
+    en: 'You can check that the GeoJSON is valid at: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> e.g. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
+    es: 'Puedes comprobar que el GeoJSON es válido en: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> ej. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
+  help_allow_html: True
   form_group_id: fototeca
 
 # # Dataset abstract translated (M)
@@ -1911,7 +1924,7 @@ dataset_fields:
   label: 
     en: Bounding Box
     es: Extensión espacial
-  preset: spatial
+  preset: fototeca_spatial
   form_placeholder: '{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}'
   help_text:
     en: 'If a <strong>Geographic identifier</strong> is selected and this element is empty, it will be filled in automatically.<a href="https://boundingbox.klokantech.com" target="_blank" rel="noopener">Draw BBox and copy GEOJSON with "coordinates" value..</a> e.g. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code><br>Only "geometry" dict with "type" and "coordinates" elements. More information at <a href="http://geojson.org/geojson-spec.html#bounding-boxes" target="_blank" rel="noopener">GeoJSON bounding boxes</a>.'
