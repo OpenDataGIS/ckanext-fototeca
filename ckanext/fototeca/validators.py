@@ -3,6 +3,18 @@ import logging
 
 import ckanext.scheming.helpers as sh
 import ckan.lib.helpers as h
+from ckantoolkit import (
+    config,
+    get_validator,
+    UnknownValidator,
+    missing,
+    Invalid,
+    StopOnError,
+    _,
+    unicode_safe,
+)
+
+import ckanext.schemingdcat.helpers as sdct_helpers
 
 log = logging.getLogger(__name__)
 
@@ -25,3 +37,23 @@ def scheming_validator(fn):
     """
     fn.is_a_scheming_validator = True
     return fn
+
+@scheming_validator
+@validator
+def fototeca_spatial_validator(field, schema):
+    """
+    Returns a validator function that checks if the 'flight_spatial' value exists in pkg If it exists, it sets the value of the field to the value of the field ('spatial').
+
+    Args:
+        field (dict): Information about the field to be updated.
+        schema (dict): The schema for the field to be updated.
+
+    Returns:
+        function: A validation function that can be used to update the field based on the presence of 'flight_spatial'.
+    """
+    def validator(key, data, errors, context):
+        spatial = data.get(('flight_spatial', ))
+        if spatial:
+            data[key] = spatial
+
+    return validator

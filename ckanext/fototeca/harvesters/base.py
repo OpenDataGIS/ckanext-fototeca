@@ -2,9 +2,12 @@ import logging
 import json
 import re
 import hashlib
+import traceback
 from past.builtins import basestring
 import pandas as pd
 import dateutil
+from urllib.parse import urlparse, urlunparse
+from abc import ABC, abstractmethod
 
 from ckan import logic
 from ckan.logic import NotFound, get_action
@@ -28,20 +31,33 @@ from ckanext.fototeca.lib.sql_field_mapping import SqlFieldMappingValidator as F
 log = logging.getLogger(__name__)
 
 
+class DatabaseManager(ABC):
+    _retry = 5
+    
+    @abstractmethod
+    def connect(self):
+        pass
+
+    @abstractmethod
+    def check_connection(self):
+        pass
+
+    @abstractmethod
+    def disconnect(self):
+        pass
+
+    @abstractmethod
+    def execute_query(self, query):
+        pass
+
 class SQLHarvester(SchemingDCATHarvester):
     """
-    A custom harvester for harvesting metadata using the Fototeca extension.
+    A base harvester for harvesting metadata from SQL databases using the Fototeca extension.
 
-    It extends the base `SchemingDCATHarvester` class provided by CKAN's schemingdcat extension.
+    It extends the base `SchemingDCATHarvester` class provided by Scheming DCAT CKAN's harvest extension.
     """
 
-    def info(self):
-        return {
-            'name': 'fototeca_sql_harvester',
-            'title': 'SQL Database Harvester',
-            'description': 'An SQL database harvester for CKAN'
-        }
-
+    db_manager = None
     _readme = "https://github.com/OpenDataGIS/ckanext-fototeca?tab=readme-ov-file"
     _database_types_supported = {
         'postgres': {
@@ -52,119 +68,330 @@ class SQLHarvester(SchemingDCATHarvester):
         'sqlite': {
             'name': 'sqlite',
             'title': 'SQLite',
-            'active': False
+            'active': False,
+        }
+    }
+    _database_type = None
+    _credentials = None
+    _connection = None
+    _engine = None
+    _metadata = None
+    _session = None
+    _auth = True
+    _queries = {}
+    data = None
+    config = None
+    _field_mapping_info = {
+        "dataset_field_mapping": {
+            "required": True,
+            "content_dicts": "datasets"
+        },
+        "distribution_field_mapping": {
+            "required": False,
+            "content_dicts": "distributions",
+            "parent_resource_id": "dataset_id"
+        },
+        "datadictionary_field_mapping": {
+            "required": False,
+            "content_dicts": "datadictionaries",
+            "parent_resource_id": "distribution_id"
         }
     }
 
-    _credentials = None
-    data = None
-    config = None
-    _field_mapping_required = {
-        "dataset_field_mapping": True,
-        "distribution_field_mapping": False,
-        "datadictionary_field_mapping": False,
-    }
+    def validate_config(self, config):
+        """
+        Validates the configuration for the harvester.
+
+        Args:
+            config (dict): The configuration dictionary.
+
+        Returns:
+            str: The validated configuration as a JSON string.
+
+        Raises:
+            ValueError: If the configuration is invalid.
+
+        """
+        config_obj = self.get_harvester_basic_info(config)
+
+        supported_types = {st['name'] for st in self._database_types_supported.values() if st['active']}
+
+        # Check basic validation config
+        self._set_basic_validate_config(config)
+        
+        # Instance sql_field_mapping validator
+        field_mapping_validator = FieldMappingValidator()
+
+        if 'database_type' in config:
+            database_type = config_obj['database_type']
+            log.debug("database_type: %s ", database_type)
+            if not isinstance(database_type, basestring):
+                raise ValueError('database_type must be a string')
+
+            if database_type not in supported_types:
+                raise ValueError(f'database_type should be one of: {", ".join(supported_types)}')
+
+            config = json.dumps({**config_obj, 'database_type': database_type})
+
+        else:
+            raise ValueError(f'database_type should be one of: {", ".join(supported_types)}')
+
+        if 'credentials' in config:   
+            required_keys = ['user', 'password', 'host', 'port', 'db']  
+            credentials = config_obj['credentials']
+            
+            if not isinstance(credentials, dict):
+                raise ValueError('credentials must be a dictionary')
+            
+            for key in required_keys:
+                if key not in credentials:
+                    raise ValueError(f'credentials needs key "{key}"')
+            
+            if not isinstance(credentials['port'], int):
+                raise ValueError('"port" must be an integer')
+        else:
+            raise ValueError("credentials must exist and be a dictionary with the following structure: {'user': 'username', 'password': 'password', 'host': 'hostname', 'port': port_number, 'db': 'database'}")
+
+        # Check if 'field_mapping_schema_version' exists in the config
+        field_mapping_schema_version_error_message = f'Insert the schema version: "field_mapping_schema_version: <version>", one of: {", ".join(map(str, self._field_mapping_validator_versions))} . More info: https://github.com/mjanez/ckanext-schemingdcat?tab=readme-ov-file#remote-google-sheetonedrive-excel-metadata-upload-harvester'
+        if 'field_mapping_schema_version' not in config_obj:
+            raise ValueError(field_mapping_schema_version_error_message)
+        else:
+            # Check if is an integer and if it is in the versions
+            if not isinstance(config_obj['field_mapping_schema_version'], int) or config_obj['field_mapping_schema_version'] not in self._field_mapping_validator_versions:
+                raise ValueError(field_mapping_schema_version_error_message)
+
+        # Validate if exists a JSON contained the mapping field_names between the remote schema and the local schema        
+        for mapping_name, field_mapping in config_obj.items():
+            if mapping_name in self._field_mapping_info:
+                if not isinstance(field_mapping, dict):
+                    raise ValueError(f'{mapping_name} must be a dictionary')
+
+                parent_resource_id = self._field_mapping_info[mapping_name].get('parent_resource_id')
+
+                # Check if parent_resource_id is in the field_mapping
+                if parent_resource_id and parent_resource_id not in field_mapping:
+                    raise ValueError(f'"{parent_resource_id}" is mandatory for "{mapping_name}". It represents the id of the record to which it is appended.')
+
+                schema_version = config_obj['field_mapping_schema_version']
+
+                try:
+                    # Validate field_mappings according to schema versions
+                    field_mapping = field_mapping_validator.validate(field_mapping, schema_version)
+                except ValueError as e:
+                    raise ValueError(f"The field mapping is invalid: {e}") from e
+
+                config = json.dumps({**config_obj, mapping_name: field_mapping})
 
     def gather_stage(self, harvest_job):
-        
-        source_url = harvest_job.source.url
+        """
+        This method is responsible for reading the remote SQL database. The contents are then processed, cleaned, and added to the database.
 
-        log.debug('In gater_stage with database: %s', source_url)
-        
-        content_dict = {}
+        Args:
+            harvest_job (HarvestJob): The harvest job object.
+
+        Returns:
+            list: A list of object IDs for the harvested datasets.
+        """
+        # Get file contents of source url
+        harvest_source_title = harvest_job.source.title
+        source_url = harvest_job.source.url    
+        content_dicts = {}
         self._names_taken = []
         
-        # obtener Opciones de configuración
+        log.debug('In SQLHarvester gather_stage with harvest source: %s and database URL: %s', harvest_source_title, source_url)
+        
+        # Get config options
         if harvest_job.source.config:
-            self.config = json.loads(harvest_job.source.config)
-            database_type = self.config.get("database_type")
-            credentials = self.config.get("credentials")
-            dataset_field_mapping = self.config.get("dataset_field_mapping")
+            self._set_config(harvest_job.source.config)
+            self.get_harvester_basic_info(harvest_job.source.config)
 
-        ###definición de engines de SQLalchemy
-        ##En caso de querer agregar nuevas bases de datos añadirlas con 
-        ##elif al condicional
-        if database_type == "postgres":
-            log.debug("starting database remote schema harvest")
-            database = routingPG(credentials['user'],credentials['password'],credentials['host'],credentials['port'],credentials['db'])
+        log.debug('Using config: %r', self._secret_properties(self.config))
+        
+        if self.config:
+            self._database_type = self.config.get("database_type")
+            self._auth = self.config.get("auth")
+            self._credentials = self.config.get("credentials")
+            credential_keys = ', '.join(self._credentials .keys())
+            log.debug('Loaded credentials with keys: %s', credential_keys)
         else:
-            raise ValueError("unsupported database reached gather stage")
-        #
-        ###realizar query y obtener los valores de la base de datos
-        #log.debug(dataset_field_mapping)
-        #with engine.connect() as conn:
-        #    query = self._create_query(dataset_field_mapping['fields'],dataset_field_mapping['p_key'])
-        #    log.debug(query)
-        #    result = conn.execute(text(query))
-        #    dataList = result.fetchall()
+            err_msg = f'The credentials are not provided. The harvest source: "{harvest_source_title}" has finished.'
+            log.error(err_msg)
+            self._save_gather_error(f'{err_msg}', harvest_job)
+            return []
 
-        keys = []
-        values = []
-
-        log.debug(dataset_field_mapping)
-
-        for key, value in dataset_field_mapping.items():
-            keys.append(str(key))
-            values.append(str(value["field_name"]))
-
-        dataList = database.get_columns(values)
-       
-        self.data = pd.DataFrame(data=dataList, columns=keys)
-        log.debug(self.data)
-        self.data.reset_index() 
-
-        ##TODO implementar validación de esquema
-
-        datasets_to_harvest = {}
-        guids_in_harvest = set()
-        #guids_in_db = set(guid_to_package_id.keys())
-
-        log.debug("Añadimos dataset a base de datos")
-        for index, row in self.data.iterrows():
-            print(row)
-            try:
-                source_dataset = model.Package.get(harvest_job.source.id)
-                if 'name' not in row:
-                    row['name'] = self._gen_new_name(row['title'])
-                while row['name'] in self._names_taken:
-                    suffix = sum(name.startswith(row['name'] + '-') for name in self._names_taken) + 1
-                    row['name'] = '{}-{}'.format(row['name'], suffix)
-                self._names_taken.append(row['name'])
-
-                # Si no hay identificador usar el nombre
-                if 'identifier' not in row:
-                    row['identifier'] = self._generate_identifier(row)
-            except Exception as e:
-                self._save_gather_error('Error for the dataset identifier %s [%r]' % (row['identifier'], e), harvest_job)
-                continue
+        # Check if the host and port in the credentials match the ones in the URL
+        is_valid = self._validate_source_url(harvest_job, source_url)
         
-            #Establecer campos traducidos
-            row = self._set_translated_fields(row)
-
-            #Obtener el owner del dataset si existe
-            if not row.get('owner_org'):
-                if source_dataset.owner_org:
-                    row['owner_org'] = source_dataset.owner_org
-
-            if 'extras' not in row:
-                row['extras'] = []
-
-            guids_in_harvest.add(row['identifier'])
-            datasets_to_harvest[row['identifier']] = row
-
-        log.debug(datasets_to_harvest)
+        if not is_valid:
+            log.error('The host and port in the credentials do not match the ones in the source URL. The harvest source: "%s" has finished.', harvest_source_title)
+            return []
         
-        # obtener GUIDs anteriores
-        qGuid = \
+        log.debug('Database type: %s', self._database_type)
+
+        # Get the previous guids for this source
+        query = \
             model.Session.query(HarvestObject.guid, HarvestObject.package_id) \
             .filter(HarvestObject.current == True) \
             .filter(HarvestObject.harvest_source_id == harvest_job.source.id)
         guid_to_package_id = {}
 
-        for guid, package_id in qGuid:
+        for guid, package_id in query:
             guid_to_package_id[guid] = package_id
 
         guids_in_db = set(guid_to_package_id.keys())
+        guids_in_harvest = set()
+        
+        # Get database url from credentials and database_type
+        conn_url = self._generate_conn_url()
+                
+        # Call the routing function with the credentials
+        log.debug("Starting database remote schema harvest: %s", self.obfuscate_credentials_in_url(conn_url))
+    
+        # Check if the content_dicts colnames correspond to the local schema
+        try:
+            # Standardizes the field_mapping           
+            field_mappings = {
+            'dataset_field_mapping': self._standardize_field_mapping(self.config.get("dataset_field_mapping")),
+            'distribution_field_mapping': self._standardize_field_mapping(self.config.get("distribution_field_mapping")),
+            'datadictionary_field_mapping': None
+        }
+
+        except RemoteSchemaError as e:
+            self._save_gather_error('Error standardize field mapping: {0}'.format(e), harvest_job)
+            return []
+
+        # before_sql_retrieve interface
+        for harvester in p.PluginImplementations(ISQLHarvester):
+            if hasattr(harvester, 'before_sql_retrieve'):
+                field_mappings, before_sql_retrieve_errors = harvester.before_sql_retrieve(field_mappings, conn_url, harvest_job)
+                        
+                for error_msg in before_sql_retrieve_errors:
+                    self._save_gather_error(error_msg, harvest_job)
+                        
+                if not field_mappings:
+                    return []
+
+        # Read database
+        if self.db_manager is not None:
+            self.db_manager.check_connection(conn_url)
+            log.debug('Connection is ready.')
+            content_dicts = self._read_remote_database(field_mappings, conn_url)
+            #log.debug('content_dicts %s', content_dicts)
+                 
+        # after_sql_retrieve interface
+        for harvester in p.PluginImplementations(ISQLHarvester):
+            if hasattr(harvester, 'after_sql_retrieve'):
+                content_dicts, after_sql_retrieve_errors = harvester.after_sql_retrieve(content_dicts, harvest_job)
+                        
+                for error_msg in after_sql_retrieve_errors:
+                    self._save_gather_error(error_msg, harvest_job)
+                        
+                if not content_dicts:
+                    return []
+
+        # Create default values dict from config mappings.
+        try:
+            self.create_default_values(field_mappings)
+    
+        except ReadError as e:
+            self._save_gather_error('Error generating default values for dataset/distribution config field mappings: {0}'.format(e), harvest_job)
+        
+        # Check if the content_dicts colnames correspond to the local schema
+        try:
+            #log.debug('content_dicts: %s', content_dicts)
+            # Standardizes the field names
+            content_dicts['datasets'], remote_dataset_field_mapping = self._standardize_df_fields_from_field_mapping(content_dicts['datasets'], field_mappings.get('dataset_field_mapping'))
+            content_dicts['distributions'], remote_distribution_field_mapping = self._standardize_df_fields_from_field_mapping(content_dicts['distributions'], field_mappings.get('distribution_field_mapping'))
+            
+            # Validate field names
+            remote_dataset_field_names = set(content_dicts['datasets'].columns)
+            remote_resource_field_names = set(content_dicts['distributions'].columns)
+
+            self._validate_remote_schema(remote_dataset_field_names=remote_dataset_field_names, remote_ckan_base_url=None, remote_resource_field_names=remote_resource_field_names, remote_dataset_field_mapping=remote_dataset_field_mapping, remote_distribution_field_mapping=remote_distribution_field_mapping)
+
+        except RemoteSchemaError as e:
+            self._save_gather_error('Error validating remote schema: {0}'.format(e), harvest_job)
+            return []
+        
+        # before_cleaning interface
+        for harvester in p.PluginImplementations(ISQLHarvester):
+            if hasattr(harvester, 'before_cleaning'):
+                content_dicts, before_cleaning_errors = harvester.before_cleaning(content_dicts, harvest_job, self.config)
+
+                for error_msg in before_cleaning_errors:
+                    self._save_gather_error(error_msg, harvest_job)
+
+        # Clean tables
+        try:
+            clean_datasets = self._process_content(content_dicts, conn_url, field_mappings)
+            log.debug('"%s" remote database cleaned successfully.', self._database_types_supported[self._database_type]['title'])
+            clean_datasets = self._update_dict_lists(clean_datasets)
+            #log.debug('clean_datasets: %s', clean_datasets)
+            log.debug('Update dict string lists. Number of datasets imported: %s', len(clean_datasets))
+            
+        except Exception as e:
+            self._save_gather_error('Error cleaning the remote database: {0}'.format(e), harvest_job)
+            return []
+    
+        # after_cleaning interface
+        for harvester in p.PluginImplementations(ISQLHarvester):
+            if hasattr(harvester, 'after_cleaning'):
+                clean_datasets, after_cleaning_errors = harvester.after_cleaning(clean_datasets)
+
+                for error_msg in after_cleaning_errors:
+                    self._save_gather_error(error_msg, harvest_job)
+    
+        # Add datasets to the database
+        try:
+            log.debug('Adding datasets to DB')
+            datasets_to_harvest = {}
+            source_dataset = model.Package.get(harvest_job.source.id)
+            for dataset in clean_datasets:
+                #log.debug('dataset: %s', dataset)
+                # Set and update translated fields
+                dataset = self._set_translated_fields(dataset)
+                
+                # Using name as identifier. Remote table datasets doesnt have identifier
+                try:
+                    if not dataset.get('name'):
+                        dataset['name'] = self._gen_new_name(dataset['title'])
+                    while dataset['name'] in self._names_taken:
+                        suffix = sum(name.startswith(dataset['name'] + '-') for name in self._names_taken) + 1
+                        dataset['name'] = '{}-{}'.format(dataset['name'], suffix)
+                    self._names_taken.append(dataset['name'])
+
+                    # If the dataset has no identifier, use the name
+                    if not dataset.get('identifier'):
+                        dataset['identifier'] = self._generate_identifier(dataset)
+                except Exception as e:
+                    self._save_gather_error('Error for the dataset identifier %s [%r]' % (dataset['identifier'], e), harvest_job)
+                    continue
+                
+                # Check if a dataset with the same identifier exists can be overridden if necessary
+                #existing_dataset = self._check_existing_package_by_ids(dataset)
+                #log.debug('existing_dataset: %s', existing_dataset)
+                            
+                # Unless already set by the dateutil.parser.parser, get the owner organization (if any)
+                # from the harvest source dataset
+                if not dataset.get('owner_org'):
+                    if source_dataset.owner_org:
+                        dataset['owner_org'] = source_dataset.owner_org
+
+                if 'extras' not in dataset:
+                    dataset['extras'] = []
+
+                # if existing_dataset:
+                #     dataset['identifier'] = existing_dataset['identifier']
+                #     guids_in_db.add(dataset['identifier'])
+                    
+                guids_in_harvest.add(dataset['identifier'])
+                datasets_to_harvest[dataset['identifier']] = dataset
+
+        except Exception as e:
+            self._save_gather_error('Error when processsing dataset: %r / %s' % (e, traceback.format_exc()),
+                                    harvest_job)
+            return []
 
         # Check guids to create/update/delete
         new = guids_in_harvest - guids_in_db
@@ -173,101 +400,40 @@ class SQLHarvester(SchemingDCATHarvester):
         change = guids_in_db & guids_in_harvest
 
         log.debug('new: %s, delete: %s and change: %s', new, delete, change)
-
-        ##Generamos HarvestObject
+            
         ids = []
         for guid in new:
-            log.debug("guid: "+ guid)
-            log.debug(datasets_to_harvest.get(guid).to_dict())
-            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid)),
                                 extras=[HarvestObjectExtra(key='status', value='new')])
             obj.save()
-            ids.append(obj.id)
-
+            ids.append({'id': obj.id, 'name': datasets_to_harvest.get(guid)['name'], 'identifier': datasets_to_harvest.get(guid)['identifier']})
         for guid in change:
-            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid)),
                                 package_id=guid_to_package_id[guid],
                                 extras=[HarvestObjectExtra(key='status', value='change')])
             obj.save()
-            ids.append(obj.id)
-            
+            ids.append({'id': obj.id, 'name': datasets_to_harvest.get(guid)['name'], 'identifier': datasets_to_harvest.get(guid)['identifier']})
         for guid in delete:
-            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid).to_dict()),
+            obj = HarvestObject(guid=guid, job=harvest_job, content=json.dumps(datasets_to_harvest.get(guid)),
                                 package_id=guid_to_package_id[guid],
                                 extras=[HarvestObjectExtra(key='status', value='delete')])
             model.Session.query(HarvestObject).\
-                  filter_by(guid=guid).\
-                  update({'current': False}, False)
+                filter_by(guid=guid).\
+                update({'current': False}, False)
             obj.save()
-            ids.append(obj.id)
+            ids.append({'id': obj.id, 'name': datasets_to_harvest.get(guid)['name'], 'identifier': datasets_to_harvest.get(guid)['identifier']})
 
-        return ids
+        log.debug('Number of elements in clean_datasets: %s and object_ids: %s', len(clean_datasets), len(ids))
 
-    def _create_query(self,fields,p_key):
-        fieldsJoined = " ,".join(list(fields.values()))
-        log.debug(fieldsJoined)
-        p_keyList = list(p_key.items())
-        query = "select "+fieldsJoined
+        # Log clean_datasets/ ids
+        self._log_export_clean_datasets_and_ids(harvest_source_title, clean_datasets, ids)
 
-        if 'oneTable' not in p_key:
-            table1 = ".".join(p_keyList[0][0].split('.')[0:2])
-            table2 = ".".join(p_keyList[0][1].split('.')[0:2])
-            query += " from "+ table1+ " left join "+table2 +" on "+ p_keyList[0][0] +"="+ p_keyList[0][1]
-
-            for field in p_keyList[1:]:
-                table1 = ".".join(field.split[0]('.')[0:2])
-                table2 = ".".join(field.split[1]('.')[0:2])
-                query += " from "+ table1+ " left join "+table2 +" on "+ field[0] +"="+ field[1]
-        else:
-            table2 = ".".join(p_keyList[0][1].split('.')[0:2])
-            query += " from " + table2
-        
-        return query
-
-    # TODO: database_p_keys _is_not_db_key
-    def _validate_dataset_pkeys(database_type, config_obj):
-        database_p_keys = config_obj['database_p_keys']
-        log.debug("database_type = "+ database_p_keys)
-        if not isinstance(database_p_keys, basestring):
-            raise ValueError('database_type must be a string')
-
-        #TODO: Loop over database_p_keys
-
-        config = json.dumps({**config_obj, 'database_type': database_type})
-    
-        return config
-
-        # if 'database_mapping' in config:
-        #     database_mapping = config_obj['database_mapping']
-
-        #     if not isinstance(next(iter(database_mapping)),dict):
-        #         ValueError('database_mapping must be a collection of dictionaries')
-        #     else:
-        #         if 'p_key' in database_mapping:
-        #             if not isinstance(database_mapping['p_key'],dict):
-        #                 ValueError('p_key must be a dictionary')
-        #             else:
-        #                 if self._is_not_db_key(next(iter(database_mapping['p_key']))):
-        #                     ValueError('wrong "p_key" database field format; should be schema.table.value')
-                        
-        #             if not isinstance(database_mapping['fields']):
-        #                 ValueError('fields must be a dictionary')
-        #             else:
-        #                 if self._is_not_db_key(next(iter(database_mapping['fields']))):
-        #                     ValueError('wrong "fields" database field format; should be schema.table.value')
-
-
-        # def _is_not_db_key(self, string):
-        #     field = string.split('.')
-
-        #     if length(field) != 3:
-        #         raise ValueError(f'"The lenght of the field is: {length(field)}"')
+        return [id_dict['id'] for id_dict in ids]
 
     def fetch_stage(self, harvest_object):
-    #vacío porque los datos ya estan recopilados en gather_stage
         return True
 
-    #TODO implementar el import stage 
+    #TODO: implementar el import stage 
     def import_stage(self, harvest_object):
         """
         Performs the import stage of the SchemingDCATXLSHarvester.
@@ -478,90 +644,6 @@ class SQLHarvester(SchemingDCATHarvester):
                     return False
 
         return result
-
-    def validate_config(self, config):
-        """
-        Validates the configuration for the harvester.
-
-        Args:
-            config (dict): The configuration dictionary.
-
-        Returns:
-            str: The validated configuration as a JSON string.
-
-        Raises:
-            ValueError: If the configuration is invalid.
-
-        """
-        config_obj = self.get_harvester_basic_info(config)
-        auth = True
-
-        supported_types = {st['name'] for st in self._database_types_supported.values() if st['active']}
-
-        # Check basic validation config
-        self._set_basic_validate_config(config)
-        
-        # Instance sql_field_mapping validator
-        field_mapping_validator = FieldMappingValidator()
-
-        if 'database_type' in config:
-            database_type = config_obj['database_type']
-            log.debug("database_type: %s ", database_type)
-            if not isinstance(database_type, basestring):
-                raise ValueError('database_type must be a string')
-
-            if database_type not in supported_types:
-                raise ValueError(f'database_type should be one of: {", ".join(supported_types)}')
-
-            config = json.dumps({**config_obj, 'database_type': database_type})
-
-        else:
-            raise ValueError(f'database_type should be one of: {", ".join(supported_types)}')
-
-        if 'credentials' in config:   
-            required_keys = ['user', 'password', 'host', 'port', 'db']  
-            credentials = config_obj['credentials']
-            
-            if not isinstance(credentials, dict):
-                raise ValueError('credentials must be a dictionary')
-            
-            for key in required_keys:
-                if key not in credentials:
-                    raise ValueError(f'credentials needs key "{key}"')
-            
-            if not isinstance(credentials['port'], int):
-                raise ValueError('"port" must be an integer')
-        else:
-            raise ValueError("credentials must exist and be a dictionary with the following structure: {'user': 'username', 'password': 'password', 'host': 'hostname', 'port': port_number, 'db': 'database'}")
-
-        #TODO: Finalizar database_p_keys
-        if 'database_p_keys' in config_obj:
-            self._validate_dataset_pkeys(database_type, config_obj)
-
-        # Check if 'field_mapping_schema_version' exists in the config
-        if 'field_mapping_schema_version' not in config_obj:
-            raise ValueError(f'Insert the schema version: "field_mapping_schema_version: <version>", one of {self._field_mapping_validator_versions} . More info: https://github.com/OpenDataGIS/ckanext-fototeca?tab=readme-ov-file#recolector-sql')
-        else:
-            # If it exists, check if it's an integer and in the allowed versions
-            if not isinstance(config_obj['field_mapping_schema_version'], int) or config_obj['field_mapping_schema_version'] not in self._field_mapping_validator_versions:
-                raise ValueError(f'field_mapping_schema_version must be an integer and one of {self._field_mapping_validator_versions}. Check the extension README for more info.')
-
-        # Validate if exists a JSON contained the mapping field_names between the remote schema and the local schema        
-        for mapping_name in ['dataset_field_mapping', 'distribution_field_mapping', 'resourcedictionary_field_mapping']:
-            if mapping_name in config:
-                field_mapping = config_obj[mapping_name]
-                if not isinstance(field_mapping, dict):
-                    raise ValueError(f'{mapping_name} must be a dictionary')
-
-                schema_version = config_obj['field_mapping_schema_version']
-
-                try:
-                    # Validate field_mappings acordin schema versions
-                    field_mapping = field_mapping_validator.validate(field_mapping, schema_version)
-                except ValueError as e:
-                    raise ValueError(f"The field mapping is invalid: {e}") from e
-
-                config = json.dumps({**config_obj, mapping_name: field_mapping})
 
     #TODO: método para crear/actualizar los datasets e importado por otros harvesters
     def _create_or_update_package(
@@ -817,6 +899,222 @@ class SQLHarvester(SchemingDCATHarvester):
 
         return None
 
+    # DB methods
+    def _save_queries(self):
+        raise NotImplementedError("The _save_queries method must be defined in the subclass for the specific database type: {}".format(self._database_type))
+
+    def _build_query(self):
+        raise NotImplementedError("The _build_query method must be defined in the subclass for the specific database type: {}".format(self._database_type))
+            
+    # Harvester
+    def _standardize_field_mapping(self, field_mapping):
+        """
+        Standardizes the field_mapping based on the schema version of SqlFieldMappingValidator.
+
+        Args:
+            field_mapping (dict): A dictionary mapping the current column names to the desired column names.
+
+        Returns:
+            dict: The standardized field_mapping.
+        """
+        if field_mapping is not None:
+            schema_version = self.config.get("field_mapping_schema_version", 1)
+            if schema_version not in self._field_mapping_validator_versions:
+                raise ValueError(f"Unsupported schema version: {schema_version}")
+        
+        return field_mapping
+    
+    def _validate_source_url(self, harvest_job, source_url):
+        """
+        Validates the source URL against the host and port in the credentials.
+
+        This method parses the source URL to extract the host and port. It then checks if these match the host and port in the credentials. If they do not match, it saves an error message and returns False. If a key is missing in the credentials, it also saves an error message and returns False.
+
+        Args:
+            harvest_job (HarvestJob): The harvest job object.
+            source_url (str): The source URL to validate.
+
+        Returns:
+            bool: True if the host and port in the credentials match the ones in the source URL, False otherwise.
+        """
+        try:
+            # Parse the source URL
+            parsed_url = urlparse(source_url)
+
+            # Extract the host and port from the URL
+            url_host = parsed_url.hostname
+            url_port = parsed_url.port if parsed_url.port else 80  # Default to port 80 if no port is specified in the URL
+
+            # Check if the host and port in the credentials match the ones in the URL
+            if self._credentials['host'] != url_host or str(self._credentials['port']) != str(url_port):
+                msg = f'The source URL: "{source_url}" and the credentials URI: "http://{self._credentials["host"]}:{self._credentials["port"]}" are not the same. Check the credentials dict.'
+                self._save_gather_error(msg, harvest_job)
+                return False
+        except KeyError as e:
+            msg = f"Missing key in credentials: {e}"
+            self._save_gather_error(msg, harvest_job)
+            return False
+
+        return True
+
+    # Clean datasets
+    def _clean_table_datasets(self, data):
+        """
+        Clean the table datasets by removing leading/trailing whitespaces, newlines, and tabs.
+
+        Args:
+            data (pandas.DataFrame): The input table dataset.
+
+        Returns:
+            list: A list of dictionaries representing the cleaned table datasets.
+        """
+        # Clean column names by removing leading/trailing whitespaces, newlines, and tabs
+        data.columns = data.columns.str.strip().str.replace('\n', '').str.replace('\t', '')
+
+        # Remove all fields that are a nan float and trim all spaces of the values
+        data = data.apply(lambda x: x.str.strip() if x.dtype == 'object' else x)
+        data = data.fillna(value='')
+
+        # Convert table to list of dicts
+        return data.to_dict('records')
+
+    def _clean_table_distributions(self, data, dataset_id_colname='dataset_id'):
+        """
+        Clean the table distributions data.
+
+        Args:
+            data (pandas.DataFrame): The table distributions data.
+            dataset_id_colname (str, optional): The column name representing the dataset ID. Defaults to 'dataset_id'.
+
+        Returns:
+            dict or None: A dictionary containing the cleaned distributions data grouped by dataset_id,
+            or None if no distributions are loaded.
+        """
+        if dataset_id_colname is None:
+            dataset_id_colname = 'dataset_id'
+
+        # Select only the columns of type 'object' and apply the strip() method to them
+        data.loc[:, data.dtypes == object] = data.select_dtypes(include=['object']).apply(lambda x: x.str.strip())
+
+        # Remove rows where dataset_id_colname is None or an empty string
+        try:
+            data = data[data[dataset_id_colname].notna() & (data[dataset_id_colname] != '')]
+        except Exception as e:
+            log.error('Error removing rows: %s | Exception type: %s', str(e), type(e).__name__)
+            raise e
+
+        if not data.empty:
+            # Group distributions by dataset_id and convert to list of dicts
+            return data.groupby(dataset_id_colname).apply(lambda x: x.to_dict('records')).to_dict()
+        else:
+            log.debug('No distributions loaded. Check "distribution.%s" fields', dataset_id_colname)
+            return None
+
+    def _add_distributions_and_datadictionaries_to_datasets(self, table_datasets, table_distributions_grouped, table_datadictionaries_grouped, identifier_field='identifier', alternate_identifier_field='alternate_identifier', inspire_id_field='inspire_id', datadictionary_id_field="id"):
+        """
+        Add distributions (CKAN resources) and datadictionaries to each dataset object.
+
+        Args:
+            table_datasets (list): List of dataset objects.
+            table_distributions_grouped (dict): Dictionary of distributions grouped by dataset identifier.
+            table_datadictionaries_grouped (dict): Dictionary of datadictionaries grouped by dataset identifier.
+            identifier_field (str, optional): Field name for the identifier. Defaults to 'identifier'.
+            alternate_identifier_field (str, optional): Field name for the alternate identifier. Defaults to 'alternate_identifier'.
+            inspire_id_field (str, optional): Field name for the inspire id. Defaults to 'inspire_id'.
+            datadictionary_id_field (str, optional): Field name for the datadictionary id. Defaults to 'id'.
+
+        Returns:
+            list: List of dataset objects with distributions (CKAN resources) and datadictionaries added.
+        """
+        try:
+            return [
+                {
+                    **d,
+                    'resources': [
+                        {**dr, 'datadictionaries': table_datadictionaries_grouped.get(dr[datadictionary_id_field], []) if table_datadictionaries_grouped else []}
+                        for dr in table_distributions_grouped.get(
+                            d.get(identifier_field) or d.get(alternate_identifier_field) or d.get(inspire_id_field), []
+                        )
+                    ]
+                }
+                for d in table_datasets
+            ]
+        except Exception as e:
+            log.error("Error while adding distributions and datadictionaries to datasets: %s", str(e))
+            raise
+
+    def _update_dict_lists(self, data):
+        """
+        Update the dictionary lists in the given data.
+
+        Args:
+            data (list): The data to be updated.
+
+        Returns:
+            list: The updated data.
+        """
+        if self._local_schema is None:
+            self._local_schema = self._get_local_schema()
+
+        # Get the list of fields that should be converted to lists
+        list_fields = ['groups'] + [
+            field['field_name']
+            for field in self._local_schema['dataset_fields']
+            if any(keyword in field.get(field_type, '').lower() for keyword in ['list', 'multiple', 'tag_string', 'tag', 'group'] for field_type in ['validators', 'output_validators', 'preset']) or 'groups' in field['field_name'].lower()
+        ]
+
+        for element in data:
+            for key, value in element.items():
+                if key in list_fields and isinstance(value, str):
+                    element[key] = self._set_string_to_list(value)
+                elif key == 'distributions':
+                    for distribution in value:
+                        for key_dist, value_dist in distribution.items():
+                            if key_dist in list_fields and isinstance(value_dist, str):
+                                distribution[key_dist] = self._set_string_to_list(value_dist)
+
+        # Return the updated data
+        return data
+
+    @staticmethod
+    def _set_string_to_list(value):
+        """
+        Converts a comma-separated string into a list of items.
+
+        Args:
+            value (str): The comma-separated string to convert.
+
+        Returns:
+            list: A list of items, with leading and trailing whitespace removed from each item,
+                  and leading dashes from each item.
+
+        Example:
+            >>> _set_string_to_list('apple, banana, -orange')
+            ['apple', 'banana', 'orange']
+        """
+        return [x.strip(" -") for x in value.split(',') if x.strip()]
+
+    @staticmethod
+    def obfuscate_credentials_in_url(conn_url):
+        """
+        Obfuscates the username and password in a connection URL for safe logging.
+
+        Args:
+            conn_url (str): The original connection URL containing sensitive information.
+
+        Returns:
+            str: The connection URL with the username and password obfuscated.
+
+        Example:
+            >>> obfuscate_credentials_in_url("postgresql://user:password@localhost:5432/my_database")
+            'postgresql://****:****@localhost:5432/my_database'
+        """
+        parts = urlparse(conn_url)
+
+        obfuscated_netloc = parts.netloc.replace(parts.username, '****', 1).replace(parts.password, '****', 1) if parts.username and parts.password else parts.netloc
+        obfuscated_parts = parts._replace(netloc=obfuscated_netloc)
+
+        return urlunparse(obfuscated_parts)
 
 class ContentFetchError(Exception):
     pass

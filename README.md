@@ -110,15 +110,28 @@ Para campos que no son multilingües, puedes usar directamente `field_name` sin 
    },
    "field_mapping_schema_version":1,
    "dataset_field_mapping":{
-      "alternate_identifer":{
-         "field_name":"fototeca.vista_ckan.cod_vuelo",
-         "sort":2
+      "alternate_identifier": {
+          "field_name": "fototeca.vista_ckan.cod_vuelo",
+          "is_p_key": true,
+          "index": true,
+          "f_key_references": [
+              "fototeca.vuelos.cod_vuelo"
+          ]
+      },
+      "flight_color": {
+          "field_name": "fototeca.vista_ckan.color",
+          "f_key_references": [
+              "fototeca.l_color.color"
+          ]
+      },
+      },
+      "encoding": {
+          "field_value": "UTF-8"
       },
       "title_translated":{
          "languages": {
             "es":{
-               "field_name":"fototeca.vuelos.nom_vuelo",
-               "sort":3
+              "field_name": "fototeca.vuelos.nom_vuelo",
             }
          }
       }
@@ -146,10 +159,29 @@ Hay dos tipos de campos que pueden ser definidos en la configuración:
 
 1. **Campos regulares**: Estos campos tienen una etiqueta de campo para definir el mapeo o un valor fijo para todos sus registros.
     - **Propiedades**: Un campo puede tener una de estas tres propiedades:
-      - **Campos de valor fijo**: Estos campos tienen un valor fijo que se asigna a todos los registros. Esto se define usando la propiedad `field_value`. Si `field_value` es una lista, `field_name` podría establecerse al mismo tiempo, y el `field_value` extiende la lista obtenida del campo remoto.
+      - **Campos de valor fijo (`field_value`)**: Estos campos tienen un valor fijo que se asigna a todos los registros. Esto se define usando la propiedad `field_value`. Si `field_value` es una lista, `field_name` podría establecerse al mismo tiempo, y el `field_value` extiende la lista obtenida del campo remoto.
       - **Etiquetas de campo**: Nombre del campo en la base de datos:
-        - **Campos basados en nombre**: Estos campos se definen por su nombre en la tabla DB. Esto se define usando la propiedad `field_name`.
-2. **Campos multilingües**: Estos campos tienen diferentes valores para diferentes idiomas. Cada idioma se representa como un objeto separado dentro del objeto de campo (`es`, `en`, ...). El objeto de idioma puede tener propiedades `field_value`, y `field_name`, al igual que un campo normal.
+        - **Campos basados en nombre (`field_name`)**: Estos campos se definen por su nombre en la tabla DB. Esto se define usando la propiedad `field_name`. Para facilitar la recuperación de datos de la base de datos, especialmente en lo que respecta a la identificación de claves primarias (`p_key`) y claves foráneas (`f_key`), se pueden añadir las siguientes propiedades al esquema de `field_mapping`:
+          1. **El campo es clave primaria (`is_p_key`)** [*Opcional*]: Esta propiedad identificará si el campo es una clave primaria (`p_key`) o no si no se indica. Esto facilitará las operaciones de join y las referencias entre tablas.
+          2. **Referencias de tabla (`f_key_references`)** [*Opcional* (`lista`)] Para los campos que son claves foráneas, esta propiedad especificaría a qué esquemas, tablas y campos se refiere la clave foránea. Por ejemplo, `["public.vuelo.id", "public.camara.id"]`. Esto es útil para automatizar las uniones entre tablas.
+          3. **Índice (`index`)** [*Opcional*]: Una propiedad booleana para indicar si el campo debería ser indexado para mejorar la eficiencia de las consultas. Aunque no es específico de claves primarias o foráneas, es relevante para la optimización de consultas. Por defecto su valor es `false`.
+
+          El esquema modificado permitiría una recuperación de datos más eficiente y simplificaría la construcción del DataFrame, especialmente en escenarios complejos con múltiples tablas y relaciones. Aquí hay un ejemplo de cómo se vería el esquema modificado para un campo que es una clave foránea:
+
+          ```json
+          "dataset_field_mapping": {
+            "alternate_identifier": {
+                "field_name": "fototeca.vista_ckan.cod_vuelo",
+                "is_p_key": true,
+                "index": true,
+                "f_key_references": [
+                    "fototeca.vuelos.cod_vuelo"
+                ]
+            }
+          }
+          ```
+
+2. **Campos multilingües (`languages`)**: Estos campos tienen diferentes valores para diferentes idiomas. Cada idioma se representa como un objeto separado dentro del objeto de campo (`es`, `en`, ...). El objeto de idioma puede tener propiedades `field_value`, y `field_name`, al igual que un campo normal.
 
 ## Validación
 El esquema se valida utilizando la clase `SqlFieldMappingValidator`. Esta clase verifica que el esquema esté en el formato correcto y que todos los campos estén en el formato correcto `{schema}.{table}.{field}`. Si el esquema no es válido, se generará un `ValueError`.

@@ -1,1 +1,1 @@
-psycopg2==2.9.9
+sycopg2-binary==2.9.9

@@ -1,278 +1,314 @@
 {
-   "database_type":"postgres",
-   "credentials":{
-    "user":"u_fototeca",
-    "password":"u_fototeca",
-    "host":"localhost",
-    "port":5432,
-    "db":"fototeca"
- },
-   "field_mapping_schema_version":1,
-   "dataset_field_mapping":{
-      "title_translated":{
-         "languages":{
-            "es":{
-               "field_name":"fototeca.vuelos.nom_vuelo"
+    "database_type": "postgres",
+    "credentials":{
+        "user":"u_fototeca",
+        "password":"u_fototeca",
+        "host":"localhost",
+        "port":5432,
+        "db":"fototeca"
+    },
+    "field_mapping_schema_version": 1,
+    "dataset_field_mapping": {
+        "title_translated": {
+            "languages": {
+                "es": {
+                    "field_name": "fototeca.vuelos.nom_vuelo"
+                }
             }
-         }
-      },
-      "private":{
-         "field_value": null
-      },
-      "graphic_overview":{
-         "field_value": null
-      },
-      "notes_translated":{
-         "languages":{
-            "es":{
-               "field_value":"Resumen de demostración del conjunto de datos {title}."
-            },
-            "en":{
-                "field_value":"Abstract of {title} dataset."
-             }
-         }
-      },
-      "dcat_type":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"
-      },
-      "theme_es":{
-         "field_value":"http://datos.gob.es/kos/sector-publico/sector/medio-ambiente"
-      },
-      "theme":{
-         "field_value":"http://inspire.ec.europa.eu/theme/oi"
-      },
-      "language":{
-         "field_value":"http://publications.europa.eu/resource/authority/language/SPA"
-      },
-      "topic":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/environment"
-      },
-      "tag_string":{
-         "field_value":["PNOA", "CNIG", "Ortoimagen", "Nacional", "Ámbito Espacial", "Fototeca Digital", "Vuelo fotogramétrico", "Fotograma"]
-      },
-      "tag_uri":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"
-      },
-      "flight_type":{
-         "field_name":"fototeca.vista_ckan.tipo"
-      },
-      "flight_frames":{
-        "field_name":"fototeca.vista_ckan.num_fotogramas"
-      },
-      "flight_graphic":{
-        "field_name":"fototeca.vista_ckan.grafico"
-      },
-      "flight_color":{
-        "field_name":"fototeca.vista_ckan.color"
-      },
-      "contact_name":{
-         "field_value":"Centro Nacional de Información Geográfica (CNIG)"
-      },
-      "contact_email":{
-         "field_value":"consulta@cnig.es"
-      },
-      "contact_url":{
-         "field_value":"https://www.cnig.es"
-      },
-      "contact_uri":{
-         "field_value":"http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
-      },
-      "hvd_category":{
-         "field_value":"http://data.europa.eu/bna/c_dd313021"
-      },
-      "author":{
-        "field_value": null
-      },
-      "author_email":{
-        "field_value": null
-      },
-      "author_url":{
-        "field_value": null
-      },
-      "author_uri":{
-        "field_value": null
-      },
-      "maintainer":{
-         "field_value":"Centro Nacional de Información Geográfica (CNIG)"
-      },
-      "maintainer_email":{
-         "field_value":"consulta@cnig.es"
-      },
-      "maintainer_url":{
-         "field_value":"https://www.cnig.es"
-      },
-      "maintainer_uri":{
-         "field_value":"http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
-      },
-      "publisher":{
-         "field_value":"Centro Nacional de Información Geográfica (CNIG)"
-      },
-      "publisher_email":{
-         "field_value":"consulta@cnig.es"
-      },
-      "publisher_url":{
-         "field_value":"https://www.cnig.es"
-      },
-      "publisher_uri":{
-         "field_value":"http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
-      },
-      "publisher_type":{
-         "field_value":"http://purl.org/adms/publishertype/NationalAuthority"
-      },
-      "inspire_id":{
-        "field_value": null
-      },
-      "alternate_identifier":{
-        "field_value": null
-      },
-      "conforms_to":{
-        "field_value":["http://inspire.ec.europa.eu/documents/inspire-metadata-regulation", "http://inspire.ec.europa.eu/documents/commission-regulation-eu-no-13122014-10-december-2014-amending-regulation-eu-no-10892010-0", "https://www.boe.es/eli/es/res/2013/02/19/(4)"]
-      },
-      "metadata_profile":{
-         "field_value":["http://semiceu.github.io/GeoDCAT-AP/releases/2.0.0","http://inspire.ec.europa.eu/document-tags/metadata","https://semiceu.github.io/DCAT-AP/releases/3.0.0"]
-      },
-      "temporal_start":{
-         "field_value":"fototeca.vista_ckan.año"
-      },
-      "temporal_end":{
-         "field_value":"fototeca.vista_ckan.año"
-      },
-      "provenance":{
-         "languages":{
-            "es":{
-               "field_name":"fototeca.vuelos.descripcion"
+        },
+        "private": {
+            "field_value": null
+        },
+        "graphic_overview": {
+            "field_value": null
+        },
+        "notes_translated": {
+            "languages": {
+                "es": {
+                    "field_value": "Resumen por defecto del conjunto de datos de la Fototeca Digital."
+                },
+                "en": {
+                    "field_value": "Default abstract of the Digital Photo Library dataset."
+                }
             }
-         }
-      },
-      "frequency":{
-         "field_value":"http://publications.europa.eu/resource/authority/frequency/ANNUAL_3"
-      },
-      "lineage_source":{
-         "field_value":"Las tomas fotográficas para los vuelos PNOA son verticales. Para recubrir la zona del territorio y obtener ortofotografías, la trayectoria que debe reccorer un avión tiene que tener solape, tanto en la dirección del avance del vuelo como entre las pasadas adyacentes. En PNOA la configuración de las pasadas generalmente es Este-Oeste. El recubrimiento longitudinal es del 60 % y el transversal es  mayor o igual al 30 %.  La superposición nos permite la formación de modelos tridimensionales para aplicar a las imágenes las rectificaciones por los efectos del relieve."
-      },
-      "source":{
-         "field_value":"https://centrodedescargas.cnig.es/CentroDescargas/index.jsp"
-      },
-      "lineage_process_steps":{
-         "field_value":["Planificación del vuelo fotogramétrico.", "Ejecución del vuelo con pasadas longitudinales y transversales.", "Proceso de ortorrectificación en el que se pasa de una imagen con proyección cónica a otra con proyección ortogonal."]
-      },
-      "reference":{
-        "field_value": null
-      },
-      "temporal_resolution":{
-        "field_value": null
-      },
-      "encoding":{
-        "field_value": "UTF-8"
-      },
-      "spatial":{
-         "field_name":"fototeca.vista_ckan.extension"
-      },
-      "spatial_uri":{
-         "field_value":"http://datos.gob.es/recurso/sector-publico/territorio/Pais/España"
-      },
-      "representation_type":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/raster"
-      },
-      "spatial_resolution_in_meters":{
-         "field_name":"fototeca.vista_ckan.escala"
-      },
-      "license_id":{
-         "field_value":"https://creativecommons.org/licenses/by/4.0/"
-      },
-      "access_rights":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
-      },
-      "reference_system":{
-        "field_value": null
-      },
-      "version":{
-        "field_value": null
-      },
-      "version_notes":{
-        "field_value": null
-      },
-      "valid":{
-        "field_value": null
-      },
-      "groups":{
-        "field_value": null
-      },
-      "purpose":{
-         "languages":{
-            "es":{
-               "field_value":"La Fototeca del CNIG tiene la función de custodiar los originales de los vuelos fotogramétricos del IGN, así como la difusión de dicha información."
-            },
-            "en":{
-               "field_value":"The CNIG Digital Fototeca has the function of safeguarding the originals of the IGN photogrammetric flights, as well as the dissemination of said information."
+        },
+        "dcat_type": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"
+        },
+        "theme_es": {
+            "field_value": "http://datos.gob.es/kos/sector-publico/sector/medio-ambiente"
+        },
+        "theme": {
+            "field_value": "http://inspire.ec.europa.eu/theme/oi"
+        },
+        "language": {
+            "field_value": "http://publications.europa.eu/resource/authority/language/SPA"
+        },
+        "topic": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/environment"
+        },
+        "tag_string": {
+            "field_value": [
+                "PNOA",
+                "CNIG",
+                "Ortoimagen",
+                "Nacional",
+                "Ámbito Espacial",
+                "Fototeca Digital",
+                "Vuelo fotogramétrico",
+                "Fotograma"
+            ]
+        },
+        "tag_uri": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"
+        },
+        "flight_type": {
+            "field_name": "fototeca.vista_ckan.tipo"
+        },
+        "flight_frames": {
+            "field_name": "fototeca.vista_ckan.num_fotogramas"
+        },
+        "flight_graphic": {
+            "field_name": "fototeca.vista_ckan.grafico"
+        },
+        "flight_color": {
+            "field_name": "fototeca.vista_ckan.color",
+            "f_key_references": [
+                "fototeca.l_color.color"
+            ]
+        },
+        "flight_spatial": {
+            "field_name": "fototeca.vista_ckan.extension"
+        },
+        "contact_name": {
+            "field_value": "Centro Nacional de Información Geográfica (CNIG)"
+        },
+        "contact_email": {
+            "field_value": "consulta@cnig.es"
+        },
+        "contact_url": {
+            "field_value": "https://www.cnig.es"
+        },
+        "contact_uri": {
+            "field_value": "http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
+        },
+        "hvd_category": {
+            "field_value": "http://data.europa.eu/bna/c_dd313021"
+        },
+        "author": {
+            "field_value": null
+        },
+        "author_email": {
+            "field_value": null
+        },
+        "author_url": {
+            "field_value": null
+        },
+        "author_uri": {
+            "field_value": null
+        },
+        "maintainer": {
+            "field_value": "Centro Nacional de Información Geográfica (CNIG)"
+        },
+        "maintainer_email": {
+            "field_value": "consulta@cnig.es"
+        },
+        "maintainer_url": {
+            "field_value": "https://www.cnig.es"
+        },
+        "maintainer_uri": {
+            "field_value": "http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
+        },
+        "publisher": {
+            "field_value": "Centro Nacional de Información Geográfica (CNIG)"
+        },
+        "publisher_email": {
+            "field_value": "consulta@cnig.es"
+        },
+        "publisher_url": {
+            "field_value": "https://www.cnig.es"
+        },
+        "publisher_uri": {
+            "field_value": "http://datos.gob.es/recurso/sector-publico/org/Organismo/E00125901"
+        },
+        "publisher_type": {
+            "field_value": "http://purl.org/adms/publishertype/NationalAuthority"
+        },
+        "inspire_id": {
+            "field_value": null
+        },
+        "alternate_identifier": {
+            "field_name": "fototeca.vista_ckan.cod_vuelo",
+            "is_p_key": true,
+            "index": true,
+            "f_key_references": [
+                "fototeca.vuelos.cod_vuelo"
+            ]
+        },
+        "conforms_to": {
+            "field_value": [
+                "http://inspire.ec.europa.eu/documents/inspire-metadata-regulation",
+                "http://inspire.ec.europa.eu/documents/commission-regulation-eu-no-13122014-10-december-2014-amending-regulation-eu-no-10892010-0",
+                "https://www.boe.es/eli/es/res/2013/02/19/(4)"
+            ]
+        },
+        "metadata_profile": {
+            "field_value": [
+                "http://semiceu.github.io/GeoDCAT-AP/releases/2.0.0",
+                "http://inspire.ec.europa.eu/document-tags/metadata",
+                "https://semiceu.github.io/DCAT-AP/releases/2.1.1"
+            ]
+        },
+        "temporal_start": {
+            "field_name": "fototeca.vista_ckan.año"
+        },
+        "temporal_end": {
+            "field_name": "fototeca.vista_ckan.año"
+        },
+        "provenance": {
+            "languages": {
+                "es": {
+                    "field_name": "fototeca.vuelos.descripcion"
+                }
             }
-         }
-      }
-   },
-   "distribution_field_mapping":{
-      "url":{
-         "field_name":"fototeca.vista_ckan.metadata_url"
-      },
-      "created":{
-        "field_value": null
-      },
-      "name":{
-         "field_value":"INSPIRE Metadata"
-      },
-      "description":{
-         "field_value":"INSPIRE Metadata"
-      },
-      "encoding":{
-         "field_value":"UTF-8"
-      },
-      "availability":{
-         "field_value":"http://publications.europa.eu/resource/authority/planned-availability/OP_DATPRO"
-      },
-      "issued":{
-        "field_value": null
-      },
-      "modified":{
-        "field_value": null
-      },
-      "language":{
-         "field_value":"http://publications.europa.eu/resource/authority/language/SPA"
-      },
-      "rights":{
-         "field_value":"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
-      },
-      "format":{
-         "field_value":"XML"
-      },
-      "status":{
-         "field_value":"http://purl.org/adms/status/Completed"
-      },
-      "size":{
-        "field_value": null
-      },
-      "resource_relation":{
-        "field_value": null
-      },
-      "license":{
-         "field_value":"https://creativecommons.org/licenses/by/4.0/"
-      },
-      "conforms_to":{
-         "field_value":["http://inspire.ec.europa.eu/documents/inspire-metadata-regulation", "http://inspire.ec.europa.eu/documents/commission-regulation-eu-no-13122014-10-december-2014-amending-regulation-eu-no-10892010-0", "https://www.boe.es/eli/es/res/2013/02/19/(4)"]
-      },
-      "reference_system":{
-        "field_value": null
-      },
-      "provenance":{
-        "field_value": null
-      },
-      "lineage_process_steps":{
-        "field_value": null
-      }
-   },
-   "default_groups":[
-      "demo-group"
-   ],
-   "default_tags":[
-      
-   ],
-   "source_date_format":"%d/%m/%Y"
+        },
+        "frequency": {
+            "field_value": "http://publications.europa.eu/resource/authority/frequency/ANNUAL_3"
+        },
+        "lineage_source": {
+            "field_value": "Las tomas fotográficas para los vuelos PNOA son verticales. Para recubrir la zona del territorio y obtener ortofotografías, la trayectoria que debe reccorer un avión tiene que tener solape, tanto en la dirección del avance del vuelo como entre las pasadas adyacentes. En PNOA la configuración de las pasadas generalmente es Este-Oeste. El recubrimiento longitudinal es del 60 % y el transversal es  mayor o igual al 30 %.  La superposición nos permite la formación de modelos tridimensionales para aplicar a las imágenes las rectificaciones por los efectos del relieve."
+        },
+        "source": {
+            "field_value": "https://centrodedescargas.cnig.es/CentroDescargas/index.jsp"
+        },
+        "lineage_process_steps": {
+            "field_value": [
+                "Planificación del vuelo fotogramétrico.",
+                "Ejecución del vuelo con pasadas longitudinales y transversales.",
+                "Proceso de ortorrectificación en el que se pasa de una imagen con proyección cónica a otra con proyección ortogonal."
+            ]
+        },
+        "reference": {
+            "field_name": "fototeca.vista_ckan.metadata_url"
+        },
+        "temporal_resolution": {
+            "field_value": null
+        },
+        "encoding": {
+            "field_value": "UTF-8"
+        },
+        "spatial": {
+            "field_name": "fototeca.vista_ckan.extension"
+        },
+        "spatial_uri": {
+            "field_value": "http://datos.gob.es/recurso/sector-publico/territorio/Pais/España"
+        },
+        "representation_type": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/grid"
+        },
+        "spatial_resolution_in_meters": {
+            "field_name": "fototeca.vista_ckan.escala"
+        },
+        "license_id": {
+            "field_value": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "access_rights": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
+        },
+        "reference_system": {
+            "field_name": "fototeca.vista_ckan.extension"
+        },
+        "version": {
+            "field_value": null
+        },
+        "version_notes": {
+            "field_value": null
+        },
+        "valid": {
+            "field_value": null
+        },
+        "groups": {
+            "field_value": null
+        },
+        "purpose": {
+            "languages": {
+                "es": {
+                    "field_value": "La Fototeca del CNIG tiene la función de custodiar los originales de los vuelos fotogramétricos del IGN, así como la difusión de dicha información."
+                },
+                "en": {
+                    "field_value": "The CNIG Digital Fototeca has the function of safeguarding the originals of the IGN photogrammetric flights, as well as the dissemination of said information."
+                }
+            }
+        }
+    },
+  "distribution_field_mapping": {
+        "dataset_id": {
+            "field_name": "fototeca.vista_ckan.cod_vuelo"
+        },
+        "url": {
+            "field_name": "fototeca.vista_ckan.metadata_url"
+        },
+        "created": {
+            "field_value": null
+        },
+        "name": {
+            "field_value": "INSPIRE Metadata"
+        },
+        "description": {
+            "field_value": "INSPIRE Metadata"
+        },
+        "encoding": {
+            "field_value": "UTF-8"
+        },
+        "availability": {
+            "field_value": "http://publications.europa.eu/resource/authority/planned-availability/OP_DATPRO"
+        },
+        "issued": {
+            "field_value": null
+        },
+        "modified": {
+            "field_value": null
+        },
+        "language": {
+            "field_value": "http://publications.europa.eu/resource/authority/language/SPA"
+        },
+        "rights": {
+            "field_value": "http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
+        },
+        "format": {
+            "field_value": null
+        },
+        "status": {
+            "field_value": "http://purl.org/adms/status/Completed"
+        },
+        "size": {
+            "field_value": null
+        },
+        "resource_relation": {
+            "field_value": null
+        },
+        "license": {
+            "field_value": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "conforms_to": {
+            "field_value": [
+                "http://inspire.ec.europa.eu/documents/inspire-metadata-regulation",
+                "http://inspire.ec.europa.eu/documents/commission-regulation-eu-no-13122014-10-december-2014-amending-regulation-eu-no-10892010-0",
+                "https://www.boe.es/eli/es/res/2013/02/19/(4)"
+            ]
+        },
+        "reference_system": {
+            "field_value": null
+        },
+        "provenance": {
+            "field_value": null
+        },
+        "lineage_process_steps": {
+            "field_value": null
+        }
+    },
+    "default_groups": [
+        "demo-group"
+    ],
+    "default_tags": []
 }
