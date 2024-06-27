@@ -25,7 +25,6 @@ from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester
 from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
 
 from ckanext.fototeca.interfaces import ISQLHarvester
-from ckanext.fototeca.lib.routing_sql.routing_pg import routingPG
 from ckanext.fototeca.lib.sql_field_mapping import SqlFieldMappingValidator as FieldMappingValidator
 
 log = logging.getLogger(__name__)
