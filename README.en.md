@@ -10,7 +10,8 @@ CKAN compatibility:
 
 | CKAN version | Compatibility?
 | --------------- | ------------- |
-| 2.9 | in testing |
+| 2.9             | yes           |
+| 2.10            | not tested    |
 
 
 ## Installation
