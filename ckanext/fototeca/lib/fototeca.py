@@ -69,7 +69,6 @@ def normalize_resources(package_dict):
     package_dict["resources"] = filtered_resources
     
     return package_dict
-      
 # Specific SQL clauses
 def sql_clauses(schema, table, column, alias):
   """
@@ -87,11 +86,12 @@ def sql_clauses(schema, table, column, alias):
   - str: A SQL expression as a string.
   """
   if alias == 'spatial':
-    return f"ST_AsGeoJSON(ST_Transform(ST_Envelope({schema}.{table}.{column}), 4326), 2) AS {alias}"
+    # NULL if SRID=0
+    return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE ST_AsGeoJSON(ST_Transform(ST_Envelope({schema}.{table}.{column}), 4326), 2) END AS {alias}"
 
   elif alias == 'flight_spatial':
-    geojson_expression = f"ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {f_config.postgres_geojson_tolerance}), 2)"
-    return f"CASE WHEN LENGTH({geojson_expression}) <= {f_config.postgres_geojson_chars_limit} THEN {geojson_expression} ELSE NULL END AS {alias}"
+    # NULL if SRID=0
+    return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE CASE WHEN LENGTH(ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {f_config.postgres_geojson_tolerance}), 2)) <= {f_config.postgres_geojson_chars_limit} THEN ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {f_config.postgres_geojson_tolerance}), 2) ELSE NULL END END AS {alias}"
 
   elif alias == 'reference_system':
     return f"ST_SRID({schema}.{table}.{column}) AS {alias}"
