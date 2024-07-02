@@ -424,8 +424,8 @@ class SQLHarvester(SchemingDCATHarvester):
 
         log.debug('Number of elements in clean_datasets: %s and object_ids: %s', len(clean_datasets), len(ids))
 
-        # Log clean_datasets/ ids
-        self._log_export_clean_datasets_and_ids(harvest_source_title, clean_datasets, ids)
+        #DEBUG::Log clean_datasets/ ids
+        #self._log_export_clean_datasets_and_ids(harvest_source_title, clean_datasets, ids)
 
         return [id_dict['id'] for id_dict in ids]
 
