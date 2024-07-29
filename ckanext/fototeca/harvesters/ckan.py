@@ -42,8 +42,6 @@ class FototecaCKANHarvester(SingletonPlugin):
         if all(key in package_dict for key in ['temporal_start', 'temporal_end']):
             package_dict = normalize_temporal_dates(package_dict)
 
-        log.debug('AFTER package_dict: %s', package_dict)
-
         return package_dict, []
     
     @staticmethod
