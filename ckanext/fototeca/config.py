@@ -108,3 +108,26 @@ FOTOTECA_PUBLISHER_TYPES = {
         'value': 'http://purl.org/adms/publishertype/LocalAuthority'
     }
 }
+
+FOTOTECA_CODELIST_MAPPING = {
+    'flight_color': [
+        {
+            'value': 'b-n',
+            'accepted_values': [
+                'B/N',
+                'b/n'
+            ],
+            'pattern': r'^[Bb][/-_][Nn]$'
+        }
+    ],
+    'flight_type': [
+        {
+            'value': 'analogico',
+            'accepted_values': [
+                'analógico',
+                'analogico'
+            ],
+            'pattern': r'^[Aa]nal[oó]gico$'
+        }
+    ],
+}
