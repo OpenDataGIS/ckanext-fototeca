@@ -21,6 +21,8 @@
                     <div class="block-code fototeca-code">
                         {{ label | safe }}
                     </div>
+                {% elif field.field_name == 'flight_typology_translated' %}
+                    {{  h.scheming_language_text(label) }}
                 {% else %}
                     {{ label | safe }}
                 {% endif %}

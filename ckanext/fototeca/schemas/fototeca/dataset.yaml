@@ -1047,7 +1047,7 @@ dataset_fields:
     - label:
         en: "Black & White"
         es: "Blanco y Negro"
-      value: "B/N"
+      value: "b-n"
     - label:
         en: "Coloured"
         es: "Color"
@@ -1069,6 +1069,15 @@ dataset_fields:
     en: 'You can check that the GeoJSON is valid at: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> e.g. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
     es: 'Puedes comprobar que el GeoJSON es válido en: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> ej. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
   help_allow_html: True
+  form_group_id: fototeca
+
+# Fototeca: Flight typology
+- field_name: flight_typology_translated
+  label: 
+    en: Flight typology
+    es: Tipología del vuelo
+  preset: schemingdcat_fluent_markdown
+  form_languages: ["es", "en"]
   form_group_id: fototeca
 
 # # Dataset abstract translated (M)
