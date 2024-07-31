@@ -23,6 +23,9 @@ from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 
 from ckanext.schemingdcat.harvesters.base import SchemingDCATHarvester
 from ckanext.schemingdcat.interfaces import ISchemingDCATHarvester
+from ckanext.schemingdcat.config import (
+    AUX_TAG_FIELDS
+)
 
 from ckanext.fototeca.interfaces import ISQLHarvester
 from ckanext.fototeca.lib.sql_field_mapping import SqlFieldMappingValidator as FieldMappingValidator
@@ -685,6 +688,7 @@ class SQLHarvester(SchemingDCATHarvester):
                   create or update occurred ok, 'unchanged' if it didn't need
                   updating or False if there were errors.
         """
+        log.debug('In SQLHarvester _create_or_update_package')
         assert package_dict_form in ("rest", "package_show")
         try:
             if package_dict is None:
@@ -785,6 +789,18 @@ class SQLHarvester(SchemingDCATHarvester):
 
                     package_dict["resources"] = new_resources
 
+                    # Clean tags before update existing dataset
+                    tags = package_dict.get("tags", [])
+
+                    if hasattr(self, 'config') and self.config:
+                        package_dict["tags"] = self._clean_tags(tags=tags, clean_tag_names=self.config.get("clean_tags", True), existing_dataset=False)
+                    else:
+                        package_dict["tags"] = self._clean_tags(tags=tags, clean_tag_names=True, existing_dataset=True)
+
+                    # Remove tag_fields from package_dict
+                    for field in AUX_TAG_FIELDS:
+                        package_dict.pop(field, None)
+
                     for field in p.toolkit.aslist(
                         config.get("ckan.harvest.not_overwrite_fields")
                     ):
@@ -844,11 +860,17 @@ class SQLHarvester(SchemingDCATHarvester):
                             "Import",
                         )
 
-                log.info(
-                    "Created new package ID: %s with GUID: %s",
-                    package_dict["id"],
-                    harvest_object.guid,
-                )
+                # Clean tags before create. Not existing_dataset 
+                tags = package_dict.get("tags", [])
+
+                if hasattr(self, 'config') and self.config:
+                    package_dict["tags"] = self._clean_tags(tags=tags, clean_tag_names=self.config.get("clean_tags", True), existing_dataset=False)
+                else:
+                    package_dict["tags"] = self._clean_tags(tags=tags, clean_tag_names=True, existing_dataset=False)
+
+                # Remove tag_fields from package_dict
+                for field in AUX_TAG_FIELDS:
+                    package_dict.pop(field, None)
 
                 #log.debug('Package: %s', package_dict)
                 harvest_object.package_id = package_dict["id"]
