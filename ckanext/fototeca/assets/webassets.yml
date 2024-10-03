@@ -1,21 +1,5 @@
-# fototeca-js:
-#   filter: rjsmin
-#   output: ckanext-fototeca/%(version)s-fototeca.js
-#   contents:
-#     - js/fototeca.js
-#   extra:
-#     preload:
-#       - base/main
-
  fototeca-css:
    filter: cssrewrite
    output: ckanext-fototeca/%(version)s-fototeca-css.css
    contents:
      - css/fototeca.css
-
-
- home-css:
-   filter: cssrewrite
-   output: ckanext-fototeca/%(version)s-home-css.css
-   contents:
-     - css/home.css

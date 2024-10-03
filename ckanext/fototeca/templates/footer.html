@@ -1,25 +1,18 @@
 {% ckan_extends %}
 
-
-{% block footer_links %}
-
-<div id="footer-text">
-        <div class="footer-text-section w50 fl">
-            <p><a class="0" href="www.ign.es">{{ _('National Geographic Institute') }}</a></p>
-            <p><a class="1" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/preguntas-frecuentes") }}" rel="noopener noreferrer">{{ _('FAQ') }}</a></p>
-            <p><a class="2" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/sistema-cartografico-nacional") }}"
-                    target="_blank" rel="noopener noreferrer">{{ _('National Cartographic System') }}</a></p>
-            <p><a class="3" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/plan-cartografico-nacional") }}" target="_blank" rel="noopener noreferrer">{{ _('National Cartographic Plan') }}</a></p>
-            <p><a class="4" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-organos-colegiados") }}" target="_self" rel="noopener noreferrer">{{ _('Collegial bodies') }}</a></p>
-        </div>
-        <div class="footer-text-section w50 fl">
-            <p><a class="5" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-enlaces-relacionados") }}"  target="_self" rel="noopener noreferrer">{{ _('Related links') }}</a></p>
-            <p><a class="6" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-aviso-legal") }}" rel="noopener noreferrer">{{ _('Legal notice') }}</a></p>
-            <p><a class="7" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/politica-datos") }}" rel="noopener noreferrer">{{ _('Data Policy') }}</a></p>
-            <p><a class="8" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-accesibilidad") }}" rel="noopener noreferrer">{{ _('Accessibility') }}</a></p>
-            <p><a class="9" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/usabilidad") }}" rel="noopener noreferrer">{{ _('Usability') }}</a></p>
-            <p><a class="10" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/mapa-web") }}" rel="noopener noreferrer">{{ _('Sitemap') }}</a></p>
-        </div>
+{% block footer_links_ckan %}
+<div id="footer-text" class="footer-columns">
+    <div class="footer-text-section">
+        <p><a class="0" href="www.ign.es">{{ _('National Geographic Institute') }}</a></p>
+        <p><a class="1" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/preguntas-frecuentes") }}" rel="noopener noreferrer">{{ _('FAQ') }}</a></p>
+        <p><a class="2" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/sistema-cartografico-nacional") }}" target="_blank" rel="noopener noreferrer">{{ _('National Cartographic System') }}</a></p>
+        <p><a class="3" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/plan-cartografico-nacional") }}" target="_blank" rel="noopener noreferrer">{{ _('National Cartographic Plan') }}</a></p>
+    </div>
+    <div class="footer-text-section">
+        <p><a class="4" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-organos-colegiados") }}" target="_self" rel="noopener noreferrer">{{ _('Collegial bodies') }}</a></p>
+        <p><a class="5" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-enlaces-relacionados") }}" target="_self" rel="noopener noreferrer">{{ _('Related links') }}</a></p>
+        <p><a class="6" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-aviso-legal") }}" rel="noopener noreferrer">{{ _('Legal notice') }}</a></p>
+        <p><a class="7" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/politica-datos") }}" rel="noopener noreferrer">{{ _('Data Policy') }}</a></p>
+    </div>
 </div>
-
 {% endblock %}

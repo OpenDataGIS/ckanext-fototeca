@@ -2,11 +2,15 @@
     {% set label = None %}
     {% if field.choices %}
         {% set choices = h.scheming_field_choices(field) %}
-       {% if pkg_dict[field.field_name] %}
+        {% if pkg_dict[field.field_name] %}
             {% set search_url = h.url_for('dataset.search', **{field.field_name: pkg_dict[field.field_name]}) %}
             {% set label_text = h.scheming_choices_label(choices, pkg_dict[field.field_name]) %}
             {% set label = '<a href="' ~ search_url ~ '" target="_blank">' ~ label_text ~ '</a>' %}
         {% endif %}
+    {% elif field.field_name == "flight_year" %}
+        {% set search_url = h.url_for('dataset.search', **{field.field_name: pkg_dict[field.field_name]}) %}
+        {% set label_text = pkg_dict[field.field_name] %}
+        {% set label = '<a href="' ~ search_url ~ '" target="_blank">' ~ label_text ~ '</a>' %}
     {% else %}
         {% if pkg_dict.get(field.field_name) %}
             {% set label = pkg_dict[field.field_name] %}
@@ -22,7 +26,15 @@
                         {{ label | safe }}
                     </div>
                 {% elif field.field_name == 'flight_typology_translated' %}
-                    {{  h.scheming_language_text(label) }}
+                    {{ h.scheming_language_text(label) }}
+                {% elif field.field_name == 'alternate_identifier' %}
+                    <div class="block-code">
+                        {{ label | safe }}
+                    </div>
+                {% elif field.field_name == 'flight_longitudinal' or field.field_name == 'flight_transverse' %}
+                    <span class="percentage">{{ label }} %</span>
+                {% elif field.field_name == "spatial_resolution_in_meters" %}
+                    {% snippet "schemingdcat/display_snippets/spatial_resolution_in_meters.html", data=pkg_dict, field=field, field_name=field_name %}
                 {% else %}
                     {{ label | safe }}
                 {% endif %}
@@ -35,13 +47,13 @@
     {% set dataset_fields = h.schemingdcat_get_dataset_schema(dataset_type).dataset_fields %}
     {% set filtered_fields = [] %}
     {% for field in dataset_fields %}
-        {% if field.field_name.startswith('flight_') or field.field_name.startswith('fototeca_')%}
+        {% if field.field_name.startswith('flight_') or field.field_name.startswith('fototeca_') or field.field_name == "spatial_resolution_in_meters" %}
             {% set filtered_fields = filtered_fields.append(field) %}
         {% endif %}
     {% endfor %}
 
     <section class="module module-narrow module-shallow publisher_info">
-        <h2 class="module-heading"><i class="fa fa-camera-retro"></i> {{ _('Fototeca Digital') }}</h2>
+        <h2 class="module-heading"><i class="fa fa-camera-retro"></i> {{ _('Data resource') }}</h2>
 
         <table class="table">
             <tbody>

@@ -1,18 +1,18 @@
 {
     "database_type": "postgres",
     "credentials":{
-        "user":"u_fototeca",
-        "password":"u_fototeca",
+        "user":"user",
+        "password":"password",
         "host":"localhost",
         "port":5432,
-        "db":"fototeca"
+        "db":"database"
     },
     "field_mapping_schema_version": 1,
     "dataset_field_mapping": {
         "title_translated": {
             "languages": {
                 "es": {
-                    "field_name": "fototeca.vuelos.nom_vuelo"
+                    "field_name": "database.vuelos.nom_vuelo"
                 }
             }
         },
@@ -63,22 +63,22 @@
             "field_value": "http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"
         },
         "flight_type": {
-            "field_name": "fototeca.vista_ckan.tipo"
+            "field_name": "database.vista_ckan.tipo"
         },
         "flight_frames": {
-            "field_name": "fototeca.vista_ckan.num_fotogramas"
+            "field_name": "database.vista_ckan.num_fotogramas"
         },
         "flight_graphic": {
-            "field_name": "fototeca.vista_ckan.grafico"
+            "field_name": "database.vista_ckan.grafico"
         },
         "flight_color": {
-            "field_name": "fototeca.vista_ckan.color",
+            "field_name": "database.vista_ckan.color",
             "f_key_references": [
-                "fototeca.l_color.color"
+                "database.l_color.color"
             ]
         },
         "flight_spatial": {
-            "field_name": "fototeca.vista_ckan.extension"
+            "field_name": "database.vista_ckan.extension"
         },
         "contact_name": {
             "field_value": "Centro Nacional de Información Geográfica (CNIG)"
@@ -138,11 +138,11 @@
             "field_value": null
         },
         "alternate_identifier": {
-            "field_name": "fototeca.vista_ckan.cod_vuelo",
+            "field_name": "database.vista_ckan.cod_vuelo",
             "is_p_key": true,
             "index": true,
             "f_key_references": [
-                "fototeca.vuelos.cod_vuelo"
+                "database.vuelos.cod_vuelo"
             ]
         },
         "conforms_to": {
@@ -160,15 +160,15 @@
             ]
         },
         "temporal_start": {
-            "field_name": "fototeca.vista_ckan.año"
+            "field_name": "database.vista_ckan.año"
         },
         "temporal_end": {
-            "field_name": "fototeca.vista_ckan.año"
+            "field_name": "database.vista_ckan.año"
         },
         "provenance": {
             "languages": {
                 "es": {
-                    "field_name": "fototeca.vuelos.descripcion"
+                    "field_name": "database.vuelos.descripcion"
                 }
             }
         },
@@ -189,7 +189,7 @@
             ]
         },
         "reference": {
-            "field_name": "fototeca.vista_ckan.metadata_url"
+            "field_name": "database.vista_ckan.metadata_url"
         },
         "temporal_resolution": {
             "field_value": null
@@ -198,7 +198,7 @@
             "field_value": "UTF-8"
         },
         "spatial": {
-            "field_name": "fototeca.vista_ckan.extension"
+            "field_name": "database.vista_ckan.extension"
         },
         "spatial_uri": {
             "field_value": "http://datos.gob.es/recurso/sector-publico/territorio/Pais/España"
@@ -207,7 +207,7 @@
             "field_value": "http://inspire.ec.europa.eu/metadata-codelist/SpatialRepresentationType/grid"
         },
         "spatial_resolution_in_meters": {
-            "field_name": "fototeca.vista_ckan.escala"
+            "field_name": "database.vista_ckan.escala"
         },
         "license_id": {
             "field_value": "https://creativecommons.org/licenses/by/4.0/"
@@ -216,7 +216,7 @@
             "field_value": "http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
         },
         "reference_system": {
-            "field_name": "fototeca.vista_ckan.extension"
+            "field_name": "database.vista_ckan.extension"
         },
         "version": {
             "field_value": null
@@ -243,10 +243,10 @@
     },
   "distribution_field_mapping": {
         "dataset_id": {
-            "field_name": "fototeca.vista_ckan.cod_vuelo"
+            "field_name": "database.vista_ckan.cod_vuelo"
         },
         "url": {
-            "field_name": "fototeca.vista_ckan.metadata_url"
+            "field_name": "database.vista_ckan.metadata_url"
         },
         "created": {
             "field_value": null
