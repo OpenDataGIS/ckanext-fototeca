@@ -1,6 +1,9 @@
 import logging
 
-import ckanext.fototeca.config as f_config
+import ckan.plugins as p
+
+import ckanext.schemingdcat.helpers as sdct_helpers
+
 
 log = logging.getLogger(__name__)
 
@@ -74,7 +77,7 @@ def sql_clauses(schema, table, column, alias):
   """
   Generates a SQL expression for GeoJSON data, spatial reference system, or other data with conditional logic based on length or alias.
 
-  This function constructs a SQL expression to select data from a specified column. For GeoJSON data, if the data length exceeds a predefined limit set in `f_config.postgres_geojson_chars_limit`, the expression returns NULL to avoid performance issues with large GeoJSON objects. Otherwise, it returns the GeoJSON data. For geographic columns, it applies a transformation to the EPSG:4326 coordinate system and simplifies the geometry based on a tolerance value defined in `f_config.postgres_geojson_tolerance`. If the alias is 'reference_system', it returns the SRID of the geometry.
+  This function constructs a SQL expression to select data from a specified column. For GeoJSON data, if the data length exceeds a predefined limit set in `ckanext.fototeca.postgres.geojson_chars_limit`, the expression returns NULL to avoid performance issues with large GeoJSON objects. Otherwise, it returns the GeoJSON data. For geographic columns, it applies a transformation to the EPSG:4326 coordinate system and simplifies the geometry based on a tolerance value defined in `postgres.geojson_tolerance`. If the alias is 'reference_system', it returns the SRID of the geometry.
 
   Parameters:
   - schema (str): The database schema name.
@@ -85,13 +88,17 @@ def sql_clauses(schema, table, column, alias):
   Returns:
   - str: A SQL expression as a string.
   """
+  
+  postgres_geojson_chars_limit = p.toolkit.config.get('ckanext.fototeca.postgres.geojson_chars_limit')
+  postgres_geojson_tolerance = sdct_helpers.schemingdcat_validate_float(p.toolkit.config.get('ckanext.fototeca.postgres.geojson_tolerance'))
+  
   if alias == 'spatial':
     # NULL if SRID=0
     return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE ST_AsGeoJSON(ST_Transform(ST_Envelope({schema}.{table}.{column}), 4326), 2) END AS {alias}"
 
   elif alias == 'flight_spatial':
     # NULL if SRID=0
-    return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE CASE WHEN LENGTH(ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {f_config.postgres_geojson_tolerance}), 2)) <= {f_config.postgres_geojson_chars_limit} THEN ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {f_config.postgres_geojson_tolerance}), 2) ELSE NULL END END AS {alias}"
+    return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE CASE WHEN LENGTH(ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {postgres_geojson_tolerance}), 2)) <= {postgres_geojson_chars_limit} THEN ST_AsGeoJSON(ST_Simplify(ST_Transform({schema}.{table}.{column}, 4326), {postgres_geojson_tolerance}), 2) ELSE NULL END END AS {alias}"
 
   elif alias == 'reference_system':
     return f"ST_SRID({schema}.{table}.{column}) AS {alias}"

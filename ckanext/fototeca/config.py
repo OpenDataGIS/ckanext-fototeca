@@ -2,10 +2,6 @@
 
 ign_base_url = "https://www.ign.es/web/ign/portal"
 
-# postgres harvester
-postgres_geojson_chars_limit = 1000
-postgres_geojson_tolerance = 0.001
-
 # Dataset default values
 FOTOTECA_HARVESTER_MD_CONFIG = {
     'access_rights': 'http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations',

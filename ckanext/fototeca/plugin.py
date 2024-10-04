@@ -1,41 +1,34 @@
-from ckan.lib.plugins import DefaultTranslation
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
+import logging
 
-import ckanext.fototeca.config as f_config
+from ckan.lib.plugins import DefaultTranslation
+import ckan.plugins as p
+
 from ckanext.fototeca import helpers, validators, blueprint
 
-import logging
+try:
+    config_declarations = p.toolkit.blanket.config_declarations
+except AttributeError:
+    # CKAN 2.9 does not have config_declarations.
+    # Remove when dropping support.
+    def config_declarations(cls):
+        return cls
 
 log = logging.getLogger(__name__)
 
-
-class FototecaPlugin(plugins.SingletonPlugin,  DefaultTranslation):
-    plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.ITemplateHelpers)
-    plugins.implements(plugins.ITranslation)
-    plugins.implements(plugins.IValidators)
-    plugins.implements(plugins.IBlueprint)
+@config_declarations
+class FototecaPlugin(p.SingletonPlugin,  DefaultTranslation):
+    p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
+    p.implements(p.ITranslation)
+    p.implements(p.IValidators)
+    p.implements(p.IBlueprint)
 
 
     # IConfigurer
     def update_config(self, config_ ):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('assets', 'ckanext-fototeca')
-
-        # Update config options directly
-        f_config.postgres_geojson_chars_limit = toolkit.asint(
-            config_.get(
-                "fototeca.postgres_geojson_chars_limit", f_config.postgres_geojson_chars_limit
-            )
-        )
-       
-        f_config.postgres_geojson_tolerance = float(
-            config_.get(
-                "fototeca.postgres_geojson_tolerance", f_config.postgres_geojson_tolerance
-            )
-        )
+        p.toolkit.add_template_directory(config_, 'templates')
+        p.toolkit.add_public_directory(config_, 'public')
+        p.toolkit.add_resource('assets', 'ckanext-fototeca')
 
     # Blueprints
     def get_blueprint(self):
