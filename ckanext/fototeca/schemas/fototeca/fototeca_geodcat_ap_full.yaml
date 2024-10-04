@@ -1,14 +1,16 @@
 scheming_version: 2
 dataset_type: dataset
-about: "Datasets/Distributions: Adaptation for CKAN of the GeoDCAT-AP metadata schema extended (2.0.0) with ISO-19115 (INSPIRE) mandatory elements. Spanish context NTI-RISP: http://www.boe.es/eli/es/res/2013/02/19/(4)/con"
+about: "Datasets/Distributions: Adaptation for Federated Fototeca catalog (CNIG) of the GeoDCAT-AP metadata schema extended (3.0.0) with ISO-19115 (INSPIRE) mandatory elements. Spanish context NTI-RISP: http://www.boe.es/eli/es/res/2013/02/19/(4)/con"
 about_url: https://github.com/mjanez/ckanext-schemingdcat
 form_languages: ["es", "en"]
 required_language: "es"
-schema_version: 0.1
-schema_date: 2024-05-01
+schema_version: 1.0
+schema_date: 2024-9-01
 schema_name: fototeca
-schema_title: Fototeca CNIG
+schema_title: Fototeca Federada
 schema_description: "Geospatial extension to the DCAT application profile for data portals in Europe (GeoDCAT-AP). It is adapted to the Spanish context and includes compatibility with the Technical Interoperability Standard (NTI-RISP), the open data profile for Spain: https://datos.gob.es/en/documentacion/guia-de-aplicacion-de-la-norma-tecnica-de-interoperabilidad-de-reutilizacion-de"
+schema_profile_version: 3.0.0
+schema_profile_url: https://semiceu.github.io/GeoDCAT-AP/releases/3.0.0
 schema_form_groups:
   # Basic Info parties form_page (#1)
   - form_group_id: title
@@ -26,10 +28,15 @@ schema_form_groups:
       en: Dataset identification
       es: Identificación del conjunto de datos
     fa_icon: fa-id-card
-  - form_group_id: fototeca
+  - form_group_id: fototeca_identification
     label:
-      en: Fototeca info
-      es: Información Fototeca
+      en: Flight identification
+      es: Identificación vuelo
+    fa_icon: fa-id-card
+  - form_group_id: fototeca_flight
+    label:
+      en: Flight info
+      es: Información vuelo
     fa_icon: fa-camera-retro
   - form_group_id: notes
     label:
@@ -61,18 +68,18 @@ schema_form_groups:
     label:
       en: Author information
       es: Información del autor
-    fa_icon: fa-pencil-square-o
+    fa_icon: fa-pencil-square
   # Quality form_page (#3)
   - form_group_id: standards
     label:
       en: Standards compliance
       es: Adecuación a estándares
-    fa_icon: fa-check-square-o
+    fa_icon: fa-check-square
   - form_group_id: temporal_info
     label:
       en: Timing
       es: Información temporal
-    fa_icon: fa-clock-o  
+    fa_icon: fa-clock  
   - form_group_id: lineage
     label:
       en: Provenance information
@@ -125,12 +132,21 @@ schema_form_groups:
     label:
       en: Resource locator
       es: Localizador del recurso
-    fa_icon: fa-link
+  - form_group_id: resource_access_service
+    label:
+      en: Data Service of the resource
+      es: Servicio de datos del recurso
+    fa_icon: fa-asterisk
+  - form_group_id: resource_distribution
+    label:
+      en: Information on resource distribution
+      es: Información de la distribución del recurso
+    fa_icon: fa-list-ul
   - form_group_id: resource_type
     label:
       en: Resource type information 
       es: Información del tipo de recurso
-    fa_icon: fa-file-code-o 
+    fa_icon: fa-file-code
   - form_group_id: resource_license_info
     label:
       en: License and restrictions
@@ -145,7 +161,135 @@ schema_form_groups:
     label:
       en: Standards compliance
       es: Adecuación a estándares
-    fa_icon: fa-check-square-o
+    fa_icon: fa-check-square
+  - form_group_id: resource_relations
+    label:
+      en: Related resources
+      es: Recursos relacionados
+    fa_icon: fa-code-fork
+schema_form_tabs:
+  # Dataset tabs
+  - form_tab: basic_tab
+    tab_type: dataset_fields
+    label:
+      en: Identification
+      es: Identificación
+    form_group_id:
+      - title
+      - general_info
+      - identification
+      - notes
+  - form_tab: fototeca_tab
+    tab_type: dataset_fields
+    label:
+      en: Photogrammetric flights
+      es: Vuelos fotogramétricos 
+    form_group_id:
+      - fototeca_identification
+      - fototeca_flight
+  - form_tab: vocabs_tab
+    tab_type: dataset_fields
+    label:
+      en: Vocabs
+      es: Vocabularios
+    form_group_id:
+      - vocabs
+  - form_tab: contact_tab
+    tab_type: dataset_fields
+    label:
+      en: Contact point
+      es: Punto de contacto
+    form_group_id:
+      - contact
+  - form_tab: publisher_tab
+    tab_type: dataset_fields
+    label:
+      en: Publisher
+      es: Publicador
+    form_group_id:
+      - publisher
+  - form_tab: responsible_parties_tab
+    tab_type: dataset_fields
+    label:
+      en: Responsible parties
+      es: Responsables
+    form_group_id:
+      - maintainer
+      - author
+  - form_tab: quality_tab
+    tab_type: dataset_fields
+    label:
+      en: Quality
+      es: Calidad
+    form_group_id:
+      - standards
+      - temporal_info
+  - form_tab: lineage_tab
+    tab_type: dataset_fields
+    label:
+      en: Lineage
+      es: Linaje
+    form_group_id:
+      - lineage
+      - purpose
+  - form_tab: spatial_tab
+    tab_type: dataset_fields
+    label:
+      en: Spatial
+      es: Espacial
+    form_group_id:
+      - spatial_info
+      - inspire
+  - form_tab: license_tab
+    tab_type: dataset_fields
+    label:
+      en: License
+      es: Licencia
+    form_group_id:
+      - license_info
+      - version_notes
+  # Distribution tabs
+  - form_tab: resource_basic_tab
+    tab_type: resource_fields
+    label:
+      en: Identification
+      es: Identificación
+    form_group_id:
+      - resource_title
+      - resource_url
+      - resource_notes
+      - resource_identification
+  - form_tab: resource_distribution
+    tab_type: resource_fields
+    label:
+      en: Distribution
+      es: Distribución
+    form_group_id:
+      - resource_distribution
+      - resource_type
+      - resource_access_service
+  - form_tab: resource_lineage_tab
+    tab_type: resource_fields
+    label:
+      en: Lineage
+      es: Linaje
+    form_group_id:
+      - resource_lineage
+      - resource_relations
+  - form_tab: resource_quality_tab
+    tab_type: resource_fields
+    label:
+      en: Quality
+      es: Calidad
+    form_group_id:
+      - resource_standards
+  - form_tab: resource_license_tab
+    tab_type: resource_fields
+    label:
+      en: License
+      es: Licencia
+    form_group_id:
+      - resource_license_info
 
 ### Codes in Schema
 # (M): Mandatory
@@ -156,17 +300,8 @@ schema_form_groups:
 #--Dataset (dcat:Dataset) fields--#
 dataset_fields:
 
-#--Basic info--#
-- start_form_page:
-    title: 
-      en: Basic Info
-      es: Identificación
-    description: 
-      en: Basic metadata identification and reference information.
-      es: Información básica de identificación y referencia de los metadatos.
-
 # Dataset title translated (M)
-  field_name: title_translated
+- field_name: title_translated
   label: 
     en: Dataset title
     es: Título del conjunto de datos
@@ -201,7 +336,7 @@ dataset_fields:
     es: 'ckanext-schemingdcat <a href="https://github.com/mjanez/ckanext-schemingdcat?tab=readme-ov-file#remote-google-sheetonedrive-excel-metadata-upload-harvester" target="_blank" rel="noopener noreferrer">cosechador de ficheros remotos Google Sheet/Onedrive Excel/a>'
   form_group_id: general_info
 
-# Non-spatial Dataset
+# Non-spatial Dataset (Hidden field, based on dcat_type)
 - field_name: dataset_scope
   label:
     en: Scope of the data
@@ -278,9 +413,8 @@ dataset_fields:
   label: 
     en: Resource type
     es: Tipo de recurso
-  preset: select
+  preset: select_not_empty
   form_include_blank_choice: False
-  validators: not_empty scheming_required
   required: True
   display_property: dct:type
   display_snippet: schemingdcat/display_snippets/link_schema.html
@@ -806,11 +940,10 @@ dataset_fields:
   label:
     en: Metadata language
     es: Idioma de los metadatos
-  preset: select
+  preset: select_not_empty
   display_property: dct:language
   display_snippet: schemingdcat/display_snippets/link_schema.html
   form_include_blank_choice: False
-  validators: not_empty scheming_required
   required: True
   sorted_choices: True
   choices:
@@ -947,10 +1080,6 @@ dataset_fields:
       es: Maltés
     value: http://publications.europa.eu/resource/authority/language/MLT
   - label:
-      en: Polish
-      es: Polaco
-    value: http://publications.europa.eu/resource/authority/language/POL
-  - label:
       en: Romanian
       es: Rumano
     value: http://publications.europa.eu/resource/authority/language/ROM
@@ -983,6 +1112,24 @@ dataset_fields:
   preset: date_modified
   form_group_id: identification
 
+# Fototeca: Flight code
+- field_name: flight_code
+  label:
+    en: Flight code
+    es: Código de vuelo
+  display_property: adms:identifier
+  validators: default(identifier)
+  form_placeholder: PNOA_2018_CAT_COST
+  form_group_id: fototeca_identification
+
+# Fototeca: Flight code
+- field_name: flight_year
+  label:
+    en: Flight year
+    es: Año del vuelo
+  preset: fototeca_year
+  form_group_id: fototeca_identification
+
 # Fototeca: Flight type
 - field_name: flight_type
   label:
@@ -999,25 +1146,34 @@ dataset_fields:
         en: "Digital"
         es: "Digital"
       value: digital
-  form_group_id: fototeca
+  form_group_id: fototeca_identification
 
 # Fototeca: Frames size
 - field_name: flight_frames
   label:
-    en: Size in number of frames
-    es: Tamaño en fotogramas
+    en: Number of frames
+    es: Número de fotogramas
   form_placeholder: 15203
   preset: flight_frames
   help_text:
     en: 'Integer value.'
     es: 'Valor entero.'
-  form_group_id: fototeca
+  form_group_id: fototeca_flight
+
+# Fototeca: Flight typology
+- field_name: flight_typology_translated
+  label: 
+    en: Flight typology
+    es: Tipología del vuelo
+  preset: schemingdcat_fluent_text
+  form_languages: ["es", "en"]
+  form_group_id: fototeca_identification
 
 # Fototeca: Graph
 - field_name: flight_graphic
   label:
-    en: Graph
-    es: Gráfico
+    en: Coverage
+    es: Cobertura
   preset: select
   validators: default(False) boolean_validator
   output_validators: boolean_validator
@@ -1034,29 +1190,37 @@ dataset_fields:
   help_text:
     en: Flight graphic available.
     es: Gráfico disponible para el vuelo.
-  form_group_id: fototeca
+  form_group_id: fototeca_flight
 
 # Fototeca: Flight type
 - field_name: flight_color
   label:
-    en: Colour Type
-    es: Tipo de color
+    en: Image
+    es: Imagen
   preset: select
   required: False
   choices:
     - label:
-        en: "Black & White"
-        es: "Blanco y Negro"
+        en: Black & White
+        es: Blanco y Negro
       value: "b-n"
     - label:
-        en: "Coloured"
-        es: "Color"
+        en: Colour
+        es: Color
       value: color
     - label:
-        en: "Mixed"
-        es: "Mixto"
-      value: mixto
-  form_group_id: fototeca
+        en: Colour & Infrared
+        es: Color e Infrarrojo
+      value: color-ir
+    - label:
+        en: Infrared
+        es: Infrarrojo
+      value: ir
+    - label:
+        en: Mixed
+        es: Mixto
+      value: mixto  
+  form_group_id: fototeca_flight
 
 # Geographic flight extension (M)
 - field_name: flight_spatial
@@ -1069,16 +1233,31 @@ dataset_fields:
     en: 'You can check that the GeoJSON is valid at: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> e.g. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
     es: 'Puedes comprobar que el GeoJSON es válido en: <a href="https://geojson.io/" target="_blank" rel="noreferrer">GeoJSON.io</a> or <a href="https://www.itb.ec.europa.eu/json/geojson/upload/" target="_blank" rel="noreferrer">EU GeoJSON validator</a> ej. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code>'
   help_allow_html: True
-  form_group_id: fototeca
+  form_group_id: fototeca_flight
 
-# Fototeca: Flight typology
-- field_name: flight_typology_translated
-  label: 
-    en: Flight typology
-    es: Tipología del vuelo
-  preset: schemingdcat_fluent_markdown
-  form_languages: ["es", "en"]
-  form_group_id: fototeca
+# Fototeca Longitudinal overlap
+- field_name: flight_longitudinal
+  label:
+    en: Longitudinal overlap
+    es: Recubrimiento longitudinal
+  preset: fototeca_flight_coating
+  form_placeholder: 60
+  help_text:
+    en: 'Percentage (%). Digital flights do not have this feature.'
+    es: 'Porcentaje (%). Los vuelos digitales no tienen este atributo.'
+  form_group_id: fototeca_flight
+
+# Fototeca Transverse coating
+- field_name: flight_transverse
+  label:
+    en: Transverse coating
+    es: Recubrimiento transversal 
+  preset: fototeca_flight_coating
+  form_placeholder: 30
+  help_text:
+    en: 'Percentage (%). Analogical flights do not have this feature.'
+    es: 'Porcentaje (%). Los vuelos analógicos no tienen este atributo.'
+  form_group_id: fototeca_flight
 
 # # Dataset abstract translated (M)
 - field_name: notes_translated
@@ -1104,11 +1283,10 @@ dataset_fields:
   label: 
     en: ISO 19115 topic category
     es: Categoría temática ISO 19115
-  preset: select
+  preset: select_not_empty
   display_property: dcat:keyword
   display_snippet: schemingdcat/display_snippets/link_schema.html
   form_include_blank_choice: False
-  validators: not_empty scheming_required
   required: True
   sorted_choices: True
   choices:
@@ -1150,7 +1328,6 @@ dataset_fields:
     value: http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/transportation
   - label: utilitiesCommunication
     value: http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/utilitiesCommunication
-
   help_text:
     en: 'e.g. Labels from <a href="http://inspire.ec.europa.eu/metadata-codelist" target="_blank" rel="noopener">Metadata code list register</a> (INSPIRE)'
     es: 'ej: Etiquetas del <a href="http://inspire.ec.europa.eu/metadata-codelist/TopicCategory" target="_blank" rel="noopener">Registro de listas controladas de metadatos</a> (INSPIRE)'
@@ -1188,12 +1365,16 @@ dataset_fields:
     es: 'ej: Registro de listas controladas de metadatos (INSPIRE): http://inspire.ec.europa.eu/metadata-codelist'
   form_group_id: vocabs
 
-# TODO: Probably better include contact_role and contact_organization (boolean) to distinguish between vcard:Individual and vcard:Organizationto use in ckanext-dcat/profiles.py
 # Metadata point of contact URI (M)
 - field_name: contact_uri
   label:
     en: URI of the Metadata contact point
     es: URI del punto de contacto de los metadatos
+  dependent_fields:
+    field_name: contact
+    subfields:
+      - field_name: uri
+  validators: schemingdcat_fill_dependent_fields
   display_snippet: schemingdcat/display_snippets/link_name.html
   form_placeholder: http://orgs.vocab.org/some-org
   form_group_id: contact
@@ -1203,6 +1384,11 @@ dataset_fields:
   label:
     en: Metadata contact point name
     es: Nombre del punto de contacto de los metadatos
+  dependent_fields:
+    field_name: contact
+    subfields:
+      - field_name: name
+  validators: schemingdcat_fill_dependent_fields
   display_property: dcat:contactPoint
   form_placeholder: José Blanco
   form_group_id: contact
@@ -1212,7 +1398,11 @@ dataset_fields:
   label:
     en: Metadata contact point email
     es: Email del punto de contacto de los Metadatos
-  validators: not_empty scheming_required
+  dependent_fields:
+    field_name: contact
+    subfields:
+      - field_name: email
+  validators: not_empty scheming_required schemingdcat_valid_email schemingdcat_fill_dependent_fields
   required: True
   display_property: vcard:hasEmail
   display_snippet: email.html
@@ -1224,27 +1414,145 @@ dataset_fields:
   label:
     en: Website of the Metadata contact point
     es: Web del punto de contacto de los metadatos
-  preset: valid_url
+  dependent_fields:
+    field_name: contact
+    subfields:
+      - field_name: url
+  preset: valid_url_dependent_fields
   display_property: vcard:hasURL
   form_placeholder: http://www.example.com
   form_group_id: contact
 
-#--Responsible party--#
-- start_form_page:
-    title: 
-      en: Responsible party
-      es: Responsable
-    description: 
-      en: Organization(s) responsible for the creation, management, maintenance and distribution of datasets.
-      es: Organización(es) responsable(s) de la creación, gestión, mantenimiento y distribución de los conjuntos de datos.
+# GeoDCAT-AP: https://semiceu.github.io/GeoDCAT-AP/releases/3.0.0#responsible-party-and-metadata-point-of-contact---dataset-responsible-party-and-metadata-point-of-contact
+- field_name: contact_role
+  label:
+    en: Metadata contact point role
+    es: Rol del punto de contacto de los metadatos
+  display_property: dcat:hadRole
+  dependent_fields:
+    field_name: contact
+    subfields:
+      - field_name: role
+  preset: select_dependent_fields
+  display_snippet: schemingdcat/display_snippets/link_schema.html
+  choices:
+    - label:
+        en: Resource Provider
+        es: Proveedor de recursos
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/resourceProvider
+      geodcatap: geodcatap:resourceProvider
+    - label:
+        en: Custodian
+        es: Custodio
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/custodian
+      geodcatap: geodcatap:custodian
+    - label:
+        en: Owner
+        es: Propietario
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/owner
+      geodcatap: dct:rightsHolder
+    - label:
+        en: User
+        es: Usuario
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/user
+      geodcatap: geodcatap:user
+    - label:
+        en: Distributor
+        es: Distribuidor
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/distributor
+      geodcatap: geodcatap:distributor
+    - label:
+        en: Originator
+        es: Originador
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/originator
+      geodcatap: geodcatap:originator
+    - label:
+        en: Point of Contact
+        es: Punto de contacto
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/pointOfContact
+      geodcatap: dcat:contactPoint
+    - label:
+        en: Principal Investigator
+        es: Investigador principal
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/principalInvestigator
+      geodcatap: geodcatap:principalInvestigator
+    - label:
+        en: Processor
+        es: Procesador
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/processor
+      geodcatap: geodcatap:processor
+    - label:
+        en: Publisher
+        es: Editor
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/publisher
+      geodcatap: dct:publisher
+    - label:
+        en: Author
+        es: Autor
+      value: http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/author
+      geodcatap: dct:creator
+  form_group_id: contact
 
-# Publisher name (M)
-  field_name: publisher_name
+
+# TO MIGRATE: contact dict. Filling with contact_* values
+- field_name: contact
+  label:
+    en: Contact points
+    es: Puntos de contacto
+  repeating_label:
+    en: Contact point
+    es: Punto de contacto
+  form_snippet: null
+  display_snippet: null
+  repeating_subfields:
+    - field_name: uri
+      legacy: contact_uri
+      label:
+        en: URI of the Metadata contact point
+        es: URI del punto de contacto de los metadatos
+
+    - field_name: name
+      legacy: contact_name
+      label:
+        en: Metadata contact point name
+        es: Nombre del punto de contacto de los metadatos
+
+    - field_name: email
+      legacy: contact_email
+      label:
+        en: Metadata contact point email
+        es: Email del punto de contacto de los Metadatos
+
+    - field_name: url
+      legacy: contact_url
+      label:
+        en: Website of the Metadata contact point
+        es: Web del punto de contacto de los metadatos
+  
+    - field_name: role
+      legacy: contact_role
+      label:
+        en: Metadata contact point role
+        es: Rol del punto de contacto de los metadatos
+
+  help_text:
+    en: 'Contact information for enquiries about the dataset.'
+    es: 'Información de contacto para consultas sobre el conjunto de datos.'
+  form_group_id: contact
+
+
+# GeoDCAT-AP: https://semiceu.github.io/GeoDCAT-AP/releases/3.0.0#responsible-party-and-metadata-point-of-contact---dataset-responsible-party-and-metadata-point-of-contact
+- field_name: publisher_name
   label:
     en: Name of the publisher
     es: Nombre del publicador
   display_property: foaf:name
   form_placeholder: José Blanco
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: name
+  validators: schemingdcat_fill_dependent_fields
   help_text:
     en: "A party that makes a dataset available to others."
     es: "Persona u organización que pone a disposición de otros el conjunto de datos."
@@ -1255,6 +1563,11 @@ dataset_fields:
   label:
     en: Identifier of the publisher
     es: Identificador del publicador
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: identifier
+  validators: schemingdcat_fill_dependent_fields
   display_property: dct:identifier
   form_placeholder: http://datos.gob.es/recurso/sector-publico/org/Organismo/E05068001
   help_text:
@@ -1268,6 +1581,11 @@ dataset_fields:
   label:
     en: URI of the publisher
     es: URI del publicador
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: uri
+  validators: schemingdcat_fill_dependent_fields
   display_snippet: schemingdcat/display_snippets/link_name.html
   form_snippet: schemingdcat/form_snippets/publisher_uri.html
   form_placeholder: http://orgs.vocab.org/some-org
@@ -1281,8 +1599,12 @@ dataset_fields:
   label:
     en: Email of the publisher
     es: Email del publicador
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: email
+  preset: schemingdcat_valid_email_dependent_fields
   display_property: foaf:mbox
-  display_snippet: email.html
   form_placeholder: joseblanco@example.com
   form_group_id: publisher
 
@@ -1293,7 +1615,11 @@ dataset_fields:
     es: Web del publicador
   display_property: foaf:homepage
   form_placeholder: http://www.example.com
-  preset: valid_url
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: url
+  preset: valid_url_dependent_fields
   help_text:
     en: Esta propiedad se refiere a una página web que actúa como página principal del publicador. URL
     es: Esta propiedad se refiere a una página web que actúa como página principal del publicador. URL
@@ -1304,7 +1630,11 @@ dataset_fields:
   label:
     en: Type of the publisher
     es: Tipo de publicador
-  preset: select
+  dependent_fields:
+    field_name: publisher
+    subfields:
+      - field_name: type
+  preset: select_dependent_fields
   display_property: dct:type
   display_snippet: schemingdcat/display_snippets/link_schema.html
   choices:
@@ -1354,6 +1684,56 @@ dataset_fields:
     value: http://purl.org/adms/publishertype/StandardisationBody
   form_group_id: publisher
 
+# TO MIGRATE: Publisher dict. Filling with publisher_* values
+- field_name: publisher
+  label:
+    en: Publisher
+    es: Publicador
+  form_snippet: null
+  display_snippet: null
+  repeating_once: true
+  repeating_subfields:
+    - field_name: uri
+      legacy: publisher_uri
+      label:
+        en: URI of the publisher
+        es: URI del publicador
+
+    - field_name: name
+      legacy: publisher_name
+      label:
+        en: URI
+        es: URI
+
+    - field_name: email
+      legacy: publisher_email
+      label:
+        en: Email of the publisher
+        es: Email del publicador
+
+    - field_name: identifier
+      legacy: publisher_identifier
+      label:
+        en: Identifier of the publisher
+        es: Identificador del publicador
+
+    - field_name: url
+      legacy: publisher_url
+      label:
+        en: Website of the publisher
+        es: Web del publicador
+
+    - field_name: type
+      legacy: publisher_type
+      label:
+        en: Type of the publisher
+        es: Tipo de publicador
+  
+  help_text:
+    en: 'Entity responsible for making the dataset available.'
+    es: 'Entidad responsable de la puesta a disposición del conjunto de datos.'
+  form_group_id: publisher
+
 # Maintainer name (O)
 - field_name: maintainer
   label:
@@ -1364,6 +1744,15 @@ dataset_fields:
   help_text:
     en: "Person or organization responsible for maintaining or updating a dataset."
     es: "Persona u organización responsable de mantener o actualizar un conjunto de datos."
+  form_group_id: maintainer
+
+# Maintainer name (O). Fallback, CKAN using maintainer in basic package schema: https://github.com/ckan/ckan/blob/f2d47c8f87bc5f224ebff93b23d0f6fda8fb81b4/ckan/model/package.py#L36-L57
+- field_name: maintainer_name
+  label:
+    en: Name of the dataset maintainer
+    es: Nombre del mantenedor
+  validators: if_empty_same_as(maintainer) unicode_safe
+  preset: hide_fallback
   form_group_id: maintainer
 
 # Maintainer Identifier (O)
@@ -1384,8 +1773,8 @@ dataset_fields:
   label:
     en: Email of the dataset maintainer
     es: Email del mantenedor
+  preset: schemingdcat_valid_email
   display_property: vcard:hasEmail
-  display_snippet: email.html
   form_placeholder: joseblanco@example.com
   form_group_id: maintainer
 
@@ -1414,6 +1803,15 @@ dataset_fields:
     es: "Persona u organización creadora o productora de un conjunto de datos"
   form_group_id: author
 
+# Author name (O). Fallback, CKAN using author in basic package schema: https://github.com/ckan/ckan/blob/f2d47c8f87bc5f224ebff93b23d0f6fda8fb81b4/ckan/model/package.py#L36-L57
+- field_name: author_name
+  label:
+    en: Name of the dataset author
+    es: Nombre del mantenedor
+  validators: if_empty_same_as(author) unicode_safe
+  preset: hide_fallback
+  form_group_id: author
+
 # Author Identifier (O)
 - field_name: author_uri
   label:
@@ -1432,8 +1830,8 @@ dataset_fields:
   label:
     en: Email of the dataset creator
     es: Email del autor
+  preset: schemingdcat_valid_email
   display_property: vcard:hasEmail
-  display_snippet: email.html
   form_placeholder: joseblanco@example.com
   form_group_id: author
 
@@ -1450,17 +1848,8 @@ dataset_fields:
     es: Esta propiedad se refiere a una página web que actúa como página principal del publicador. URL
   form_group_id: author
 
-#--Quality--#
-- start_form_page:
-    title: 
-      en: Quality
-      es: Calidad
-    description: 
-      en: Data quality information.
-      es: Información sobre calidad de los datos.
-
 # Other identifier (O))
-  field_name: alternate_identifier
+- field_name: alternate_identifier
   label: 
     en: Other identifier
     es: Identificador alternativo
@@ -1507,19 +1896,36 @@ dataset_fields:
   required: False
   display_property: dct:conformsTo
   preset: multiple_metadata_profiles
-  form_placeholder: 'http://semiceu.github.io/GeoDCAT-AP/releases/2.0.0'
+  form_placeholder: 'http://semiceu.github.io/GeoDCAT-AP/releases/3.0.0'
   help_text:
     en: 'URI(s) of the Metadata profile used'
     es: 'URI(s) del perfil de Metadatos utilizado'
   form_group_id: standards
+
+# Applicable legislation (M)
+- field_name: applicable_legislation
+  label: 
+    en: Applicable legislation 
+    es: Legislación aplicable
+  preset: multiple_text_links
+  display_property: dcatap:applicableLegislation
+  form_placeholder: 'http://data.europa.eu/eli/reg_impl/2023/138/oj'
+  help_text:
+    en: 'The legislation that mandates the creation or management of the resource.'
+    es: 'La legislación que ordena la creación o gestión del recurso.'
+  form_group_id: standards 
 
 # Temporal start (O)
 - field_name: temporal_start
   label: 
     en: Temporal extent (Start)
     es: Cobertura temporal (Inicio)
+  dependent_fields:
+    field_name: temporal_coverage
+    subfields:
+      - field_name: start
   display_property: dct:temporal
-  preset: date
+  preset: date_dependent_fields
   form_group_id: temporal_info
 
 # Temporal end (O)
@@ -1527,8 +1933,38 @@ dataset_fields:
   label: 
     en: Temporal extent (End)
     es: Cobertura temporal (Fin)
+  dependent_fields:
+    field_name: temporal_coverage
+    subfields:
+      - field_name: end
   display_property: dct:temporal
-  preset: date
+  preset: date_dependent_fields
+  form_group_id: temporal_info
+
+# TO MIGRATE: Temporal coverage dict. Filling with temporal_* values
+- field_name: temporal_coverage
+  label: 
+    en: Temporal coverage
+    es: Cobertura temporal
+  form_snippet: null
+  display_snippet: null
+  repeating_once: true
+  repeating_subfields:
+    - field_name: start
+      legacy: temporal_start
+      label: 
+        en: Temporal extent (Start)
+        es: Cobertura temporal (Inicio)
+
+    - field_name: end
+      legacy: temporal_end
+      label: 
+        en: Temporal extent (End)
+        es: Cobertura temporal (Fin)
+  
+  help_text:
+    en: The temporal period or periods the dataset covers.
+    es: Periodo o periodos temporales que abarca el conjunto de datos.
   form_group_id: temporal_info
 
 # Update frequency (O)
@@ -1710,6 +2146,19 @@ dataset_fields:
     es: 'URI que identifica al recurso relacionado. Se pueden incluir tantas propiedades como referencias se conozcan.'
   form_group_id: lineage
 
+# Related resources (O)
+- field_name: is_referenced_by
+  label: 
+    en: Is referenced by
+    es: Es referenciado por
+  preset: multiple_text_links
+  display_property: dct:isReferencedBy
+  form_placeholder: 'http://example.org/catalog/dataset/ejemplo'
+  help_text: 
+    en: 'A related resource, such as a publication, that references, cites, or otherwise points to the dataset.'
+    es: 'Un recurso relacionado, como una publicación, que referencia, cita o de otro modo apunta al conjunto de datos.'
+  form_group_id: lineage
+
 # Purpose (O)
 - field_name: purpose
   label:
@@ -1737,20 +2186,19 @@ dataset_fields:
   form_group_id: standards
 
 ##TODO: temporal_resolution
-## ISO 8601: http://www.google.com/url?q=http://www.w3.org/TR/xmlschema11-2/%23duration&sa=D&source=editors&ust=1677159514756434&usg=AOvVaw3Xyh6wn0UVcwFCy3-_9P8i
-
-
-#--Spatial--#
-- start_form_page:
-    title: 
-      en: Spatial info
-      es: Espacial
-    description: 
-      en: Spatial capabilities information.
-      es: Información sobre las capacidades espaciales.
+## Add codelist or validator to check ISO 8601: http://www.google.com/url?q=http://www.w3.org/TR/xmlschema11-2/%23duration&sa=D&source=editors&ust=1677159514756434&usg=AOvVaw3Xyh6wn0UVcwFCy3-_9P8i
+- field_name: temporal_resolution
+  label:
+    en: Temporal resolution
+    es: Resolución Temporal
+  help_text:
+    en: 'Minimum time period resolvable in the dataset,<a href="http://www.w3.org/TR/xmlschema11-2/%23duration&sa=D&source=editors&ust=1677159514756434&" target="_blank" rel="noopener">[ISO 8601]</a>.'
+    es: 'Período de tiempo mínimo resoluble en el conjunto de datos, ISO 8601., <a href="http://www.w3.org/TR/xmlschema11-2/%23duration&sa=D&source=editors&ust=1677159514756434&" target="_blank" rel="noopener">[ISO 8601]</a>.'
+  help_allow_html: True
+  form_group_id: standards
 
 # INSPIRE Themes (M)
-  field_name: theme
+- field_name: theme
   label:
     en: INSPIRE Themes
     es: Temas INSPIRE
@@ -1923,8 +2371,8 @@ dataset_fields:
   display_snippet: schemingdcat/display_snippets/link_epsg.html
   form_placeholder: http://www.opengis.net/def/crs/EPSG/0/4326
   help_text:
-    en: 'EPSG URI system for identifying position in the real world [ISO 19112]. The URI prefix for coordinate reference systems is the following one: http://www.opengis.net/def/crs/EPSG/0/{EPSG Code}'
-    es: 'URI EPSG del sistema para identificar la posición en el mundo real [ISO 19112]. El prefijo URI para los sistemas de referencia de coordenadas es el siguiente: http://www.opengis.net/def/crs/EPSG/0/{Código EPSG}'
+    en: 'EPSG URI system for identifying position in the real world [ISO 19112]. The URI prefix for coordinate reference systems is the following one: <code>http://www.opengis.net/def/crs/EPSG/0/{EPSG Code}</code>'
+    es: 'URI EPSG del sistema para identificar la posición en el mundo real [ISO 19112]. El prefijo URI para los sistemas de referencia de coordenadas es el siguiente: <code>http://www.opengis.net/def/crs/EPSG/0/{Código EPSG}</code>'
   help_allow_html: True
   form_group_id: inspire
 
@@ -1933,7 +2381,13 @@ dataset_fields:
   label: 
     en: Bounding Box
     es: Extensión espacial
-  preset: fototeca_spatial
+  preset: spatial_dependent_fields
+  dependent_fields:
+    field_name: spatial_coverage
+    subfields:
+      - field_name: bbox
+      - field_name: geom
+      - field_name: centroid
   form_placeholder: '{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}'
   help_text:
     en: 'If a <strong>Geographic identifier</strong> is selected and this element is empty, it will be filled in automatically.<a href="https://boundingbox.klokantech.com" target="_blank" rel="noopener">Draw BBox and copy GEOJSON with "coordinates" value..</a> e.g. <code>{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}</code><br>Only "geometry" dict with "type" and "coordinates" elements. More information at <a href="http://geojson.org/geojson-spec.html#bounding-boxes" target="_blank" rel="noopener">GeoJSON bounding boxes</a>.'
@@ -1946,7 +2400,12 @@ dataset_fields:
   label: 
     en: Geographic identifier
     es: Identificador geográfico
-  preset: select_spatial_icon
+  preset: select_spatial_icon_dependent_fields
+  dependent_fields:
+    field_name: spatial_coverage
+    subfields:
+      - field_name: uri
+      - field_name: text
   display_property: dcat:theme
   select_size: 10
   sorted_choices: False
@@ -2597,6 +3056,58 @@ dataset_fields:
   help_allow_html: True
   form_group_id: spatial_info
 
+# TO MIGRATE: Geographic bounding box dict. Filling with spatial_* values
+- field_name: spatial_coverage
+  label:
+    en: Spatial coverage
+    es: Cobertura espacial
+  form_snippet: null
+  display_snippet: null
+  repeating_once: true
+  repeating_subfields:
+    - field_name: uri
+      legacy: spatial_uri
+      label:
+        en: URI
+        es: URI
+
+    - field_name: text
+      legacy: spatial_uri
+      label:
+        en: Label
+        es: Etiqueta
+      form_placeholder: 'España'
+
+    - field_name: geom
+      legacy: spatial_geom
+      label: 
+          en: Geometry
+          es: Geometría
+      form_placeholder: '{"type": "Polygon", "coordinates": [[[11.9936, 54.0486], [11.9936, 54.2466], [12.3045, 54.2466], [12.3045, 54.0486], [11.9936, 54.0486]]]}'
+      validators: schemingdcat_valid_json_object
+
+    - field_name: bbox
+      legacy: spatial
+      label: 
+          en: Bounding Box
+          es: Extensión espacial
+      form_placeholder: '{"type": "Polygon", "coordinates": [[[-18.27, 27.54], [4.44, 27.54], [4.44, 43.85], [-18.27, 43.85], [-18.27, 27.54]]]}'
+      validators: schemingdcat_valid_json_object
+
+    - field_name: centroid
+      legacy: spatial_centroid
+      label: 
+          en: Centroid
+          es: Centroide
+      form_placeholder: '{"type": "Point", "coordinates": [1.5, 1.5]}'
+      validators: schemingdcat_valid_json_object
+
+  help_text:
+    en: 'A geographic region that is covered by the dataset.'
+    es: 'Región geográfica que abarca el conjunto de datos.'
+  form_group_id: spatial_info
+
+
 # Spatial representation type (O)
 - field_name: representation_type
   label: 
@@ -2640,26 +3151,18 @@ dataset_fields:
 # Spatial resolution (C)
 - field_name: spatial_resolution_in_meters
   label: 
-    en: Spatial resolution of the dataset (m) 
-    es: Resolución espacial del dataset (m)
+    en: Spatial resolution of the dataset
+    es: Resolución espacial del dataset
+  display_snippet: schemingdcat/display_snippets/spatial_resolution_in_meters.html
   display_property: dcat:spatialResolutionInMeters
-  form_placeholder: '5000'
+  form_placeholder: 5000
   help_text:
-    en: Specify spatial resolution as distance in metres.
-    es: Especifique la resolución espacial como distancia en metros
+    en: Specify the spatial resolution as a distance in metres (m).
+    es: Especifique la resolución espacial como distancia en metros (m).
   form_group_id: inspire
 
-#--License--#
-- start_form_page:
-    title: 
-      en: License info
-      es: Licencia
-    description: 
-      en: Information on licenses and restrictions on use and access.
-      es: Información sobre licencias y restricciones de uso y acceso.
-
 # License URI (M)
-  field_name: license_id
+- field_name: license_id
   label: 
     en: License
     es: Licencia
@@ -2767,12 +3270,76 @@ resource_fields:
 # Access URL (M)
 - field_name: url
   label:
-    en: Access URL
-    es: URL de acceso
+    en: URL
+    es: URL
   preset: resource_url_upload
-  display_property: dcat:accessURL
   display_snippet: schemingdcat/display_snippets/link.html
   form_group_id: resource_url
+
+# Access URL (M). Hide, falls back to the standard resource url field
+- field_name: access_url
+  label:
+    en: Access URL
+    es: URL de acceso
+  validators: if_empty_same_as(url) unicode_safe
+  form_snippet: null
+  display_property: dcat:accessURL
+  display_snippet: schemingdcat/display_snippets/link.html
+  help_text:
+    en: 'URL that gives access to the dataset (defaults to the standard resource URL).'
+    es: 'URL que da acceso al conjunto de datos (por defecto es la URL de recursos estándar).'
+  form_group_id: resource_url
+
+# Access URL (M). Falls back to the standard resource url field
+- field_name: download_url
+  label:
+    en: Download URL
+    es: URL de descarga
+  validators: if_empty_same_as(url) unicode_safe
+  display_property: dcat:downloadURL
+  display_snippet: schemingdcat/display_snippets/link.html
+  help_text:
+    en: 'URL that provides a direct link to a downloadable file (defaults to the standard resource URL).'
+    es: 'URL que proporciona un enlace directo a un archivo descargable (por defecto es la URL de recursos estándar).'
+  form_group_id: resource_url
+
+# Access services (O). Dictionariy.
+- field_name: access_services
+  label:
+    en: Access services
+    es: Servicios de acceso
+  repeating_label:
+    en: Access service
+    es: Servicio de acceso
+  display_property: dcat:downloadURL
+  repeating_subfields:
+    - field_name: uri
+      label:
+        en: Access service URI
+        es: URI del servicio de acceso
+      display_snippet: schemingdcat/display_snippets/link_schema.html
+    - field_name: title
+      label:
+        en: Access service title
+        es: Título del servicio de acceso
+    - field_name: endpoint_description
+      label:
+        en: Endpoint description
+        es: Descripción del punto final
+    - field_name: endpoint_url
+      label:
+        en: Endpoint URL
+        es: URL del punto final
+      preset: multiple_text_links
+    - field_name: serves_dataset
+      label:
+        en: Serves dataset
+        es: Sirve los conjuntos de datos
+      preset: multiple_text_links
+  help_text:
+    en: 'A data service that gives access to the resource.'
+    es: 'Un servicio de datos que da acceso al recurso.'
+  form_group_id: resource_access_service
 
 #FIX: Resource title (M) -- name_translated field dont work
 - field_name: name
@@ -2813,6 +3380,30 @@ resource_fields:
     es: Fecha de última modificación
   display_property: dct:modified
   preset: date_modified
+  form_group_id: resource_identification
+
+# Resource character encoding (C)
+- field_name: hash
+  label:
+    en: Hash
+    es: Hash
+  display_property: spdx:checksumValue
+  form_placeholder: 4304cf2e751e6053c90b1804c89c0ebb758f395a
+  help_text:
+    en: 'Checksum of the downloaded file.'
+    es: 'Suma de comprobación del fichero descargado.'
+  form_group_id: resource_identification
+
+# Resource character encoding (C)
+- field_name: hash_algorithm
+  label:
+    en: Hash Algorithm
+    es: Algoritmo Hash
+  display_property: spdx:Checksum
+  form_placeholder: http://spdx.org/rdf/terms#checksumAlgorithm_sha1
+  help_text:
+    en: 'Algorithm used to calculate to checksum.'
+    es: 'Algoritmo utilizado para calcular la suma de comprobación.'
   form_group_id: resource_identification
 
 # Resource status (O)
@@ -2858,7 +3449,7 @@ resource_fields:
     es: Formato
   preset: resource_format_autocomplete
   display_property: dct:format
-  form_group_id: resource_type
+  form_group_id: resource_distribution
 
 # Media type (O)
 - field_name: mimetype
@@ -2872,7 +3463,33 @@ resource_fields:
     en: 'This property refers to the media type of the Distribution as defined in the official <a href="http://www.iana.org/assignments/media-types/media-types.xhtml" target="_blank" rel="noopener">register of media types</a> (IANA)'
     es: 'Esta propiedad se refiere al tipo de medio de la Distribución tal y como se define en el <a href="http://www.iana.org/assignments/media-types/media-types.xhtml" target="_blank" rel="noopener">registro oficial de tipos de medios</a> (IANA)'
   help_allow_html: True
-  form_group_id: resource_type
+  form_group_id: resource_distribution
+
+# Compress format (O)
+- field_name: compress_format
+  label:
+    en: Compress format
+    es: Formato comprimido
+  display_snippet: schemingdcat/display_snippets/link.html
+  display_property: dcat:compressFormat
+  form_placeholder: http://www.iana.org/assignments/media-types/application/gzip
+  help_text:
+    en: 'The format of the file in which the data is contained in a compressed form.'
+    es: 'Formato del archivo en el que los datos están contenidos de forma comprimida.'
+  form_group_id: resource_distribution
+
+# Package format (O)
+- field_name: package_format
+  label:
+    en: Package format
+    es: Formato del paquete
+  display_snippet: schemingdcat/display_snippets/link.html
+  display_property: dcat:packageFormat
+  form_placeholder: http://publications.europa.eu/resource/authority/file-type/TAR
+  help_text:
+    en: 'The format of the file in which one or more data files are grouped together.'
+    es: 'Formato del fichero en el que se agrupan uno o varios ficheros de datos.'
+  form_group_id: resource_distribution
 
 # Resource status (O)
 - field_name: status
@@ -2917,6 +3534,19 @@ resource_fields:
     en: 'Character encoding in ISO-19115 metadata is specified with a code list that can be mapped to the corresponding codes in <a href="https://www.iana.org/assignments/character-sets" target="_blank" rel="noopener">[IANA-CHARSETS]</a>'
     es: 'La codificación de caracteres en los metadatos ISO-19115 se especifica con una lista de códigos que puede asignarse a los códigos correspondientes en <a href="https://www.iana.org/assignments/character-sets" target="_blank" rel="noopener">[IANA-CHARSETS]</a>.'
   help_allow_html: True
+  form_group_id: resource_type
+
+# Byte size (O)
+- field_name: size
+  label:
+    en: Byte size
+    es: Tamaño en bytes
+  form_placeholder: 305000
+  preset: file_size
+  display_property: dcat:byteSize
+  help_text:
+    en: 'Integer value.'
+    es: 'Valor entero.'
   form_group_id: resource_type
 
 # Resource language (M)
@@ -3061,10 +3691,6 @@ resource_fields:
       es: Maltés
     value: http://publications.europa.eu/resource/authority/language/MLT
   - label:
-      en: Polish
-      es: Polaco
-    value: http://publications.europa.eu/resource/authority/language/POL
-  - label:
       en: Romanian
       es: Rumano
     value: http://publications.europa.eu/resource/authority/language/ROM
@@ -3078,19 +3704,6 @@ resource_fields:
     value: http://publications.europa.eu/resource/authority/language/GLE
   form_group_id: resource_identification
 
-# Byte size (O)
-- field_name: size
-  label:
-    en: Byte size
-    es: Tamaño en bytes
-  form_placeholder: 305000
-  preset: file_size
-  display_property: dcat:byteSize
-  help_text:
-    en: 'Integer value.'
-    es: 'Valor entero.'
-  form_group_id: resource_type
-
 # Additional format information (O)
 ##TODO: To profiles.py
 - field_name: resource_relation
@@ -3102,7 +3715,20 @@ resource_fields:
   help_text:
     en: 'Link(s) related to the format, where the format, the scheme used for its representation or other technical information on how to access the documents or information resources is indicated.'
     es: 'Enlace(s) relacionado(s) con el formato, en dónde se indica el formato, el esquema utilizado para su representación u otra información técnica sobre cómo acceder a los documentos o recursos de información.'
-  form_group_id: resource_lineage
+  form_group_id: resource_relations
+
+# Additional format information (O)
+- field_name: documentation
+  label: 
+    en: Documentation
+    es: Documentación
+  preset: multiple_text_raws_ordered
+  validators: ignore_missing scheming_multiple_text
+  form_placeholder: 'https://example.org/some-doc.html'
+  help_text:
+    en: 'A page or document about this resource.'
+    es: 'Una página o documento sobre este recurso.'
+  form_group_id: resource_relations
 
 # Resource License (R)
 - field_name: license
@@ -3184,6 +3810,19 @@ resource_fields:
     es: 'Especificaciones (e.g. OGC). URLs'
   form_group_id: resource_standards 
 
+# Applicable legislation (M)
+- field_name: applicable_legislation
+  label: 
+    en: Applicable legislation 
+    es: Legislación aplicable
+  preset: multiple_text_links
+  display_property: dcatap:applicableLegislation
+  form_placeholder: 'http://data.europa.eu/eli/reg_impl/2023/138/oj'
+  help_text:
+    en: 'The legislation that mandates the creation or management of the resource.'
+    es: 'La legislación que ordena la creación o gestión del recurso.'
+  form_group_id: resource_standards 
+
 # Coordinate Reference System (C)
 - field_name: reference_system
   label:
@@ -3193,8 +3832,8 @@ resource_fields:
   display_snippet: schemingdcat/display_snippets/link_epsg.html
   form_placeholder: http://www.opengis.net/def/crs/EPSG/0/4326
   help_text:
-    en: 'EPSG URI system for identifying position in the real world [ISO 19112]. The URI prefix for coordinate reference systems is the following one: http://www.opengis.net/def/crs/EPSG/0/{EPSG Code}'
-    es: 'URI EPSG del sistema para identificar la posición en el mundo real [ISO 19112]. El prefijo URI para los sistemas de referencia de coordenadas es el siguiente: http://www.opengis.net/def/crs/EPSG/0/{Código EPSG}'
+    en: 'EPSG URI system for identifying position in the real world [ISO 19112]. The URI prefix for coordinate reference systems is the following one: <code>http://www.opengis.net/def/crs/EPSG/0/{EPSG Code}</code>'
+    es: 'URI EPSG del sistema para identificar la posición en el mundo real [ISO 19112]. El prefijo URI para los sistemas de referencia de coordenadas es el siguiente: <code>http://www.opengis.net/def/crs/EPSG/0/{Código EPSG}</code>'
   help_allow_html: True
   form_group_id: resource_standards 
 
