@@ -7,7 +7,7 @@
         "preset_name": "flight_frames",
         "values": {
           "validators": "default(0) natural_number_validator",
-          "display_snippet": "schemingdcat/display_snippets/file_size.html",
+          "display_snippet": "schemingdcat/display_snippets/number_size.html",
           "form_snippet": "schemingdcat/form_snippets/file_size.html"
         }
       },
@@ -25,6 +25,22 @@
           "form_snippet": "json.html",
           "display_snippet": "schemingdcat/display_snippets/spatial_json.html",
           "validators": "fototeca_spatial_validator ignore_missing schemingdcat_valid_json_object"
+        }
+      },
+      {
+        "preset_name": "fototeca_year",
+        "values": {
+          "validators": "fototeca_year_validator ignore_missing natural_number_validator",
+          "form_snippet": null,
+          "display_snippet": null
+        }
+      },
+      {
+        "preset_name": "fototeca_flight_coating",
+        "values": {
+          "validators": "fototeca_flight_coating_validator fototeca_valid_percentage",
+          "form_snippet": "schemingdcat/form_snippets/percenteage.html",
+          "display_snippet": "schemingdcat/display_snippets/percenteage.html"
         }
       }
     ]

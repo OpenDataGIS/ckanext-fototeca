@@ -1,0 +1,19 @@
+version: 1
+groups:
+  - annotation: General settings
+    options:
+      - key: ckanext.fototeca.ign_base_url
+        default: https://www.ign.es/web/ign/portal
+        validators:
+        description: |
+          URL of IGN portal.
+        required: false
+
+  - annotation: Postgres Harvester settings
+    options:
+      - key: ckanext.fototeca.postgres.alternate_identifier_field
+        default: flight_code
+        validators:
+        description: |
+          Field name of the ckanext-fototeca schema that using to alternate_identifier in Postgres Harvester.
+        required: false

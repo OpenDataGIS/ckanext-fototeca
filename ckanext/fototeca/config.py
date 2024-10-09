@@ -114,10 +114,38 @@ FOTOTECA_CODELIST_MAPPING = {
         {
             'value': 'b-n',
             'accepted_values': [
-                'B/N',
-                'b/n'
+                'b/n',
+                'blanco y negro'
             ],
-            'pattern': r'^[Bb][/-_][Nn]$'
+            'pattern': r'^[bB][/-_][nN]$'
+        },
+        {
+            'value': 'color',
+            'accepted_values': [
+                'color'
+            ],
+            'pattern': r'^[cC]olor$'
+        },
+        {
+            'value': 'mixto',
+            'accepted_values': [
+                'mixto'
+            ],
+            'pattern': r'^[mM]ixto$'
+        },
+        {
+            'value': 'infrarrojo',
+            'accepted_values': [
+                'infrarrojo'
+            ],
+            'pattern': r'^[iI]nfrarrojo$'
+        },
+        {
+            'value': 'color_infrarrojo',
+            'accepted_values': [
+                'color e infrarrojo'
+            ],
+            'pattern': r'^[cC]olor [eE] [iI]nfrarrojo$'
         }
     ],
     'flight_type': [
@@ -127,7 +155,7 @@ FOTOTECA_CODELIST_MAPPING = {
                 'analógico',
                 'analogico'
             ],
-            'pattern': r'^[Aa]nal[oó]gico$'
+            'pattern': r'^[aA]nal[oó]gico$'
         }
     ],
 }

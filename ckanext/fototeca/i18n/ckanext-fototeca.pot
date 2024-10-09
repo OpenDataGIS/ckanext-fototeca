@@ -22,6 +22,10 @@ msgid "Digital Fototeca"
 msgstr ""
 
 #: ckanext/fototeca/templates/header.html
+msgid "Federated Fototeca"
+msgstr ""
+
+#: ckanext/fototeca/templates/header.html
 msgid "Open Data portal"
 msgstr ""
 
@@ -79,6 +83,10 @@ msgstr ""
 
 #: ckanext/harvest/templates/source/new_source_form.html
 msgid "fototeca_sqlite_harvester"
+msgstr ""
+
+#: ckanext/fototeca/snippets/fototeca_info.html
+msgid "Resource data"
 msgstr ""
 
 # Codelists
