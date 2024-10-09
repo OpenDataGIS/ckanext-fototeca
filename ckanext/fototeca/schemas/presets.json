@@ -7,7 +7,7 @@
         "preset_name": "flight_frames",
         "values": {
           "validators": "default(0) natural_number_validator",
-          "display_snippet": "schemingdcat/display_snippets/file_size.html",
+          "display_snippet": "schemingdcat/display_snippets/number_size.html",
           "form_snippet": "schemingdcat/form_snippets/file_size.html"
         }
       },

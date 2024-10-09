@@ -1118,7 +1118,7 @@ dataset_fields:
     en: Flight code
     es: Código de vuelo
   display_property: adms:identifier 
-  form_placeholder: 0006_03
+  form_placeholder: P-0172
   form_group_id: fototeca_identification
 
 # Fototeca: Flight code
