@@ -2,16 +2,9 @@ version: 1
 groups:
   - annotation: ckanext-fototeca SQL Harvester settings
     options:
-      - key: ckanext.fototeca.postgres.geojson_chars_limit
-        default: 1000
-        type: int
-        description: |
-          Number of limit using in SQLHarvester to select data from a specified column. For GeoJSON data, if the data length exceeds, the expression returns NULL to avoid performance issues with large GeoJSON objects.
-        required: false
-
-      - key: ckanext.fototeca.postgres.geojson_tolerance
-        default: 0.001
+      - key: ckanext.fototeca.ign_base_url
+        default: https://www.ign.es/web/ign/portal
         validators:
         description: |
-          For geographic columns, it applies a transformation to the EPSG:4326 coordinate system and simplifies the geometry based on a tolerance value
+          URL of IGN portal.
         required: false

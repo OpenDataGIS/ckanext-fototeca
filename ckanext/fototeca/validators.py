@@ -99,7 +99,6 @@ def fototeca_flight_coating_validator(field, schema):
     """
     def validator(key, data, errors, context):
         flight_type = data.get(('flight_type', ))
-        log.debug('flight_type: %s', key)
         flight_longitudinal = data.get(('flight_longitudinal', ))
         flight_transverse = data.get(('flight_transverse', ))
 
@@ -120,7 +119,6 @@ def fototeca_valid_percentage(field, schema):
     """
     def validator(key, data, errors, context):
         value = data.get(key)
-        log.debug('percentage value: %s', value)
         if value is None or value == '':
             return  # Skip validation if value is None or an empty string
         try:

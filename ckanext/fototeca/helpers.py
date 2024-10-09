@@ -3,9 +3,6 @@ import logging
 import ckan.lib.helpers as h
 import ckan.plugins as p
 
-import ckanext.fototeca.config as f_config
-
-
 log = logging.getLogger(__name__)
 
 all_helpers = {}
@@ -30,4 +27,4 @@ def fototeca_get_ign_base_url():
     Returns:
         str: The URL.
     """
-    return f_config.ign_base_url
+    return p.toolkit.config.get('ckanext.fototeca.ign_base_url')
