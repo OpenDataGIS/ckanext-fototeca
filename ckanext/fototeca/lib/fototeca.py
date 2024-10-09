@@ -1,13 +1,100 @@
 import logging
 
+import re
+
 import ckan.plugins as p
 
 import ckanext.schemingdcat.helpers as sdct_helpers
 
+from ckanext.fototeca.config import FOTOTECA_CODELIST_MAPPING
 
 log = logging.getLogger(__name__)
 
 epsg_uri_template = "http://www.opengis.net/def/crs/EPSG/0/{srid}"
+
+def normalize_fototeca_fields(package_dict):
+    """
+    Normalize Fototeca specific fields in the package dictionary based on FOTOTECA_CODELIST_MAPPING.
+
+    Args:
+        package_dict (dict): The package dictionary where fields are to be normalized.
+
+    Returns:
+        dict: The updated package dictionary.
+    """
+    for field, mappings in FOTOTECA_CODELIST_MAPPING.items():
+        if field in package_dict:
+            value = package_dict[field]
+            if isinstance(value, list):
+                package_dict[field] = [normalize_value(v, mappings) for v in value]
+            else:
+                package_dict[field] = normalize_value(value, mappings)
+    return package_dict
+
+def normalize_value(value, mappings):
+    """
+    Normalize a single value based on the provided mappings.
+
+    Args:
+        value (str): The value to be normalized.
+        mappings (list): The list of mappings to use for normalization.
+
+    Returns:
+        str: The normalized value.
+    """
+    value = value.lower()
+
+    for mapping in mappings:
+        if value in [v.lower() for v in mapping['accepted_values']]:
+            return mapping['value']
+        if re.match(mapping['pattern'], value, re.IGNORECASE):
+            return mapping['value']
+    return value
+
+FOTOTECA_CODELIST_MAPPING = {
+    'flight_color': [
+        {
+            'value': 'b-n',
+            'accepted_values': [
+                'B/N',
+                'b/n'
+            ],
+            'pattern': r'^[bB][/-_][nN]$'
+        },
+        {
+            'value': 'color',
+            'accepted_values': [
+                'Color',
+                'color'
+            ],
+            'pattern': r'^[cC]olor$'
+        },
+        {
+            'value': 'mixto',
+            'accepted_values': [
+                'Mixto',
+                'mixto'
+            ],
+            'pattern': r'^[mM]ixto$'
+        },
+        {
+            'value': 'infrarrojo',
+            'accepted_values': [
+                'Infrarrojo',
+                'infrarrojo'
+            ],
+            'pattern': r'^[iI]nfrarrojo$'
+        },
+        {
+            'value': 'color_infrarrojo',
+            'accepted_values': [
+                'Color e Infrarrojo',
+                'color e infrarrojo'
+            ],
+            'pattern': r'^[cC]olor [eE] [iI]nfrarrojo$'
+        }
+    ],
+}
 
 # Aux defs for Fototeca import_stage validation
 def normalize_temporal_dates(package_dict):
