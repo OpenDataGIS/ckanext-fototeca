@@ -28,3 +28,13 @@ def fototeca_get_ign_base_url():
         str: The URL.
     """
     return p.toolkit.config.get('ckanext.fototeca.ign_base_url')
+
+@helper
+def fototeca_get_alternate_identifier_field():
+    """
+    Retrieves the alternate identifier field_name.
+
+    Returns:
+        str: The field_name of the ckanext-fototeca scheming schema.
+    """
+    return p.toolkit.config.get('ckanext.fototeca.postgres.alternate_identifier_field')

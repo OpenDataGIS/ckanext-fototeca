@@ -27,12 +27,14 @@
                     </div>
                 {% elif field.field_name == 'flight_typology_translated' %}
                     {{ h.scheming_language_text(label) }}
-                {% elif field.field_name == 'alternate_identifier' %}
+                {% elif field.field_name == 'alternate_identifier' or field.field_name == h.fototeca_get_alternate_identifier_field() %}
                     <div class="block-code">
                         {{ label | safe }}
                     </div>
                 {% elif field.field_name == 'flight_longitudinal' or field.field_name == 'flight_transverse' %}
                     <span class="percentage">{{ label }} %</span>
+                {% elif field.field_name == 'flight_frames' %}
+                <span>{{ h.schemingdcat_format_number(label) }}</span>
                 {% elif field.field_name == "spatial_resolution_in_meters" %}
                     {% snippet "schemingdcat/display_snippets/spatial_resolution_in_meters.html", data=pkg_dict, field=field, field_name=field_name %}
                 {% else %}

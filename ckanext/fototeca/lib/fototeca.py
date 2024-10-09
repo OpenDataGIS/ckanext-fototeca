@@ -51,51 +51,6 @@ def normalize_value(value, mappings):
             return mapping['value']
     return value
 
-FOTOTECA_CODELIST_MAPPING = {
-    'flight_color': [
-        {
-            'value': 'b-n',
-            'accepted_values': [
-                'B/N',
-                'b/n'
-            ],
-            'pattern': r'^[bB][/-_][nN]$'
-        },
-        {
-            'value': 'color',
-            'accepted_values': [
-                'Color',
-                'color'
-            ],
-            'pattern': r'^[cC]olor$'
-        },
-        {
-            'value': 'mixto',
-            'accepted_values': [
-                'Mixto',
-                'mixto'
-            ],
-            'pattern': r'^[mM]ixto$'
-        },
-        {
-            'value': 'infrarrojo',
-            'accepted_values': [
-                'Infrarrojo',
-                'infrarrojo'
-            ],
-            'pattern': r'^[iI]nfrarrojo$'
-        },
-        {
-            'value': 'color_infrarrojo',
-            'accepted_values': [
-                'Color e Infrarrojo',
-                'color e infrarrojo'
-            ],
-            'pattern': r'^[cC]olor [eE] [iI]nfrarrojo$'
-        }
-    ],
-}
-
 # Aux defs for Fototeca import_stage validation
 def normalize_temporal_dates(package_dict):
   """
