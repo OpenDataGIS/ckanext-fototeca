@@ -157,7 +157,7 @@
           "field_value":null
        },
        "alternate_identifier":{
-          "field_name":"extras_id-vuelo"
+          "field_value":null
        },
        "conforms_to":{
           "field_value":[
@@ -256,6 +256,9 @@
                 "field_value":"sample digital photo library. Harvest test."
              }
           }
+       },
+       "flight_code":{
+          "field_name":"extras_id-vuelo"
        },
        "flight_frames":{
           "field_name":"extras_numero-fotogramas"

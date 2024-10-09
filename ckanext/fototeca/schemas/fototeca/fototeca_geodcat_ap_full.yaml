@@ -1117,9 +1117,8 @@ dataset_fields:
   label:
     en: Flight code
     es: Código de vuelo
-  display_property: adms:identifier
-  validators: default(identifier)
-  form_placeholder: PNOA_2018_CAT_COST
+  display_property: adms:identifier 
+  form_placeholder: 0006_03
   form_group_id: fototeca_identification
 
 # Fototeca: Flight code
@@ -1855,6 +1854,7 @@ dataset_fields:
     es: Identificador alternativo
   display_property: adms:identifier
   form_placeholder: doi:10.1234/example-dataset
+  validators: if_empty_same_as(flight_code)
   help_text:
     en: 'An alternate identifier in a particular context, can express other locally minted identifiers or external identifiers, like DOI, ELI, arΧiv for creative works and ORCID, VIAF, ISNI for actors such as authors and publishers, as long as the identifiers are globally unique and stable.'
     es: 'Un identificador alternativo en un contexto particular, puede expresar otros identificadores acuñados localmente o identificadores externos, como DOI, ELI, arΧiv para obras creativas y ORCID, VIAF, ISNI para actores como autores y editores, siempre que los identificadores sean globalmente únicos y estables.'

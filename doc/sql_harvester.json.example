@@ -62,6 +62,14 @@
         "tag_uri": {
             "field_value": "http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/imageryBaseMapsEarthCover"
         },
+        "flight_code": {
+           "field_name": "database.vista_ckan.cod_vuelo",
+           "is_p_key": true,
+           "index": true,
+           "f_key_references": [
+               "database.vuelos.cod_vuelo"
+           ]
+       },
         "flight_type": {
             "field_name": "database.vista_ckan.tipo"
         },
@@ -138,12 +146,7 @@
             "field_value": null
         },
         "alternate_identifier": {
-            "field_name": "database.vista_ckan.cod_vuelo",
-            "is_p_key": true,
-            "index": true,
-            "f_key_references": [
-                "database.vuelos.cod_vuelo"
-            ]
+            "field_value": null
         },
         "conforms_to": {
             "field_value": [
