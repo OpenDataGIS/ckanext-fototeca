@@ -88,9 +88,8 @@ def sql_clauses(schema, table, column, alias):
   Returns:
   - str: A SQL expression as a string.
   """
-  
-  postgres_geojson_chars_limit = p.toolkit.config.get('ckanext.fototeca.postgres.geojson_chars_limit')
-  postgres_geojson_tolerance = sdct_helpers.schemingdcat_validate_float(p.toolkit.config.get('ckanext.fototeca.postgres.geojson_tolerance'))
+  postgres_geojson_chars_limit = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_chars_limit')
+  postgres_geojson_tolerance = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_tolerance')
   
   if alias == 'spatial':
     # NULL if SRID=0

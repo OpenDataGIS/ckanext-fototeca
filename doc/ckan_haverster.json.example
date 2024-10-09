@@ -115,7 +115,7 @@
           "field_value":"http://data.europa.eu/bna/c_dd313021"
        },
        "author_name":{
-          "field_name":"author"
+          "field_name":"author_name"
        },
        "author_email":{
           "field_name":"author_email"
