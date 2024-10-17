@@ -11,6 +11,7 @@ from ckanext.fototeca.config import FOTOTECA_CODELIST_MAPPING
 log = logging.getLogger(__name__)
 
 epsg_uri_template = "http://www.opengis.net/def/crs/EPSG/0/{srid}"
+wms_url = f"{p.toolkit.config.get('ckanext.fototeca.postgres.wms_base_url')}?request=GetCapabilities&service=WMS"
 
 def normalize_fototeca_fields(package_dict):
     """
@@ -95,19 +96,24 @@ def normalize_reference_system(package_dict):
     return package_dict
     
   except Exception as e:
-    raise ValueError('SRID value is not a valid number: %s', package_dict['reference_system']) from e
+    raise ValueError(f'SRID value is not a valid number: {package_dict["reference_system"]}') from e
 
 def normalize_resources(package_dict):
-    """Filters out resources without a non-empty URL from the package dictionary.
+    """Filters out resources without a non-empty URL from the package dictionary and normalizes WMS URLs.
 
-    This function iterates over the resources in the given package dictionary. It keeps only those resources that have a non-empty URL field. The filtered list of resources is then reassigned back to the package dictionary.
+    This function iterates over the resources in the given package dictionary. It keeps only those resources that have a non-empty URL field and are not equal to the WMS base URL. The filtered list of resources is then reassigned back to the package dictionary.
 
     Args:
         package_dict (dict): A dictionary representing the package, which contains a list of resources.
 
+    Returns:
+        dict: The updated package dictionary with filtered and normalized resources.
     """
-    # Filter resources that have a non-empty URL
-    filtered_resources = [resource for resource in package_dict.get("resources", []) if resource.get('url')]
+    # Filter resources that have a non-empty URL and are not equal to the WMS URL
+    filtered_resources = [
+        resource for resource in package_dict.get("resources", [])
+        if resource.get('url') and not resource['url'] == f'{wms_url}#'
+    ]
     
     # Reassign the filtered list of resources back to the package_dict
     package_dict["resources"] = filtered_resources
@@ -132,13 +138,13 @@ def sql_clauses(schema, table, column, alias):
   """
   postgres_geojson_chars_limit = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_chars_limit')
   postgres_geojson_tolerance = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_tolerance')
-  wms_base_url = p.toolkit.config.get('ckanext.fototeca.postgres.wms_base_url')
-  
-  
-  if column == 'id_layer_wms':
-    return f"CASE WHEN {schema}.{table}.{column} IS NOT NULL THEN '{wms_base_url}?request=GetCapabilities&service=WMS#' || {schema}.{table}.{column} ELSE NULL END AS {alias}"
 
-  if alias == 'spatial':
+  # Check for specific columns
+  if column == 'id_layer_wms':
+    return f"CASE WHEN {schema}.{table}.{column} IS NOT NULL THEN '{wms_url}#' || {schema}.{table}.{column} ELSE NULL END AS {alias}"
+
+  # Check field_names (alias)
+  elif alias == 'spatial':
     # NULL if SRID=0
     return f"CASE WHEN ST_SRID({schema}.{table}.{column}) = 0 THEN NULL ELSE ST_AsGeoJSON(ST_Transform(ST_Envelope({schema}.{table}.{column}), 4326), 2) END AS {alias}"
 
@@ -149,5 +155,6 @@ def sql_clauses(schema, table, column, alias):
   elif alias == 'reference_system':
     return f"ST_SRID({schema}.{table}.{column}) AS {alias}"
 
+  # Default case
   else:
     return f"{schema}.{table}.{column} AS {alias}"
