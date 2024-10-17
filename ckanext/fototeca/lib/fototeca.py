@@ -136,7 +136,7 @@ def sql_clauses(schema, table, column, alias):
   
   
   if column == 'id_layer_wms':
-    return f"'{wms_base_url}?request=GetCapabilities&service=WMS#' || {schema}.{table}.{column} AS {alias}"
+    return f"CASE WHEN {schema}.{table}.{column} IS NOT NULL THEN '{wms_base_url}?request=GetCapabilities&service=WMS#' || {schema}.{table}.{column} ELSE NULL END AS {alias}"
 
   if alias == 'spatial':
     # NULL if SRID=0
