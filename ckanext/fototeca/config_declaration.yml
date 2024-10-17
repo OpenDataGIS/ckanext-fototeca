@@ -17,3 +17,10 @@ groups:
         description: |
           Field name of the ckanext-fototeca schema that using to alternate_identifier in Postgres Harvester.
         required: false
+
+      - key: ckanext.fototeca.postgres.wms_base_url
+        default: https://wms-fototeca.idee.es/fototeca
+        validators:
+        description: |
+          Base URL of WMS service of Fototeca.
+        required: false  
