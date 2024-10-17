@@ -1,17 +1,12 @@
 import logging
-
 import re
-
 import ckan.plugins as p
-
 import ckanext.schemingdcat.helpers as sdct_helpers
-
 from ckanext.fototeca.config import FOTOTECA_CODELIST_MAPPING
 
 log = logging.getLogger(__name__)
 
 epsg_uri_template = "http://www.opengis.net/def/crs/EPSG/0/{srid}"
-wms_url = f"{p.toolkit.config.get('ckanext.fototeca.postgres.wms_base_url')}?request=GetCapabilities&service=WMS"
 
 def normalize_fototeca_fields(package_dict):
     """
@@ -109,10 +104,13 @@ def normalize_resources(package_dict):
     Returns:
         dict: The updated package dictionary with filtered and normalized resources.
     """
+    wms_base_url = p.toolkit.config.get('ckanext.fototeca.postgres.wms_base_url')
+    wms_url_prefix = f"{wms_base_url}?request=GetCapabilities&service=WMS#"
+
     # Filter resources that have a non-empty URL and are not equal to the WMS URL
     filtered_resources = [
         resource for resource in package_dict.get("resources", [])
-        if resource.get('url') and not resource['url'] == f'{wms_url}#'
+        if resource.get('url') and not resource['url'] == wms_url_prefix
     ]
     
     # Reassign the filtered list of resources back to the package_dict
@@ -138,10 +136,12 @@ def sql_clauses(schema, table, column, alias):
   """
   postgres_geojson_chars_limit = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_chars_limit')
   postgres_geojson_tolerance = p.toolkit.config.get('ckanext.schemingdcat.postgres.geojson_tolerance')
+  wms_base_url = p.toolkit.config.get('ckanext.fototeca.postgres.wms_base_url')
+  wms_url = f"{wms_base_url}?request=GetCapabilities&service=WMS"
 
   # Check for specific columns
   if column == 'id_layer_wms':
-    return f"CASE WHEN {schema}.{table}.{column} IS NOT NULL THEN '{wms_url}#' || {schema}.{table}.{column} ELSE NULL END AS {alias}"
+    return f"CASE WHEN {schema}.{table}.{column} IS NOT NULL AND {schema}.{table}.{column} != '' THEN '{wms_url}#' || {schema}.{table}.{column} ELSE NULL END AS {alias}"
 
   # Check field_names (alias)
   elif alias == 'spatial':
