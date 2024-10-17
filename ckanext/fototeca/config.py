@@ -136,7 +136,8 @@ FOTOTECA_CODELIST_MAPPING = {
         {
             'value': 'infrarrojo',
             'accepted_values': [
-                'infrarrojo'
+                'infrarrojo',
+                'Infrarrojo'
             ],
             'pattern': r'^[iI]nfrarrojo$'
         },
