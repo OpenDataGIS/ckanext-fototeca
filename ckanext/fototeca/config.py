@@ -134,15 +134,14 @@ FOTOTECA_CODELIST_MAPPING = {
             'pattern': r'^[mM]ixto$'
         },
         {
-            'value': 'infrarrojo',
+            'value': 'ir',
             'accepted_values': [
-                'infrarrojo',
-                'Infrarrojo'
+                'infrarrojo'
             ],
             'pattern': r'^[iI]nfrarrojo$'
         },
         {
-            'value': 'color_infrarrojo',
+            'value': 'color-ir',
             'accepted_values': [
                 'color e infrarrojo'
             ],
