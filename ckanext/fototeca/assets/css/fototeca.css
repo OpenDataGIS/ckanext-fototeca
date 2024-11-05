@@ -94,6 +94,9 @@ header {
         }
     }
 }
+.site-footer {
+    background: #e0e6ec;
+}
 
 /* fototeca_info */
 .fototeca-code {
