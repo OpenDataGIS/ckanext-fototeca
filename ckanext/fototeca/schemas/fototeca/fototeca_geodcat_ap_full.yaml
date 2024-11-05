@@ -5,7 +5,7 @@ about_url: https://github.com/mjanez/ckanext-schemingdcat
 form_languages: ["es", "en"]
 required_language: "es"
 schema_version: 1.0
-schema_date: 2024-9-01
+schema_date: 2024-10-01
 schema_name: fototeca
 schema_title: Fototeca Federada
 schema_description: "Geospatial extension to the DCAT application profile for data portals in Europe (GeoDCAT-AP). It is adapted to the Spanish context and includes compatibility with the Technical Interoperability Standard (NTI-RISP), the open data profile for Spain: https://datos.gob.es/en/documentacion/guia-de-aplicacion-de-la-norma-tecnica-de-interoperabilidad-de-reutilizacion-de"
@@ -365,6 +365,29 @@ dataset_fields:
     es: Entidad (organización) responsable de publicar el conjunto de datos.
   preset: dataset_organization
   form_group_id: general_info
+
+# Dataset privacy (M)
+- field_name: private
+  label:
+    en: Dataset visibility
+    es: Visiblidad del conjunto de datos
+  required: True
+  preset: dataset_private
+  form_include_blank_choice: False
+  choices:
+  - label:
+      en: Private
+      es: Privado
+    value: True
+  - label:
+      en: Public
+      es: Público
+    value: False
+  form_group_id: general_info
+  help_text:
+    en: The publicity or the visibility of the dataset. Only an <code>admin</code> can publish.
+    es: Publicidad o visiblidad del conjunto de datos. Solo un <code>administrador</code> puede publicar.
+  help_allow_html: True
 
 # Graphic overview (O)
 - field_name: graphic_overview
@@ -1436,6 +1459,10 @@ dataset_fields:
       es: Lituano
     value: http://publications.europa.eu/resource/authority/language/LIT
   - label:
+      en: Luxembourgish
+      es: Luxemburgués
+    value: http://publications.europa.eu/resource/authority/language/LTZ
+  - label:
       en: Maltese
       es: Maltés
     value: http://publications.europa.eu/resource/authority/language/MLT
@@ -1455,46 +1482,6 @@ dataset_fields:
       en: Romanian
       es: Rumano
     value: http://publications.europa.eu/resource/authority/language/ROM
-  - label:
-      en: Bulgarian
-      es: Búlgaro
-    value: http://publications.europa.eu/resource/authority/language/BUL
-  - label:
-      en: Irish
-      es: Irlandés
-    value: http://publications.europa.eu/resource/authority/language/GLE
-  - label:
-      en: Croatian
-      es: Croata
-    value: http://publications.europa.eu/resource/authority/language/HRV
-  - label:
-      en: Luxembourgish
-      es: Luxemburgués
-    value: http://publications.europa.eu/resource/authority/language/LTZ
-  - label:
-      en: Slovak
-      es: Eslovaco
-    value: http://publications.europa.eu/resource/authority/language/SLK
-  - label:
-      en: Slovene
-      es: Esloveno
-    value: http://publications.europa.eu/resource/authority/language/SLV
-  - label:
-      en: Maltese
-      es: Maltés
-    value: http://publications.europa.eu/resource/authority/language/MLT
-  - label:
-      en: Romanian
-      es: Rumano
-    value: http://publications.europa.eu/resource/authority/language/ROM
-  - label:
-      en: Bulgarian
-      es: Búlgaro
-    value: http://publications.europa.eu/resource/authority/language/BUL
-  - label:
-      en: Irish
-      es: Irlandés
-    value: http://publications.europa.eu/resource/authority/language/GLE
   form_group_id: identification
 
 # Date of creation (O)
@@ -2144,6 +2131,7 @@ dataset_fields:
     es: Nombre del mantenedor
   display_property: dcat:contactPoint
   form_placeholder: José Blanco
+  validators: default() unicode_safe
   help_text:
     en: "Person or organization responsible for maintaining or updating a dataset."
     es: "Persona u organización responsable de mantener o actualizar un conjunto de datos."
@@ -2201,6 +2189,7 @@ dataset_fields:
     es: Nombre del autor
   display_property: dct:creator
   form_placeholder: José Blanco
+  validators: default() unicode_safe
   help_text:
     en: "A party that creates or produces a particular dataset."
     es: "Persona u organización creadora o productora de un conjunto de datos"
@@ -2382,8 +2371,12 @@ dataset_fields:
   preset: select
   display_property: dct:accrualPeriodicity
   display_snippet: schemingdcat/display_snippets/link_schema.html
-  sorted_choices: True
+  sorted_choices: False
   choices:
+  - label:
+      en: Provisional data
+      es: Datos provisionales
+    value: http://publications.europa.eu/resource/authority/frequency/OP_DATPRO
   - label:
       en: Annual
       es: Anual
@@ -2440,10 +2433,6 @@ dataset_fields:
       en: Never
       es: Nunca
     value: http://publications.europa.eu/resource/authority/frequency/NEVER
-  - label:
-      en: Provisional data
-      es: Datos provisionales
-    value: http://publications.europa.eu/resource/authority/frequency/OP_DATPRO
   - label:
       en: Quarterly
       es: Trimestral
@@ -3564,8 +3553,8 @@ dataset_fields:
   display_property: dcat:spatialResolutionInMeters
   form_placeholder: 5000
   help_text:
-    en: Specify the spatial resolution as a distance in metres (m).
-    es: Especifique la resolución espacial como distancia en metros (m).
+    en: The minimum spatial separation resolvable in a dataset, measured in meters (m).
+    es: La separación espacial mínima resoluble en un conjunto de datos, medida en metros (m).
   form_group_id: inspire
 
 # License URI (M)
@@ -3573,7 +3562,7 @@ dataset_fields:
   label: 
     en: License
     es: Licencia
-  form_snippet: license.html
+  form_snippet: schemingdcat/form_snippets/license.html
   display_property: dct:license
   help_text:
     en: 'License definitions and additional information can be found at: <a href="http://opendefinition.org/" target="_blank" rel="noopener">Open Definition</a>'
@@ -3586,8 +3575,7 @@ dataset_fields:
   label:
     en: Access Rights
     es: Derechos de acceso
-  preset: select
-  display_snippet: schemingdcat/display_snippets/link_schema.html
+  preset: access_rights
   display_property: dct:accessRights
   form_include_blank_choice: False
   choices:
@@ -4050,6 +4038,10 @@ resource_fields:
       es: Lituano
     value: http://publications.europa.eu/resource/authority/language/LIT
   - label:
+      en: Luxembourgish
+      es: Luxemburgués
+    value: http://publications.europa.eu/resource/authority/language/LTZ
+  - label:
       en: Maltese
       es: Maltés
     value: http://publications.europa.eu/resource/authority/language/MLT
@@ -4069,46 +4061,6 @@ resource_fields:
       en: Romanian
       es: Rumano
     value: http://publications.europa.eu/resource/authority/language/ROM
-  - label:
-      en: Bulgarian
-      es: Búlgaro
-    value: http://publications.europa.eu/resource/authority/language/BUL
-  - label:
-      en: Irish
-      es: Irlandés
-    value: http://publications.europa.eu/resource/authority/language/GLE
-  - label:
-      en: Croatian
-      es: Croata
-    value: http://publications.europa.eu/resource/authority/language/HRV
-  - label:
-      en: Luxembourgish
-      es: Luxemburgués
-    value: http://publications.europa.eu/resource/authority/language/LTZ
-  - label:
-      en: Slovak
-      es: Eslovaco
-    value: http://publications.europa.eu/resource/authority/language/SLK
-  - label:
-      en: Slovene
-      es: Esloveno
-    value: http://publications.europa.eu/resource/authority/language/SLV
-  - label:
-      en: Maltese
-      es: Maltés
-    value: http://publications.europa.eu/resource/authority/language/MLT
-  - label:
-      en: Romanian
-      es: Rumano
-    value: http://publications.europa.eu/resource/authority/language/ROM
-  - label:
-      en: Bulgarian
-      es: Búlgaro
-    value: http://publications.europa.eu/resource/authority/language/BUL
-  - label:
-      en: Irish
-      es: Irlandés
-    value: http://publications.europa.eu/resource/authority/language/GLE
   form_group_id: resource_identification
 
 # Additional format information (O)
@@ -4222,7 +4174,10 @@ resource_fields:
   label: 
     en: Applicable legislation 
     es: Legislación aplicable
-  preset: multiple_text_links
+  form_snippet: schemingdcat/form_snippets/multiple_text.html
+  display_snippet: schemingdcat/display_snippets/list_links.html
+  validators: schemingdcat_hvd_category_applicable_legislation ignore_missing schemingdcat_multiple_text
+  output_validators: scheming_load_json
   display_property: dcatap:applicableLegislation
   form_placeholder: 'http://data.europa.eu/eli/reg_impl/2023/138/oj'
   help_text:
