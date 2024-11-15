@@ -49,32 +49,62 @@ def normalize_value(value, mappings):
 
 # Aux defs for Fototeca import_stage validation
 def normalize_temporal_dates(package_dict):
-  """
-  Normalizes 'temporal_start' and 'temporal_end' in a dictionary to YYYY-MM-DD format.
+    """
+    Normalizes 'temporal_start' and 'temporal_end' in a dictionary to YYYY-MM-DD format.
 
-  Modifies 'temporal_start' and 'temporal_end' in `package_dict` to represent the first and last day of the year(s) specified. 
-  Input can be a comma-separated string or a list of years.
+    Modifies 'temporal_start' and 'temporal_end' in `package_dict` to represent the first and last day of the year(s) specified. 
+    Input can be a comma-separated string or a list of years.
 
-  Args:
-    package_dict (dict): Dictionary with 'temporal_start' and/or 'temporal_end' keys.
+    Args:
+        package_dict (dict): Dictionary with 'temporal_start' and/or 'temporal_end' keys.
 
-  Returns:
-    None: Modifies `package_dict` in-place.
-  """
-  # Convert to standard date string assuming the first or last day of the selected year
-  for key in ['temporal_start', 'temporal_end']:
-    if key in package_dict:
-      # Convert the value to a list of years if it's a string
-      years = [int(year) for year in package_dict[key].split(',')] if isinstance(package_dict[key], str) else package_dict[key]
-      
-      # Select the appropriate year
-      selected_year = min(years) if key == 'temporal_start' else max(years)
-      
-      # Convert to standard date string
-      date_str = f"{selected_year}-01-01" if key == 'temporal_start' else f"{selected_year}-12-31"
-      package_dict[key] = date_str
-      
-  return package_dict
+    Returns:
+        None: Modifies `package_dict` in-place.
+    """
+    # Regular expression to match valid years
+    year_pattern = re.compile(r'^\d{4}$')
+
+    for key in ['temporal_start', 'temporal_end']:
+        if key in package_dict:
+            value = package_dict[key]
+            if isinstance(value, str):
+                # Split the string by commas and hyphens
+                parts = re.split(r'[,-]', value)
+                years = []
+                for part in parts:
+                    part = part.strip()
+                    if year_pattern.match(part):
+                        years.append(int(part))
+                    else:
+                        # If any part is not a valid year, set the value to None
+                        package_dict[key] = None
+                        break
+                else:
+                    if years:
+                        # Select the appropriate year
+                        selected_year = min(years) if key == 'temporal_start' else max(years)
+                        # Convert to standard date string
+                        date_str = f"{selected_year}-01-01" if key == 'temporal_start' else f"{selected_year}-12-31"
+                        package_dict[key] = date_str
+                    else:
+                        package_dict[key] = None
+            elif isinstance(value, list):
+                try:
+                    years = [int(year) for year in value]
+                    if years:
+                        # Select the appropriate year
+                        selected_year = min(years) if key == 'temporal_start' else max(years)
+                        # Convert to standard date string
+                        date_str = f"{selected_year}-01-01" if key == 'temporal_start' else f"{selected_year}-12-31"
+                        package_dict[key] = date_str
+                    else:
+                        package_dict[key] = None
+                except ValueError:
+                    package_dict[key] = None
+            else:
+                package_dict[key] = None
+
+    return package_dict
       
 def normalize_reference_system(package_dict):
   """
