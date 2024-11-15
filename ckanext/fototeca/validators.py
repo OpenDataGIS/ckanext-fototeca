@@ -102,6 +102,9 @@ def fototeca_flight_coating_validator(field, schema):
         flight_longitudinal = data.get(('flight_longitudinal', ))
         flight_transverse = data.get(('flight_transverse', ))
 
+        if flight_type not in ['analogico', 'digital']:
+            return validator
+
         if flight_type == 'analogico':
             if flight_transverse is not None and flight_transverse != '' and flight_transverse != 0:
                 errors[('flight_transverse', )].append('There must be no transverse coating on analogical flights.')
@@ -120,7 +123,7 @@ def fototeca_valid_percentage(field, schema):
     def validator(key, data, errors, context):
         value = data.get(key)
         if value is None or value == '':
-            return  # Skip validation if value is None or an empty string
+            return validator    # Skip validation if value is None or an empty string
         try:
             value = int(value)
             log.debug('percentage int value: %s', value)
