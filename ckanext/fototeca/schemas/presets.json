@@ -38,7 +38,7 @@
       {
         "preset_name": "fototeca_flight_coating",
         "values": {
-          "validators": "fototeca_flight_coating_validator fototeca_valid_percentage",
+          "validators": "ignore_missing fototeca_flight_coating_validator fototeca_valid_percentage",
           "form_snippet": "schemingdcat/form_snippets/percenteage.html",
           "display_snippet": "schemingdcat/display_snippets/percenteage.html"
         }
