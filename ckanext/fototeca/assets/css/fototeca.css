@@ -88,7 +88,7 @@ header {
         flex: 1;
         min-width: 200px; /* Ajusta este valor según sea necesario */
         margin-right: 20px;
-
+        align-content: end;
         p {
             margin: 0 0 10px;
         }
@@ -98,6 +98,28 @@ header {
     background: #e0e6ec;
 }
 
+.banner-ign-title{
+    font-weight: bold !important;
+    color: #183d68 !important;
+    font-size: 0.8rem;
+    
+}
+
+.ckan-socials{
+    justify-content: end;
+    div{
+        width: fit-content;
+        margin-inline: 5px;
+    }
+    .footer-socicons{
+        .icon-button{
+            .fab{
+                font-size: 1.2rem;
+            }
+        }
+        margin: 4px;
+    }
+}
 /* fototeca_info */
 .fototeca-code {
     overflow: auto;

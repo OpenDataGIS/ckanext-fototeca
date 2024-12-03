@@ -1,102 +1,159 @@
-# Translations template for ckanext-fototeca.
+# Spanish translations for ckanext-fototeca.
 # Copyright (C) 2024 OpenDataGIS
-# This file is distributed under the same license as the ckanext-fototeca project.
+# This file is distributed under the same license as the ckanext-fototeca
+# project.
 # mjanez <mjanez@tragsa.es>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-fototeca 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-01-01 12:01+0000\n"
-"PO-Revision-Date: 2024-06-18 15:23+0200\n"
+"POT-Creation-Date: 2024-12-03 11:36+0100\n"
+"PO-Revision-Date: 2024-12-03 11:38+0100\n"
 "Last-Translator: mjanez <mjanez@tragsa.es>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Generated-By: Babel 2.7.0\n"
-"X-Generator: Poedit 3.2\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"Generated-By: Babel 2.10.3\n"
+"X-Generator: Poedit 3.5\n"
 
-#: ckanext/fototeca/templates/header.html
-msgid "Digital Fototeca"
-msgstr "Fototeca Digital"
+#: ckanext/fototeca/templates/footer.html:14
+msgid "Colaborators"
+msgstr "Colaboradores"
 
-#: ckanext/fototeca/templates/header.html
-msgid "Federated Fototeca"
-msgstr "Fototeca Federada"
-
-#: ckanext/fototeca/templates/header.html
-msgid "Open Data portal"
-msgstr "Portal de Datos Abiertos"
-
-#: ckanext/fototeca/templates/footer.html
-msgid "National Geographic Institute"
-msgstr "Instituto Geográfico Nacional"
-
-#: ckanext/fototeca/templates/footer.html
+#: ckanext/fototeca/templates/footer.html:16
 msgid "FAQ"
 msgstr "Preguntas frequentes"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "National Cartographic System"
-msgstr "Sistema Cartográfico Nacional"
+#: ckanext/fototeca/templates/footer.html:18
+msgid "Help"
+msgstr "Ayuda"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "National Cartographic Plan"
-msgstr "Plan Cartográfico Nacional"
-
-#: ckanext/fototeca/templates/footer.html
-msgid "Collegial bodies"
-msgstr "Órganos colegiados"
-
-#: ckanext/fototeca/templates/footer.html
-msgid "Related links"
-msgstr "Enlaces relacionados"
-
-#: ckanext/fototeca/templates/footer.html
+#: ckanext/fototeca/templates/footer.html:19
 msgid "Legal notice"
 msgstr "Aviso legal"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "Data Policy"
+# | msgid "Data Policy"
+#: ckanext/fototeca/templates/footer.html:20
+msgid "Data policy"
 msgstr "Política de datos"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "Accessibility"
-msgstr "Accesibilidad"
+#: ckanext/fototeca/templates/footer.html:23
+msgid "Managed by"
+msgstr "Gestionado por"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "Usability"
-msgstr "Usabilidad"
+#: ckanext/fototeca/templates/footer.html:38
+msgid "<a class=\"hide-text ckan-footer-logo\" href=\"http://ckan.org\">CKAN</a>"
+msgstr "<a class=\"hide-text ckan-footer-logo\" href=\"http://ckan.org\">CKAN</a>"
 
-#: ckanext/fototeca/templates/footer.html
-msgid "Sitemap"
-msgstr "Mapa del sitio"
+#: ckanext/fototeca/templates/header.html:10
+msgid "Federated Fototeca"
+msgstr "Fototeca Federada"
 
-#: ckanext/fototeca/source/new_source.html
-msgid "This should include the <code>http://</code> or <code>https://</code> part of the URL. If it is for the SQL Harvester, then it can be <code>http://{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
-msgstr "Debe incluir la parte <code>http://</code> o <code>https://</code> de la URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
+#: ckanext/fototeca/templates/header.html:11
+msgid "Open Data portal"
+msgstr "Portal de Datos Abiertos"
 
-#: ckanext/harvest/templates/source/new_source_form.html
-msgid "fototeca_postgres_harvester"
-msgstr "Fototeca: Bases de datos PostgreSQL"
-
-#: ckanext/harvest/templates/source/new_source_form.html
-msgid "fototeca_sqlite_harvester"
-msgstr "Fototeca: Bases de datos SQLite"
-
-#: ckanext/fototeca/snippets/fototeca_info.html
+#: ckanext/fototeca/templates/fototeca/snippets/fototeca_info.html:58
 msgid "Resource data"
 msgstr "Datos del recurso"
 
-# Codelists
-#: ckanext/fototeca
-msgid "true"
-msgstr "Sí"
+#: ckanext/fototeca/templates/home/snippets/search.html:3
+msgid "E.g. environment"
+msgstr "E.j. ambiente"
 
-#: ckanext/fototeca
-msgid "false"
-msgstr "No"
+# | msgid "Open Data portal"
+#: ckanext/fototeca/templates/home/snippets/search.html:5
+msgid "Open Data Catalog"
+msgstr "Portal de Datos Abiertos"
+
+#: ckanext/fototeca/templates/home/snippets/search.html:17
+msgid ""
+"Find data published by various organizations to help you develop products and "
+"services."
+msgstr ""
+"Encontrar datos publicados por diversas organizaciones para ayudarte a "
+"desarrollar productos y servicios."
+
+#: ckanext/fototeca/templates/home/snippets/search.html:25
+msgid "Search datasets"
+msgstr "Buscar conjuntos de datos"
+
+#: ckanext/fototeca/templates/home/snippets/search.html:28
+msgid "Search"
+msgstr "Buscar"
+
+#: ckanext/fototeca/templates/home/snippets/search.html:32
+msgid "Popular tags"
+msgstr "Etiquetas populares"
+
+#: ckanext/fototeca/templates/source/new.html:5
+msgid "Harvest sources"
+msgstr "Fuentes de recolección"
+
+#: ckanext/fototeca/templates/source/new.html:8
+msgid ""
+"Harvest sources allow importing remote metadata into this catalog.   Remote "
+"sources can be other catalogs such as other CKAN instances, CSW servers, XML "
+"metadata files, XLSX with metadata records or Web Accessible Folder (WAF)."
+msgstr ""
+"Las fuentes de recolección permiten importar metadatos remotos en este "
+"catálogo.   Las fuentes remotas pueden ser otros catálogos como otras "
+"instancias CKAN, servidores CSW, archivos XML, documentos XLSX con registros de "
+"metadatos o una carpeta accesible por web (WAF)."
+
+#: ckanext/fototeca/templates/source/new.html:14
+msgid "Depending on the actual harvesters enabled for this instance. eg: "
+msgstr "Dependiendo de los cosechadores activados en esta instancia. ej: "
+
+#~ msgid "Digital Fototeca"
+#~ msgstr "Fototeca Digital"
+
+#~ msgid "National Geographic Institute"
+#~ msgstr "Instituto Geográfico Nacional"
+
+#~ msgid "National Cartographic System"
+#~ msgstr "Sistema Cartográfico Nacional"
+
+#~ msgid "National Cartographic Plan"
+#~ msgstr "Plan Cartográfico Nacional"
+
+#~ msgid "Collegial bodies"
+#~ msgstr "Órganos colegiados"
+
+#~ msgid "Related links"
+#~ msgstr "Enlaces relacionados"
+
+#~ msgid "Accessibility"
+#~ msgstr "Accesibilidad"
+
+#~ msgid "Usability"
+#~ msgstr "Usabilidad"
+
+#~ msgid "Sitemap"
+#~ msgstr "Mapa del sitio"
+
+#~ msgid ""
+#~ "This should include the <code>http://</code> or <code>https://</code> part "
+#~ "of the URL. If it is for the SQL Harvester, then it can be <code>http://"
+#~ "{host}:{port}</code>, e.g.: <code>http://localhost:5432</code>"
+#~ msgstr ""
+#~ "Debe incluir la parte <code>http://</code> o <code>https://</code> de la "
+#~ "URL. Sí es para el Recolector SQL, entonces puede ser <code>http://{host}:"
+#~ "{port}</code>, por ejemplo: <code>http://localhost:5432</code>"
+
+#~ msgid "fototeca_postgres_harvester"
+#~ msgstr "Fototeca: Bases de datos PostgreSQL"
+
+#~ msgid "fototeca_sqlite_harvester"
+#~ msgstr "Fototeca: Bases de datos SQLite"
+
+# Codelists
+#~ msgid "true"
+#~ msgstr "Sí"
+
+#~ msgid "false"
+#~ msgstr "No"

@@ -1,18 +1,57 @@
 {% ckan_extends %}
 
-{% block footer_links_ckan %}
-<div id="footer-text" class="footer-columns">
-    <div class="footer-text-section">
-        <p><a class="0" href="www.ign.es">{{ _('National Geographic Institute') }}</a></p>
-        <p><a class="1" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/preguntas-frecuentes") }}" rel="noopener noreferrer">{{ _('FAQ') }}</a></p>
-        <p><a class="2" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/sistema-cartografico-nacional") }}" target="_blank" rel="noopener noreferrer">{{ _('National Cartographic System') }}</a></p>
-        <p><a class="3" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/plan-cartografico-nacional") }}" target="_blank" rel="noopener noreferrer">{{ _('National Cartographic Plan') }}</a></p>
-    </div>
-    <div class="footer-text-section">
-        <p><a class="4" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-organos-colegiados") }}" target="_self" rel="noopener noreferrer">{{ _('Collegial bodies') }}</a></p>
-        <p><a class="5" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-enlaces-relacionados") }}" target="_self" rel="noopener noreferrer">{{ _('Related links') }}</a></p>
-        <p><a class="6" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-aviso-legal") }}" rel="noopener noreferrer">{{ _('Legal notice') }}</a></p>
-        <p><a class="7" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/politica-datos") }}" rel="noopener noreferrer">{{ _('Data Policy') }}</a></p>
-    </div>
-</div>
-{% endblock %}
+
+{% block footer_content %}
+<div class="row d-flex align-items-center">
+    <div class="col-md-8 footer-links d-flex flex-column">
+        {% block footer_nav %}
+        <div class="footer-sitelinks">
+            <ul class="list-unstyled">
+                {% block footer_links_ckan %}
+                <div id="footer-text" class="footer-columns">
+                    <div class="footer-text-section">
+                        <p><a class="0" href="{{ h.url_for('pages.pages_index') + '/colaboradores' }}">{{
+                                _('Colaborators') }}</a></p>
+                        <p><a class="1" href="{{ h.url_for('pages.pages_index') + '/preguntas-frecuentes' }}"
+                                rel="noopener noreferrer">{{ _('FAQ') }}</a></p>
+                        <p><a class="2" href="{{ h.url_for('pages.pages_index') + '/ayuda' }}" target="_blank"
+                                rel="noopener noreferrer">{{ _('Help') }}</a></p>
+                        <p><a class="3" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/info-aviso-legal") }}" target="_blank" rel="noopener noreferrer">{{ _('Legal notice') }}</a></p>
+                        <p><a class="4" href="{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/politica-datos") }}" target="_blank" rel="noopener noreferrer">{{ _('Data policy') }}</a></p>
+                    </div>
+                    <div class="footer-text-section">
+                        <strong>{{_("Managed by")}}</strong>
+                        <p class="banner-ign-title">O. A. Centro de Información Geografica</p>
+                        <div><a href='{{ h.url_for_static_or_external(h.fototeca_get_ign_base_url() + "/qsm-cnig")}}'><img
+                                    class="banner-ign" src="{{ h.url_for_static(" /fototeca/banner-gov.png") }}"
+                                    alt="Banner ign"> </a></div>
+                    </div>
+                </div>
+                {% endblock %}
+            </ul>
+        </div>
+        {% endblock %}
+        </div>
+        <div class="col-md-4 attribution d-flex flex-row align-self-end align-items-end ckan-socials">
+          {% block footer_attribution %}
+            <div class="footer-powered-ckan align-items-end">
+              <div>{% trans %}<a class="hide-text ckan-footer-logo" href="http://ckan.org">CKAN</a>{% endtrans %}</div>
+            </div>
+          {% endblock %}
+          {% block footer_social %}
+          {% set social = h.schemingdcat_get_social_links() %}
+            <div class="footer-socicons align-items-end">
+                <a href="{{ h.url_for_static_or_external(social.github) }}" class="icon-button">
+                    <span class="fab fa-github"></span>
+                </a>
+                <a href="{{ h.url_for_static_or_external(social.x) }}" class="icon-button">
+                  <span class="fab fa-twitter"></span>
+                </a>
+                <a href="{{ h.url_for_static_or_external(social.linkedin) }}" class="icon-button">
+                  <span class="fab fa-linkedin"></span>
+                </a>
+            </div>
+          {% endblock %}
+        </div>
+      </div>
+      {% endblock %}
