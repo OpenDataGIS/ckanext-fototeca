@@ -265,3 +265,8 @@ a.tag:hover {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
 }
+
+/*Fix for ckanext-spatial*/
+.leaflet-touch .leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+    background-image: url("../../img/pencil.png")!important; 
+}
