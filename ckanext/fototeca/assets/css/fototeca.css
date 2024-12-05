@@ -182,6 +182,10 @@ a.tag:hover {
     color: #364b5f;
 }
 
+.block-code{
+    color: #000;
+}
+
 /* About site intro*/
 .sdct-about-heading-container {
     max-width: 700px;
