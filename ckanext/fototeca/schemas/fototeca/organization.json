@@ -500,8 +500,7 @@
           "form_placeholder":{
             "en":"contact number",
             "es":"telefono de contacto"
-          },
-          "required_language": "es"
+          }
         },
         {
           "field_name": "address",
@@ -512,8 +511,7 @@
           "form_placeholder":{
             "en":"Address",
             "es":"Dirección"
-          },
-          "required_language": "es"
+          }
         },
         {
           "field_name": "other",
@@ -524,8 +522,7 @@
           "form_placeholder":{
             "en":"Other info",
             "es":"Otra información"
-          },
-          "required_language": "es"
+          }
         }
       ]
   }
