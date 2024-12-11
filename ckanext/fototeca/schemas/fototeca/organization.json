@@ -490,6 +490,39 @@
               "dcat_ap": "http://publications.europa.eu/resource/authority/data-theme/REGI"
             }
           ]
+        },
+        {
+          "field_name": "phone",
+          "label": {
+            "en": "Phone",
+            "es": "Telefono"
+          },
+          "form_placeholder":{
+            "en":"contact number",
+            "es":"telefono de contacto"
+          }
+        },
+        {
+          "field_name": "address",
+          "label": {
+            "en": "Address",
+            "es": "Dirección"
+          },
+          "form_placeholder":{
+            "en":"Address",
+            "es":"Dirección"
+          }
+        },
+        {
+          "field_name": "other",
+          "label": {
+            "en": "Other",
+            "es": "Otros"
+          },
+          "form_placeholder":{
+            "en":"Other info",
+            "es":"Otra información"
+          }
         }
       ]
   }

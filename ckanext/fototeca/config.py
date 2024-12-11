@@ -13,9 +13,9 @@ FOTOTECA_HARVESTER_MD_CONFIG = {
         'http://inspire.ec.europa.eu/documents/inspire-metadata-regulation','http://inspire.ec.europa.eu/documents/commission-regulation-eu-no-13122014-10-december-2014-amending-regulation-eu-no-10892010-0'
     ],
     'author': 'ckanext-fototeca',
-    'author_email': 'admin@{ckan_instance}',
-    'author_url': '{ckan_instance}/organization/test',
-    'author_uri': '{ckan_instance}/organization/test',
+    'author_email': 'admin@{ckan_site_url}',
+    'author_url': '{ckan_site_url}/organization/test',
+    'author_uri': '{ckan_site_url}/organization/test',
     'contact_name': 'Centro Nacional de Información Geográfica (CNIG)',
     'contact_email': 'consulta@cnig.es',
     'contact_url': 'https://www.cnig.es',
@@ -45,9 +45,9 @@ FOTOTECA_HARVESTER_MD_CONFIG = {
     'license_id': 'cc-by',
     'lineage_process_steps': 'ckanext-fototeca lineage process steps.',
     'maintainer': 'ckanext-fototeca',
-    'maintainer_email': 'admin@{ckan_instance}',
-    'maintainer_url': '{ckan_instance}/organization/test',
-    'maintainer_uri': '{ckan_instance}/organization/test',
+    'maintainer_email': 'admin@{ckan_site_url}',
+    'maintainer_url': '{ckan_site_url}/organization/test',
+    'maintainer_uri': '{ckan_site_url}/organization/test',
     'metadata_profile': [
         "http://semiceu.github.io/GeoDCAT-AP/releases/2.0.0","http://inspire.ec.europa.eu/document-tags/metadata","https://semiceu.github.io/DCAT-AP/releases/3.0.0"
     ],
