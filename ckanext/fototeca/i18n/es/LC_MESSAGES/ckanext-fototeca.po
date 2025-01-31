@@ -26,7 +26,7 @@ msgstr "Colaboradores"
 
 #: ckanext/fototeca/templates/footer.html:16
 msgid "FAQ"
-msgstr "Preguntas frequentes"
+msgstr "Preguntas frecuentes"
 
 #: ckanext/fototeca/templates/footer.html:18
 msgid "Help"
