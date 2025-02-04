@@ -3547,8 +3547,8 @@ dataset_fields:
 # Spatial resolution (C)
 - field_name: spatial_resolution_in_meters
   label: 
-    en: Spatial resolution of the dataset
-    es: Resolución espacial del dataset
+    en: Spatial resolution of the dataset (m)
+    es: Resolución espacial del dataset (m)
   display_snippet: schemingdcat/display_snippets/spatial_resolution_in_meters.html
   display_property: dcat:spatialResolutionInMeters
   form_placeholder: 5000
